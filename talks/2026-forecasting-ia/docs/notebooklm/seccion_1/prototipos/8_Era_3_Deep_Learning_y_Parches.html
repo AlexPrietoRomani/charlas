@@ -27,7 +27,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html, body { width: 100%; min-height: 100%; margin: 0; }
+html, body { width: 100%; height: 100%; min-height: 100%; margin: 0; }
 
 body {
   min-height: 100svh;
@@ -166,7 +166,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   color: var(--purple);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -340,7 +340,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   --stage-accent: var(--phi);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: clamp(6px, 0.9vh, 10px);
   padding: clamp(10px, 1.2vw, 18px);
   border: 1px solid color-mix(in srgb, var(--stage-accent) 35%, rgba(133, 158, 192, 0.16));
@@ -349,7 +349,8 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
     radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--stage-accent) 12%, transparent), transparent 55%),
     linear-gradient(155deg, rgba(11, 19, 39, 0.95), rgba(5, 10, 24, 0.94));
   min-height: 0;
-  overflow-y: auto;
+  height: 100%;
+  overflow-y: hidden;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(180, 142, 255, 0.3) rgba(5, 10, 24, 0.4);
@@ -404,13 +405,13 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .narr-title {
   margin: 0;
-  font: 700 clamp(17px, 1.45vw, 22px)/1.18 var(--display);
+  font: 700 clamp(18px, 1.45vw, 22.5px)/1.18 var(--display);
   color: #f8fbff;
 }
 
 .narr-lead {
   margin: 0;
-  font: 400 clamp(12px, 0.98vw, 13.8px)/1.45 var(--sans);
+  font: 400 clamp(13.5px, 1.02vw, 15.8px)/1.45 var(--sans);
   color: #b8cae0;
 }
 
@@ -421,9 +422,15 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   flex-direction: column;
   gap: 8px;
   min-height: 0;
+  flex: 1 1 auto;
+  justify-content: space-evenly;
 }
 
 .info-block {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 9px 12px;
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -435,7 +442,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--stage-accent);
@@ -443,7 +450,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .info-block-text {
   margin: 0;
-  font: 400 clamp(11.5px, 0.92vw, 13px)/1.42 var(--sans);
+  font: 400 clamp(13px, 0.98vw, 15.2px)/1.42 var(--sans);
   color: #cedcf0;
 }
 
@@ -468,21 +475,24 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   text-align: right;
 }
 
-.speaker-box {
-  padding: 10px 12px;
-  border-left: 3px solid var(--stage-accent);
-  border-radius: 0 10px 10px 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--stage-accent) 11%, rgba(8, 15, 32, 0.85)), rgba(8, 15, 32, 0.5));
-}
-
-.speaker-head {
+.speaker-box, .executive-takeaway {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
-  font: 700 9px/1 var(--mono);
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(56, 239, 255, 0.28);
+  background: linear-gradient(135deg, rgba(14, 116, 144, 0.22), rgba(7, 13, 28, 0.9));
+  font: 600 clamp(10px, 0.76vw, 11.5px)/1.3 var(--sans);
+  color: #edf5ff;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.executive-takeaway strong { color: var(--ockham); white-space: nowrap; }
+
+.speaker-head {
+  display: none;
+}
   color: var(--stage-accent);
 }
 
@@ -850,14 +860,14 @@ input[type="range"] {
         </svg>
       </div>
       <div>
-        <p class="eyebrow">Continuación de Era 2 (Fallo de Meseta Plana) · Saga Evolutiva (Era 3 de 4)</p>
-        <h1>VÍA 3: <span class="era">Deep Learning y Parches</span> <span class="sub">· De LSTM y TFT a la Revolución PatchTST</span></h1>
+        <p class="eyebrow">Cuando los árboles se quedan cortos</p>
+        <h1>Redes neuronales: <span class="era">leer el tiempo en parches</span></h1>
       </div>
     </div>
 
     <div class="via-card" aria-label="Condiciones operativas de la Vía 3">
       <div class="via-title">
-        <span>⚡ FICHA OPERATIVA VÍA 3</span>
+        <span>⚡ FICHA OPERATIVA</span>
         <span>REPRESENTACIONES LATENTES + PARCHES</span>
       </div>
       <div class="via-pills">
@@ -872,7 +882,7 @@ input[type="range"] {
   <!-- BARRA DE PROCESO EN BUCLE: 1. LSTM/TFT ─▶ 2. Quiebre O(L²) ─▶ 3. PatchTST ─▶ 4. CAISO/Enel & Pase a Era 4 -->
   <nav class="flowbar" aria-label="Proceso evolutivo de la Era 3">
     <div class="process-track" role="tablist">
-      <button class="proc-node" role="tab" type="button" data-step="lstm" aria-selected="true">
+      <button class="proc-node" role="tab" type="button" data-step="lstm" aria-selected="true" data-route="corta">
         <span class="proc-num">1</span>
         <div class="proc-text">
           <span class="proc-year">Memoria Fluida (LSTM/TFT)</span>
@@ -883,7 +893,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="bottleneck" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="bottleneck" aria-selected="false" data-route="experta">
         <span class="proc-num">2</span>
         <div class="proc-text">
           <span class="proc-year">El Doble Quiebre: O(L²)</span>
@@ -894,7 +904,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="patchtst" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="patchtst" aria-selected="false" data-route="corta">
         <span class="proc-num">3</span>
         <div class="proc-text">
           <span class="proc-year">2023 · Revolución PatchTST</span>
@@ -905,11 +915,11 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="era4" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="era4" aria-selected="false" data-route="corta">
         <span class="proc-num">4</span>
         <div class="proc-text">
-          <span class="proc-year">CAISO / Enel ─▶ Era 4</span>
-          <span class="proc-sub">Renovables y pase a Zero-Shot</span>
+          <span class="proc-year">CAISO / Enel ─▶ Modelos preentrenados</span>
+          <span class="proc-sub">Parques eólicos y solares</span>
         </div>
         <div class="proc-progress" id="prog-era4"></div>
       </button>
@@ -930,28 +940,22 @@ input[type="range"] {
     <aside class="narrative-card" id="narrativeCard" aria-live="polite">
       <div class="narr-top">
         <div class="narr-badges">
-          <span class="stage-tag" id="stageTag">ETAPA 1 DE 4 · EL FLUJO CONTINUO</span>
+          <span class="stage-tag" id="stageTag">MEMORIA FLUIDA</span>
           <span class="stage-year-pill" id="stageKeyHint">Teclas 1 · 2 · 3 · 4</span>
         </div>
-        <h2 class="narr-title" id="narrTitle">1. De Tablas Rígidas a Memoria Fluida: RNN, LSTM y TFT</h2>
-        <p class="narr-lead" id="narrLead">
-          En la Era 2 vimos que los árboles cortan el tiempo en cajas cerradas y chocan contra una <b>meseta plana</b>. El <b>Deep Learning</b> nació para leer el tiempo como una <b>película continua</b> sin crear tablas de <i>lags</i> a mano.
-        </p>
+        <h2 class="narr-title" id="narrTitle">Las redes neuronales leen el tiempo como una película</h2>
+        <p class="narr-lead" id="narrLead">El aprendizaje profundo nació para leer secuencias continuas, sin armar tablas de rezagos a mano.</p>
       </div>
 
       <div class="narr-blocks">
         <div class="info-block">
-          <div class="info-block-label" id="block1Label">🧠 LA CINTA DE MEMORIA (LSTM, N-BEATS Y TFT)</div>
-          <p class="info-block-text" id="block1Text">
-            En lugar de mirar celdas sueltas de Excel, una red <b>LSTM</b> tiene una cinta transportadora interna con <b>3 compuertas</b>: decide qué ruido viejo borrar (<b>olvido fₜ</b>), qué dato nuevo guardar (<b>entrada iₜ</b>) y qué proyectar hoy (<b>salida oₜ</b>).
-          </p>
+          <div class="info-block-label" id="block1Label">🧠 Una cinta de memoria</div>
+          <p class="info-block-text" id="block1Text">Una red LSTM usa 3 compuertas: olvidar el ruido, dejar entrar datos nuevos y decidir qué sale.</p>
         </div>
 
         <div class="info-block">
-          <div class="info-block-label" id="block2Label">🎛️ SUPERPODER: EXTRAPOLAR PENDIENTES Y COVARIABLES</div>
-          <p class="info-block-text" id="block2Text">
-            Arquitecturas como <b>TFT (Temporal Fusion Transformer)</b> integran datos fijos y clima futuro aprendiendo la <b>velocidad y curvatura real de la serie</b>, superando el techo plano de los árboles.
-          </p>
+          <div class="info-block-label" id="block2Label">🎛️ Aprende pendientes</div>
+          <p class="info-block-text" id="block2Text">Aprende la velocidad y curvatura reales de la serie, superando la meseta plana de los árboles.</p>
         </div>
 
         <div class="math-strip">
@@ -960,14 +964,8 @@ input[type="range"] {
         </div>
       </div>
 
-      <div class="speaker-box">
-        <div class="speaker-head">
-          <span>🎤 GUÍA DE EXPOSICIÓN (QUÉ DECIR)</span>
-          <span id="speakerTime">~15 seg</span>
-        </div>
-        <p class="speaker-quote" id="speakerQuote">
-          “Para romper la meseta plana de los árboles en Texas, las redes neuronales dejaron de ver el tiempo como fotos sueltas en Excel y empezaron a leerlo como una película continua, guardando en su memoria la velocidad de subida.”
-        </p>
+      <div class="executive-takeaway" id="speakerBox">
+        <strong>💡 Idea Clave:</strong> <span id="speakerQuote">Las redes aprenden la velocidad y curva del tiempo.</span>
       </div>
     </aside>
 
@@ -988,8 +986,8 @@ input[type="range"] {
       <div class="canvas-wrap">
         <canvas id="stageCanvas"></canvas>
         <div class="canvas-overlay-top">
-          <span class="ov-badge left" id="ovLeft">🧠 Arriba: Cinta de Memoria Latente (Cₜ₋₁ ➔ Cₜ)</span>
-          <span class="ov-badge right" id="ovRight">📈 Abajo: Extrapolación continua sin meseta plana</span>
+          <span class="ov-badge left" id="ovLeft">🧠 Cinta de Memoria Latente (Cₜ)</span>
+          <span class="ov-badge right" id="ovRight">📈 Extrapolación Continua</span>
         </div>
       </div>
 
@@ -1067,77 +1065,77 @@ input[type="range"] {
   const STAGE_CONTENT = {
     lstm: {
       accent: 'var(--phi)',
-      tag: 'ETAPA 1 DE 4 · LA MEMORIA FLUIDA (LSTM / TFT)',
-      title: '1. De Tablas Rígidas a Memoria Fluida: RNN, LSTM y TFT',
-      lead: 'En la Era 2 vimos que los árboles cortan el tiempo en cajas cerradas y chocan contra una <b>meseta plana</b>. El <b>Deep Learning</b> nació para leer el tiempo como una <b>película continua</b> sin crear tablas de <i>lags</i> a mano.',
-      b1Label: '🧠 LA CINTA DE MEMORIA (LSTM, N-BEATS Y TFT)',
-      b1Text: 'En lugar de mirar celdas sueltas de Excel, una red <b>LSTM</b> tiene una cinta transportadora interna con <b>3 compuertas</b>: decide qué ruido viejo borrar (<b>olvido fₜ</b>), qué dato nuevo guardar (<b>entrada iₜ</b>) y qué proyectar hoy (<b>salida oₜ</b>).',
-      b2Label: '🎛️ SUPERPODER: EXTRAPOLAR PENDIENTES Y COVARIABLES',
-      b2Text: 'Arquitecturas como <b>TFT (Temporal Fusion Transformer)</b> integran datos fijos y clima futuro aprendiendo la <b>velocidad y curvatura real de la serie</b>, superando el techo plano de los árboles.',
+      tag: 'MEMORIA FLUIDA',
+      title: 'Las redes neuronales leen el tiempo como una película',
+      lead: 'El aprendizaje profundo nació para leer secuencias continuas, sin armar tablas de rezagos a mano.',
+      b1Label: '🧠 Una cinta de memoria',
+      b1Text: 'Una red LSTM usa 3 compuertas: olvidar el ruido, dejar entrar datos nuevos y decidir qué sale.',
+      b2Label: '🎛️ Aprende pendientes',
+      b2Text: 'Aprende la velocidad y curvatura reales de la serie, superando la meseta plana de los árboles.',
       formula: 'Estado Latente hₜ = f( hₜ₋₁, xₜ ) · Compuertas [ fₜ, iₜ, oₜ ]',
       hint: 'Sin ingeniería manual de lags · Flujo continuo',
-      quote: '“Para romper la meseta plana de los árboles en Texas, las redes neuronales dejaron de ver el tiempo como fotos sueltas en Excel y empezaron a leerlo como una película continua, guardando en su memoria la velocidad de subida.”',
+      quote: 'Las redes aprenden la velocidad y curva del tiempo.',
       icon: '🧠',
       canvasTitle: 'Memoria Secuencial Continua (LSTM / TFT) vs. Meseta Plana Tabular',
-      ovLeft: '🧠 Arriba: Cinta de Memoria Latente (Cₜ₋₁ ➔ Cₜ)',
-      ovRight: '📈 Abajo: Extrapolación continua sin meseta plana',
+      ovLeft: '🧠 Cinta de Memoria Latente (Cₜ)',
+      ovRight: '📈 Extrapolación Continua',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Señal Continua (xₜ)</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Proyección Fluida (LSTM/TFT)</span><span class="leg-item"><i class="leg-line dashed" style="--c:#ffc05c"></i> Meseta Plana Árbol (Era 2)</span>',
       nextLabel: 'Ver El Doble Quiebre O(L²) ─▶'
     },
     bottleneck: {
       accent: 'var(--rupture)',
-      tag: 'ETAPA 2 DE 4 · EL DOBLE CUELLO DE BOTELLA',
-      title: '2. ¿Por qué colapsaron las RNN y los primeros Transformers?',
-      lead: 'Al llevar estas redes a series largas en producción, aparecieron <b>dos muros matemáticos</b>: la lentitud del “gota a gota” y la explosión de comparar puntos sueltos.',
-      b1Label: '⏳ FALLO 1 (LSTM): EL EMBUDO GOTA A GOTA Y EL OLVIDO',
-      b1Text: 'En una LSTM, para calcular el día 500 debes esperar en fila india a que terminen los 499 días anteriores. <b>No se puede paralelizar en GPU</b> y, en secuencias largas, los recuerdos lejanos se borran (<b>desvanecimiento de gradiente</b>).',
-      b2Label: '💥 FALLO 2 (TRANSFORMER): UN PUNTO AISLADO NO DICE NADA + O(L²)',
-      b2Text: 'En texto, la palabra <i>“Fuego”</i> tiene significado sola; en series temporales, el número suelto <b>“42.3” no significa nada</b> sin ver si sube o baja. Comparar 512 puntos todos contra todos exige <b>512² = 262,144 cruces O(L²)</b>, ahogando la GPU.',
+      tag: 'DOBLE CUELLO DE BOTELLA',
+      title: 'Las primeras redes se atascaron con series largas',
+      lead: 'Al crecer las secuencias aparecieron dos barreras: el cálculo en fila india y un costo que explota.',
+      b1Label: '⏳ Embudo en fila india',
+      b1Text: 'Calcula punto por punto, uno tras otro: no se puede paralelizar en GPU y olvida lo lejano.',
+      b2Label: '💥 Costo que explota',
+      b2Text: 'Comparar 512 puntos entre sí exige 262,144 cruces; un número suelto como 42.3 no dice nada.',
       formula: 'LSTM = Fila India Secuencial + Olvido  │  Transformer = Costo Cuadrático O(L²)',
       hint: 'Para L = 512 puntos ──▶ 262,144 conexiones punto a punto',
-      quote: '“Aquí chocamos con dos muros: la LSTM lee gota a gota como un reloj de arena y olvida el principio; y el Transformer clásico intenta comparar cada número suelto contra todos los demás, multiplicando el costo al cuadrado.”',
+      quote: 'Comparar todos los puntos con todos dispara el costo.',
       icon: '💥',
       canvasTitle: 'El Doble Cuello de Botella: Embudo Secuencial (LSTM) vs. Explosión Cuadrática O(L²)',
-      ovLeft: '⏳ Izquierda: Reloj de Arena LSTM (Fila india + Olvido)',
-      ovRight: '💥 Derecha: Transformer Punto a Punto O(L²) sin semántica',
+      ovLeft: '⏳ Embudo Secuencial (LSTM)',
+      ovRight: '💥 Explosión Cuadrática O(L²)',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Espera Secuencial Gota a Gota</span><span class="leg-item"><i class="leg-line" style="--c:#ff5277"></i> Red Cuadrática O(L²) Saturada</span><span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Punto aislado sin contexto</span>',
       nextLabel: 'Ver La Revolución PatchTST ─▶'
     },
     patchtst: {
       accent: 'var(--purple)',
-      tag: 'ETAPA 3 DE 4 · LA REVOLUCIÓN DEL PARCHE (ICLR 2023)',
-      title: '3. PatchTST: Empaquetar Números en “Palabras del Tiempo”',
-      lead: 'En 2023, <b>PatchTST (Nie et al.)</b> resolvió ambos problemas con una idea brillante del procesamiento de señales: <b>dejar de leer números sueltos y agruparlos en bloques o “parches”</b>.',
-      b1Label: '🧱 ¿QUÉ ES UN PARCHE TEMPORAL? (FORMA + PENDIENTE)',
-      b1Text: 'Si agrupamos <b>P = 16 días seguidos en una sola cápsula (parche)</b>, ese bloque ya tiene significado propio: sabemos si dentro de él la curva <b>sube, acelera o rebota</b>. Además, cada serie viaja por un <b>canal independiente</b> sin contaminar a las demás.',
-      b2Label: '⚡ EL MILAGRO MATEMÁTICO: DE O(L²) A O((L/P)²) — HASTA 256x MENOS COSTO',
-      b2Text: 'Una serie de <b>512 puntos</b> dividida en parches de <b>16 pasos</b> se reduce a solo <b>32 bloques</b>. La matriz de atención pasa de <b>262,144 cruces a solo 1,024</b>: la GPU procesa todo de golpe en paralelo y ve horizontes larguísimos.',
+      tag: 'LA REVOLUCIÓN DEL PARCHE',
+      title: 'Agrupar números en parches crea palabras del tiempo',
+      lead: 'En 2023, PatchTST agrupó puntos continuos en parches, como si cada trozo fuera una palabra.',
+      b1Label: '🧱 Parches con sentido',
+      b1Text: 'Agrupar 16 pasos seguidos aporta forma y pendiente; cada canal viaja por separado.',
+      b2Label: '⚡ Mucho menos cálculo',
+      b2Text: 'De 512 puntos a 32 parches: de 262,144 a 1,024 operaciones, 256 veces menos.',
       formula: 'Secuencia L ──▶ L/P Parches ──▶ Costo cae de O(L²) a O((L/P)²)',
       hint: 'Con P = 16: 256 veces menos memoria en el mapa de atención',
-      quote: '“Un número suelto es como una letra aislada: no dice nada. Pero un parche de 16 días es una palabra completa con forma y pendiente. Al juntar de 16 en 16, PatchTST hace que el Transformer sea hasta 256 veces más ligero.”',
+      quote: 'Agrupar 16 pasos en un parche ahorra hasta 256 veces.',
       icon: '🧱',
       canvasTitle: 'Arquitectura PatchTST: Segmentación en Parches (P) + Autoatención Paralela O((L/P)²)',
-      ovLeft: '🧱 Paso 1: 512 puntos empaquetados en Parches con forma',
-      ovRight: '⚡ Paso 2: Autoatención rápida entre bloques O((L/P)²)',
+      ovLeft: '🧱 Empaquetado en Parches (P=16)',
+      ovRight: '⚡ Autoatención Eficiente O((L/P)²)',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Señal Cruda (L=512)</span><span class="leg-item"><i class="leg-line" style="--c:#b48eff"></i> Parches Temporales (Tamaño P)</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Atención de Largo Alcance</span>',
-      nextLabel: 'Ver Caso CAISO/Enel y Pase a Era 4 ─▶'
+      nextLabel: 'Ver Caso CAISO/Enel ─▶'
     },
     era4: {
       accent: 'var(--lab)',
-      tag: 'ETAPA 4 DE 4 · IMPACTO INDUSTRIAL Y PASE A ERA 4',
-      title: '4. Parques Renovables (CAISO / Enel) y el Salto a la Era 4',
-      lead: 'Hoy <b>PatchTST</b> gobierna el pronóstico masivo de energías renovables y, al convertir el tiempo en <i>tokens de parches</i>, abrió la puerta a los <b>Modelos Fundacionales (Era 4)</b>.',
-      b1Label: '🌬️ ÉXITO EN PRODUCCIÓN: CAISO (CALIFORNIA), ENEL Y COES',
-      b1Text: 'Operadores eléctricos como <b>CAISO</b> y <b>Enel Green Power</b> procesan cientos de parques eólicos y solares a la vez con <b>PatchTST</b>: capturan frentes de viento y radiación solar a largo plazo sin acumular error recursivo.',
-      b2Label: '🚀 EL PASE A LA SIGUIENTE DIAPOSITIVA (ERA 4: FOUNDATION MODELS ZERO-SHOT)',
-      b2Text: '¿Cuál es el límite de la Era 3? Exige <b>entrenar desde cero con &gt;100,000 datos propios y GPUs caras</b>. Pero si un parche es igual a una “palabra”, ¡podemos pre-entrenar un <b>ChatGPT del Tiempo sobre billones de series</b> para predecir sin entrenar (<b>Zero-Shot</b>)!',
+      tag: 'RENOVABLES A ESCALA',
+      title: 'Parques eólicos y solares abrieron paso a modelos gigantes',
+      lead: 'PatchTST funcionó en cientos de parques renovables y preparó el camino a los modelos que ya vienen entrenados.',
+      b1Label: '🌬️ En California e Italia',
+      b1Text: 'Pronostica cientos de parques eólicos y solares a la vez, sin acumular error paso a paso.',
+      b2Label: '🚀 Modelos ya entrenados',
+      b2Text: 'Con parches como piezas, se entrenan modelos gigantes que pronostican sin reentrenar (Zero-Shot).',
       formula: 'Parches (Era 3) + 27 Mil Millones de Datos (LOTSA) ──▶ Era 4: Zero-Shot',
       hint: 'Siguiente Diapo · Era 4: TimesFM, Chronos, Moirai y Lag-Llama',
-      quote: '“Con PatchTST, CAISO y Enel pronostican cientos de parques eólicos en paralelo. Y lo mejor: como ya sabemos convertir series en parches-palabras, nació la Era 4: pre-entrenar modelos gigantes con billones de datos para predecir en frío (Zero-Shot).”',
+      quote: 'Con parches nacieron los modelos que pronostican sin reentrenar.',
       icon: '🚀',
       canvasTitle: 'Pronóstico Eólico/Solar Multi-Parque (CAISO / Enel) y Puente a la Era 4 (Zero-Shot)',
-      ovLeft: '🌬️ Izquierda: Red de Parques Eólicos/Solares (CAISO / Enel)',
-      ovRight: '⏭️ Derecha: Pase a Era 4 (Foundation Models Zero-Shot)',
+      ovLeft: '🌬️ Red Eléctrica CAISO / Enel',
+      ovRight: '⏭️ Siguiente: Modelos Fundacionales',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Pronóstico Multi-Horizonte PatchTST</span><span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Canales Independientes (Turbinas)</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Salto a Era 4 (Zero-Shot)</span>',
       nextLabel: 'Reiniciar bucle (LSTM/TFT) ↺'
     }
@@ -1146,6 +1144,37 @@ input[type="range"] {
   const $ = id => document.getElementById(id);
   const canvas = $('stageCanvas');
   const ctx = canvas.getContext('2d');
+
+  // Red de seguridad F12 (1366×768): ningún texto del lienzo se sale del borde; si no cabe se reduce
+  // la fuente (mín. 11 px) y, como último recurso, se comprime con maxWidth.
+  (function guardCanvasText() {
+    const rawFill = ctx.fillText.bind(ctx);
+    ctx.fillText = function (text, x, y, maxW) {
+      const W = canvas.clientWidth || 0;
+      const t = String(text);
+      if (W > 0 && maxW === undefined) {
+        const tw = ctx.measureText(t).width;
+        const a = ctx.textAlign;
+        const avail = (a === 'right' || a === 'end') ? x - 12
+          : (a === 'center') ? 2 * Math.min(x, W - x) - 24
+          : W - x - 12;
+        if (tw > avail && avail > 40) {
+          const base = ctx.font;
+          const m = /(\d+(?:\.\d+)?)px/.exec(base);
+          let px = m ? parseFloat(m[1]) : 0;
+          while (m && px > 11 && ctx.measureText(t).width > avail) {
+            px -= 0.5;
+            ctx.font = base.replace(/(\d+(?:\.\d+)?)px/, px + 'px');
+          }
+          const fits = ctx.measureText(t).width <= avail;
+          fits ? rawFill(t, x, y) : rawFill(t, x, y, avail);
+          ctx.font = base;
+          return;
+        }
+      }
+      if (maxW === undefined) rawFill(text, x, y); else rawFill(text, x, y, maxW);
+    };
+  })();
 
   function fitCanvas() {
     const r = canvas.getBoundingClientRect();
@@ -1284,7 +1313,7 @@ input[type="range"] {
     }
 
     ctx.fillStyle = '#a5f3fc';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('Autopista de Memoria Latente Cₜ₋₁ ──▶ Cₜ (Transporta velocidad y contexto)', boxX + 20, pipeY - 9);
 
@@ -1312,13 +1341,24 @@ input[type="range"] {
       ctx.stroke();
 
       ctx.fillStyle = g.color;
-      ctx.font = '700 10px "JetBrains Mono"';
+      ctx.font = '700 12px "JetBrains Mono"';
       ctx.textAlign = 'center';
-      ctx.fillText(g.name, gx + gw / 2, gy + gh * 0.44);
+      ctx.fillText(g.name, gx + gw / 2, gy + gh * 0.36);
+
+      // Medidor de nivel visual dentro de la compuerta
+      const barW = gw - 24;
+      const barH = 5;
+      const barX = gx + 12;
+      const barY = gy + gh * 0.52;
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.2)';
+      ctx.fillRect(barX, barY, barW, barH);
+      const fillRatio = idx === 0 ? (state.gateOpen / 100) : (idx === 1 ? 0.75 : 0.88);
+      ctx.fillStyle = g.color;
+      ctx.fillRect(barX, barY, barW * fillRatio, barH);
 
       ctx.fillStyle = '#cbd5e1';
-      ctx.font = '500 9.5px Inter, sans-serif';
-      ctx.fillText(g.desc, gx + gw / 2, gy + gh * 0.78);
+      ctx.font = '500 11.5px Inter, sans-serif';
+      ctx.fillText(g.desc, gx + gw / 2, gy + gh * 0.82);
     });
     ctx.restore();
 
@@ -1363,7 +1403,7 @@ input[type="range"] {
     ctx.restore();
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '600 9.5px "JetBrains Mono"';
+    ctx.font = '600 12px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('🧱 Árbol Era 2: Meseta Plana Ciega (65 GW)', X(N - 1) - 6, Y(64) + 15);
 
@@ -1384,7 +1424,7 @@ input[type="range"] {
     ctx.restore();
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('🧠 LSTM / TFT: Extrapola pendiente + ciclo continuo', X(N - 1) - 6, chartY + 16);
   }
@@ -1403,12 +1443,12 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(lx, ly, halfW, boxH, 12); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 10.5px "JetBrains Mono"';
+    ctx.font = '700 13.5px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('1. RECURRENCIA (LSTM): Fila India Gota a Gota O(L)', lx + 14, ly + 22);
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '500 10px Inter, sans-serif';
+    ctx.font = '500 13px Inter, sans-serif';
     ctx.fillText('El paso t=8 NO puede calcularse hasta terminar t=1..7 (GPU bloqueada):', lx + 14, ly + 40);
 
     // Cadena de 8 nodos secuenciales donde el pulso avanza lento uno por uno y se apaga el recuerdo inicial
@@ -1438,7 +1478,7 @@ input[type="range"] {
       ctx.beginPath(); ctx.arc(nx, cy, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
 
       ctx.fillStyle = i === activeIdx ? '#040714' : '#e2e8f0';
-      ctx.font = '700 9px "JetBrains Mono"';
+      ctx.font = '700 11.5px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(`t${i + 1}`, nx, cy + 3);
     }
@@ -1450,11 +1490,11 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(lx + 14, gradY, halfW - 28, boxH * 0.22, 8); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('⚠️ Desvanecimiento de Gradiente + 0% Paralelismo:', lx + 24, gradY + 18);
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 10px Inter, sans-serif';
+    ctx.font = '500 13px Inter, sans-serif';
     ctx.fillText('Al llegar al final de una serie larga, la red ya olvidó el inicio.', lx + 24, gradY + 36);
     ctx.restore();
 
@@ -1466,12 +1506,12 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx, ry, halfW, boxH, 12); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 10.5px "JetBrains Mono"';
+    ctx.font = '700 13.5px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText(`2. TRANSFORMER PUNTO A PUNTO: Costo O(L²) = ${(state.seqLen * state.seqLen).toLocaleString()} cruces`, rx + 14, ry + 22);
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '500 10px Inter, sans-serif';
+    ctx.font = '500 13px Inter, sans-serif';
     ctx.fillText('Un punto aislado (“42.3”) no tiene semántica, pero conecta todos contra todos:', rx + 14, ry + 40);
 
     // Malla densa todos-contra-todos que se vuelve más tupida con state.seqLen
@@ -1507,13 +1547,26 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx + 14, gradY, halfW - 28, boxH * 0.22, 8); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#a5f3fc';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('🔍 ¿Por qué falla mirar puntos sueltos?', rx + 24, gradY + 18);
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 10px Inter, sans-serif';
+    ctx.font = '500 13px Inter, sans-serif';
     ctx.fillText('Un punto no es una palabra; carece de pendiente y satura la memoria.', rx + 24, gradY + 36);
     ctx.restore();
+  }
+
+  // Texto que se ajusta al ancho disponible: envuelve palabras y devuelve la siguiente y
+  function wrapFill(text, x, y, maxW, lh) {
+    const words = text.split(' ');
+    let line = '';
+    words.forEach(wd => {
+      const t = line ? line + ' ' + wd : wd;
+      if (line && ctx.measureText(t).width > maxW) { ctx.fillText(line, x, y); y += lh; line = wd; }
+      else line = t;
+    });
+    if (line) { ctx.fillText(line, x, y); y += lh; }
+    return y;
   }
 
   // ACTO 3: LA REVOLUCIÓN PATCHTST (SEÑAL CRUDA -> EMPAQUETADO EN PARCHES P -> MATRIZ DE AUTOATENCIÓN LIGERA O((L/P)²))
@@ -1542,7 +1595,7 @@ input[type="range"] {
       ctx.stroke();
 
       ctx.fillStyle = isHighlighted ? '#e9d5ff' : '#94a3b8';
-      ctx.font = '700 8.5px "JetBrains Mono"';
+      ctx.font = '700 11.5px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(`Parche ${p + 1}`, px + patchW / 2, sigY + 14);
       ctx.restore();
@@ -1580,9 +1633,16 @@ input[type="range"] {
     ctx.restore();
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'center';
-    ctx.fillText('🔗 Self-Attention conecta “Palabras Temporales” homólogas a largo plazo', (p1Center + p2Center) / 2, sigY + sigH + 16);
+    const attnFull = '🔗 Self-Attention conecta “Palabras Temporales” homólogas a largo plazo';
+    const attnTxt = ctx.measureText(attnFull).width <= pw - 20 ? attnFull : '🔗 Self-Attention conecta parches homólogos';
+    const attnW = ctx.measureText(attnTxt).width + 12;
+    ctx.save();
+    ctx.fillStyle = 'rgba(6, 12, 28, 0.92)';
+    ctx.fillRect((p1Center + p2Center) / 2 - attnW / 2, sigY + sigH + 3, attnW, 17);
+    ctx.restore();
+    ctx.fillText(attnTxt, (p1Center + p2Center) / 2, sigY + sigH + 16);
 
     // MITAD INFERIOR: 2 CAJAS EXPLICATIVAS (INDEPENDENCIA DE CANALES + BARRA DE REDUCCIÓN CUADRÁTICA O((L/P)²))
     const botY = sigY + sigH + 26;
@@ -1596,15 +1656,17 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(padL, botY, halfW, botH, 10); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#d8b4fe';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('🧬 INDEPENDENCIA DE CANALES + SEMÁNTICA LOCAL', padL + 12, botY + 18);
+    const indTitle = '🧬 INDEPENDENCIA DE CANALES + SEMÁNTICA LOCAL';
+    ctx.fillText(ctx.measureText(indTitle).width <= halfW - 20 ? indTitle : '🧬 CANALES INDEPENDIENTES', padL + 12, botY + 18);
 
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 10.5px Inter, sans-serif';
-    ctx.fillText(`• Cada parche de P=${state.patchSize} pasos guarda pendiente y forma.`, padL + 12, botY + 38);
-    ctx.fillText('• Cada sensor/serie se procesa sin contaminación cruzada', padL + 12, botY + 56);
-    ctx.fillText('  compartiendo los mismos pesos del Transformer.', padL + 12, botY + 72);
+    ctx.font = '500 13px Inter, sans-serif';
+    const narrowBox = halfW < 420;
+    let ty = botY + 37;
+    ty = wrapFill(`• Cada parche de P=${state.patchSize} pasos guarda pendiente y forma.`, padL + 12, ty, halfW - 24, 16);
+    wrapFill(narrowBox ? '• Cada serie se procesa por separado, con los mismos pesos del Transformer.' : '• Cada sensor/serie se procesa sin contaminación cruzada compartiendo los mismos pesos del Transformer.', padL + 12, ty, halfW - 24, 16);
     ctx.restore();
 
     // Caja Derecha: Comparador en vivo de Complejidad O(L²) vs O((L/P)²)
@@ -1619,14 +1681,15 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx, botY, halfW, botH, 10); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#6ef0b4';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText(`⚡ REDUCCIÓN DE COSTO (L=512 con Parche P=${state.patchSize})`, rx + 12, botY + 18);
+    const redTitle = `⚡ REDUCCIÓN DE COSTO (L=512 con Parche P=${state.patchSize})`;
+    ctx.fillText(ctx.measureText(redTitle).width <= halfW - 20 ? redTitle : `⚡ REDUCCIÓN DE COSTO (P=${state.patchSize})`, rx + 12, botY + 18);
 
     // Barra Punto a Punto
     const barW = halfW - 150;
     ctx.fillStyle = '#fda4af';
-    ctx.font = '600 9.5px "JetBrains Mono"';
+    ctx.font = '600 12px "JetBrains Mono"';
     ctx.fillText('Punto a Punto:', rx + 12, botY + 40);
     ctx.fillStyle = 'rgba(255, 82, 119, 0.8)';
     ctx.fillRect(rx + 108, botY + 30, barW, 12);
@@ -1668,7 +1731,7 @@ input[type="range"] {
       ctx.beginPath(); ctx.roundRect(padL - 8, cyTop, leftW - padL + 4, chH, 8); ctx.fill(); ctx.stroke();
 
       ctx.fillStyle = ch.color;
-      ctx.font = '700 9px "JetBrains Mono"';
+      ctx.font = '700 11.5px "JetBrains Mono"';
       ctx.textAlign = 'left';
       ctx.fillText(`${ch.name} · (${state.parksCount} series en GPU)`, padL, cyTop + 14);
 
@@ -1706,9 +1769,9 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx, ry, rw, rh, 12); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#6ef0b4';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('⏭️ PASE A LA SIGUIENTE DIAPO: ERA 4', rx + 14, ry + 22);
+    ctx.fillText('⏭️ SIGUIENTE: MODELOS PREENTRENADOS', rx + 14, ry + 22);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '700 13px "Space Grotesk", sans-serif';
@@ -1721,10 +1784,10 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx + 14, b1Y, rw - 28, b1H, 8); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.fillText('⚠️ LÍMITE ERA 3 (PatchTST / TFT Supervisado):', rx + 22, b1Y + 18);
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 10px Inter, sans-serif';
+    ctx.font = '500 13px Inter, sans-serif';
     ctx.fillText('Exige entrenar desde cero con >100,000 datos y GPUs.', rx + 22, b1Y + 36);
 
     // Caja de Modelos Fundacionales Preentrenados
@@ -1734,15 +1797,15 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx + 14, b2Y, rw - 28, b2H, 8); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.fillText('🌐 EL SALTO A LA ERA 4 (TSFMs Pre-entrenados):', rx + 22, b2Y + 18);
 
     ctx.fillStyle = '#e2eeff';
-    ctx.font = '500 10px Inter, sans-serif';
+    ctx.font = '500 13px Inter, sans-serif';
     ctx.fillText('• Parches + 27 Mil Millones de datos (LOTSA).', rx + 22, b2Y + 38);
     ctx.fillText('• TimesFM (Google), Chronos (Amazon), Moirai.', rx + 22, b2Y + 56);
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.fillText('⚡ Predicen en frío (Zero-Shot) con 0% entrenamiento!', rx + 22, b2Y + 76);
     ctx.restore();
   }

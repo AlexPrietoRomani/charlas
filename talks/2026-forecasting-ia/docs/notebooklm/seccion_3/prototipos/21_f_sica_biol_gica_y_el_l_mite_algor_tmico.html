@@ -27,7 +27,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html, body { width: 100%; min-height: 100%; margin: 0; }
+html, body { width: 100%; height: 100%; min-height: 100%; margin: 0; }
 
 body {
   min-height: 100svh;
@@ -164,7 +164,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   color: var(--danger);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -335,7 +335,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   --stage-accent: var(--agro);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: clamp(8px, 1vh, 12px);
   padding: clamp(12px, 1.3vw, 18px);
   border: 1px solid color-mix(in srgb, var(--stage-accent) 35%, rgba(133, 158, 192, 0.16));
@@ -344,7 +344,8 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
     radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--stage-accent) 12%, transparent), transparent 55%),
     linear-gradient(155deg, rgba(11, 19, 36, 0.95), rgba(5, 10, 22, 0.94));
   min-height: 0;
-  overflow-y: auto;
+  height: 100%;
+  overflow-y: hidden;
   scrollbar-width: thin;
 }
 
@@ -391,13 +392,13 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .narr-title {
   margin: 0;
-  font: 700 clamp(17px, 1.45vw, 22px)/1.18 var(--display);
+  font: 700 clamp(18px, 1.45vw, 22.5px)/1.18 var(--display);
   color: #f8fbff;
 }
 
 .narr-lead {
   margin: 0;
-  font: 400 clamp(12px, 0.98vw, 13.8px)/1.45 var(--sans);
+  font: 400 clamp(13.5px, 1.02vw, 15.8px)/1.45 var(--sans);
   color: #b8cae0;
 }
 
@@ -407,10 +408,16 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex-shrink: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  justify-content: space-evenly;
 }
 
 .info-block {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 9px 12px;
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -422,7 +429,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--stage-accent);
@@ -430,7 +437,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .info-block-text {
   margin: 0;
-  font: 400 clamp(11.5px, 0.92vw, 13px)/1.42 var(--sans);
+  font: 400 clamp(13px, 0.98vw, 15.2px)/1.42 var(--sans);
   color: #cedcf0;
 }
 
@@ -450,33 +457,33 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 }
 
 .math-strip span.hint {
-  font: 500 9.5px/1.2 var(--sans);
+  font: 500 11.5px/1.2 var(--sans);
   color: #94a3b8;
   text-align: right;
 }
 
-.speaker-box {
+.executive-takeaway {
   flex-shrink: 0;
-  padding: 10px 12px;
-  border-left: 3px solid var(--stage-accent);
-  border-radius: 0 10px 10px 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--stage-accent) 12%, rgba(8, 15, 32, 0.88)), rgba(8, 15, 32, 0.5));
-}
-
-.speaker-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
-  font: 700 9px/1 var(--mono);
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--stage-accent);
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(8, 15, 32, 0.88);
+  border: 1px solid rgba(56, 239, 255, 0.28);
 }
 
-.speaker-quote {
+.takeaway-badge {
+  font: 700 11.5px/1 var(--mono);
+  color: var(--stage-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.takeaway-text {
   margin: 0;
-  font: italic 500 clamp(11px, 0.9vw, 12.5px)/1.38 var(--sans);
+  font: italic 500 clamp(12.5px, 0.95vw, 14.5px)/1.35 var(--sans);
   color: #e2eeff;
 }
 
@@ -736,10 +743,10 @@ input[type="range"] {
     padding: 5px 10px !important;
     font-size: 10.5px !important;
   }
-  .speaker-box {
+  .executive-takeaway {
     padding: 6px 10px !important;
   }
-  .speaker-quote {
+  .takeaway-text {
     font-size: 11px !important;
     line-height: 1.3 !important;
   }
@@ -774,8 +781,8 @@ input[type="range"] {
         </svg>
       </div>
       <div>
-        <p class="eyebrow">BIOFÍSICA &amp; MODELADO · EL LÍMITE ALGORÍTMICO · SECCIÓN 3</p>
-        <h1><span class="era">Física biológica</span> <span class="sub">· Las 3 leyes que obligan a la IA a aprender botánica</span></h1>
+        <p class="eyebrow">SECCIÓN 3 · LO QUE LA IA NO PUEDE IGNORAR</p>
+        <h1><span class="era">Física biológica</span> <span class="sub">· Las tres leyes de la planta</span></h1>
       </div>
     </div>
 
@@ -795,7 +802,7 @@ input[type="range"] {
   <!-- BARRA DE PROCESO EN BUCLE: 1. Diagrama General (Engranaje + Colapso) ─▶ 2. Retrasos (τ = 6–8m) ─▶ 3. Umbrales Fatales (VPD) ─▶ 4. N=24 No Perdona & Pase a Diapo 22 -->
   <nav class="flowbar" aria-label="Recorrido interactivo de la Diapositiva 21">
     <div class="process-track" role="tablist">
-      <button class="proc-node" role="tab" type="button" data-step="overview" aria-selected="true">
+      <button class="proc-node" role="tab" type="button" data-step="overview" aria-selected="true" data-route="corta">
         <span class="proc-num">1</span>
         <div class="proc-text">
           <span class="proc-year">Engranaje τ + Colapso</span>
@@ -806,7 +813,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="delay" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="delay" aria-selected="false" data-route="corta">
         <span class="proc-num">2</span>
         <div class="proc-text">
           <span class="proc-year">Retrasos (τ = 6–8 meses)</span>
@@ -817,7 +824,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="vpd" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="vpd" aria-selected="false" data-route="experta">
         <span class="proc-num">3</span>
         <div class="proc-text">
           <span class="proc-year">Umbrales Fatales (VPD)</span>
@@ -828,10 +835,10 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="n24" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="n24" aria-selected="false" data-route="corta">
         <span class="proc-num">4</span>
         <div class="proc-text">
-          <span class="proc-year">N=24 No Perdona ─▶ Diapo 22</span>
+          <span class="proc-year">N=24 No Perdona</span>
           <span class="proc-sub">Fenología reduce el error 4×</span>
         </div>
         <div class="proc-progress" id="prog-n24"></div>
@@ -852,10 +859,10 @@ input[type="range"] {
     <aside class="narrative-card" id="narrativeCard" aria-live="polite">
       <div class="narr-top">
         <div class="narr-badges">
-          <span class="stage-tag" id="stageTag">ACTO 1 DE 4 · BIOFÍSICA &amp; MODELADO</span>
+          <span class="stage-tag" id="stageTag">LAS 3 REGLAS DE LA PLANTA</span>
           <span class="stage-year-pill" id="stageKeyHint">Teclas 1 · 2 · 3 · 4</span>
         </div>
-        <h2 class="narr-title" id="narrTitle">1. Física Biológica: Las 3 reglas que ningún software puede violar</h2>
+        <h2 class="narr-title" id="narrTitle">Tres reglas de la planta que ningún software puede violar</h2>
         <p class="narr-lead" id="narrLead">
           A una planta de café no le importa qué tan caro sea tu algoritmo. Su producción está gobernada por <b>3 leyes físicas y biológicas implacables</b> que hacen del agro la serie temporal más difícil de todas:
         </p>
@@ -863,15 +870,12 @@ input[type="range"] {
 
       <div class="narr-blocks">
         <div class="info-block">
-          <div class="info-block-label" id="block1Label">⚙️ 1. RETRASOS (τ = 6–8 MESES) Y 2. UMBRALES FATALES</div>
-          <p class="info-block-text" id="block1Text">
-            • <b>Retrasos (τ = 6–8 meses):</b> Lo que pasa hoy en el clima impacta recién el próximo semestre; la red debe aprender esta larga memoria invisible.<br>
-            • <b>Umbrales fatales:</b> Más de <b>32 °C</b>, alta <i>sed del aire</i> (<b>VPD &gt; 1.8 kPa</b>) o <b>2 semanas sin agua</b> causan aborto floral inmediato y <b>colapso biológico total</b>.
-          </p>
+          <div class="info-block-label" id="block1Label">⚙️ 1. Retrasos y 2. umbrales fatales</div>
+          <p class="info-block-text" id="block1Text">Hoy se decide la cosecha 6 a 8 meses antes; sobre 32 °C la flor aborta.</p>
         </div>
 
         <div class="info-block">
-          <div class="info-block-label" id="block2Label">📅 3. N = 24 NO PERDONA (EL SOBREAJUSTE ES FATAL)</div>
+          <div class="info-block-label" id="block2Label">📅 3. N = 24 no perdona</div>
           <p class="info-block-text" id="block2Text">
             Solo tenemos <b>1 cosecha al año (24 campañas en 24 años)</b>. Entrenar una red a ciegas con cientos de datos satelitales memoriza ruido, pero <b>integrar las ventanas fenológicas reduce el error 4×</b>.
           </p>
@@ -883,14 +887,9 @@ input[type="range"] {
         </div>
       </div>
 
-      <div class="speaker-box">
-        <div class="speaker-head">
-          <span>🎤 GUÍA DE EXPOSICIÓN (CITA DE CONFERENCIA)</span>
-          <span id="speakerTime">~15 seg</span>
-        </div>
-        <p class="speaker-quote" id="speakerQuote">
-          “Miren, a la planta no le importa qué tan caro sea su software. Si hace calor extremo, el aire siente sed y la planta aborta su flor para sobrevivir. Es pura física. Lo difícil para la IA es que ese daño de hoy recién aparece en el balance financiero ocho meses después. Y como tenemos una cosecha al año, no podemos equivocarnos.”
-        </p>
+      <div class="executive-takeaway" id="executiveTakeaway">
+        <span class="takeaway-badge">💡 Idea Clave</span>
+        <span class="takeaway-text" id="speakerQuote">El agro obedece leyes físicas: retrasos de meses y umbrales fatales.</span>
       </div>
     </aside>
 
@@ -910,10 +909,8 @@ input[type="range"] {
 
       <div class="canvas-wrap">
         <canvas id="stageCanvas"></canvas>
-        <div class="canvas-overlay-top">
-          <span class="ov-badge left" id="ovLeft">⚙️ Izquierda: Estímulo ➔ Engranaje Retraso (τ) ➔ Cosecha Final</span>
-          <span class="ov-badge right" id="ovRight">📉 Derecha: Curva Sigmoide vs. Colapso por Sed del Aire (VPD)</span>
-        </div>
+        <span id="ovLeft" hidden></span>
+        <span id="ovRight" hidden></span>
       </div>
 
       <div class="legend-bar">
@@ -990,77 +987,77 @@ input[type="range"] {
   const STAGE_CONTENT = {
     overview: {
       accent: 'var(--agro)',
-      tag: 'ACTO 1 DE 4 · BIOFÍSICA & MODELADO (VISTA INTEGRAL)',
-      title: '1. Física Biológica: Las 3 reglas que ningún software puede violar',
-      lead: 'A una planta de café no le importa qué tan caro sea tu algoritmo. Su producción está gobernada por <b>3 leyes físicas y biológicas implacables</b> que hacen del agro la serie temporal más difícil de todas:',
-      b1Label: '⚙️ 1. RETRASOS (τ = 6–8 MESES) Y 2. UMBRALES FATALES',
-      b1Text: '• <b>Retrasos (τ = 6–8 meses):</b> Lo que pasa hoy en el clima impacta recién el próximo semestre; la red debe aprender esta larga memoria invisible.<br>• <b>Umbrales fatales:</b> Más de <b>32 °C</b>, alta <i>sed del aire</i> (<b>VPD &gt; 1.8 kPa</b>) o <b>2 semanas sin agua</b> causan aborto floral inmediato y <b>colapso biológico total</b>.',
-      b2Label: '📅 3. N = 24 NO PERDONA (EL SOBREAJUSTE ES FATAL)',
-      b2Text: 'Solo tenemos <b>1 cosecha al año (24 campañas en 24 años)</b>. Entrenar una red a ciegas con cientos de datos satelitales memoriza ruido, pero <b>integrar las ventanas fenológicas reduce el error 4×</b>.',
+      tag: 'LAS 3 REGLAS DE LA PLANTA',
+      title: 'Tres reglas de la planta que ningún software puede violar',
+      lead: 'La producción del café está gobernada por <b>3 leyes biofísicas implacables</b>:',
+      b1Label: '⚙️ 1. Retrasos y 2. umbrales fatales',
+      b1Text: 'Hoy se decide la cosecha 6 a 8 meses antes; sobre 32 °C la flor aborta.',
+      b2Label: '📅 3. N = 24 no perdona',
+      b2Text: 'Solo 1 cosecha al año (24 campañas). Modelos crudos memorizan ruido; la fenología reduce el error 4×.',
       formula: 'Estímulo (Xₜ₋τ) ──[ Engranaje τ = 6–8m ]──▶ Cosecha Yₜ (Colapsa si VPD > 1.8)',
       hint: 'Mueve el deslizador de Estrés Ambiental para cruzar el umbral',
-      quote: '“Miren, a la planta no le importa qué tan caro sea su software. Si hace calor extremo, el aire siente sed y la planta aborta su flor para sobrevivir. Es pura física. Lo difícil para la IA es que ese daño de hoy recién aparece en el balance financiero ocho meses después. Y como tenemos una cosecha al año, no podemos equivocarnos.”',
+      quote: 'El agro obedece leyes físicas: retrasos de meses y umbrales fatales.',
       icon: '⚙️',
       canvasTitle: 'Engranaje de Retraso (τ = 6–8m) y Gráfico de Umbral y Colapso Biológico',
-      ovLeft: '⚙️ Izquierda: Estímulo ➔ Engranaje Retraso (τ) ➔ Cosecha Final',
-      ovRight: '📉 Derecha: Curva Sigmoide de Salud vs. Colapso Biológico Total',
+      ovLeft: '',
+      ovRight: '',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Curva Sigmoide de Salud Vegetal</span><span class="leg-item"><i class="leg-line dashed" style="--c:#ffc05c"></i> Umbral: Sed del Aire (VPD &gt; 1.8 kPa)</span><span class="leg-item"><i class="leg-line" style="--c:#ff5277"></i> Colapso Biológico Total</span>',
       nextLabel: 'Explorar Retrasos (τ = 6–8m) ─▶'
     },
     delay: {
       accent: 'var(--ancestral)',
-      tag: 'ACTO 2 DE 4 · LEY 1: RETRASOS FENOLÓGICOS (LAGS FISIOLÓGICOS)',
-      title: '2. Retrasos (τ) de 6–8 meses: La larga memoria invisible del tejido',
-      lead: 'En la bolsa o en un supermercado, el clima de ayer afecta la venta de hoy. En el café, <b>el volumen cosechado hoy (Yₜ) se decidió entre 6 y 8 meses atrás durante la floración</b>.',
-      b1Label: '🌸 ¿POR QUÉ EL CLIMA DE “AYER” (t−1) DESTRUYE TU MODELO?',
-      b1Text: 'La cantidad de cerezas que recoges en mayo depende de cuántas flores abrieron y cuajaron entre <b>agosto y octubre (τ = 6 a 8 meses atrás)</b>. Meter en la tabla el clima del día anterior (<i>t−1</i>) solo inyecta ruido y correlaciones falsas.',
-      b2Label: '🛠️ TRADUCCIÓN PARA LA IA: VENTANA AGREGADA DE FLORACIÓN',
-      b2Text: 'En lugar de usar retardos diarios sueltos, debemos construir una <b>variable acumulada exactamente sobre la ventana biológica de floración</b> (sumando la lluvia y promediando la sed del aire de hace 6 a 8 meses).',
+      tag: 'RETRASO DE 6–8 MESES',
+      title: 'La cosecha de hoy se decidió hace 6 a 8 meses',
+      lead: 'La cosecha de hoy se decidió entre 6 y 8 meses atrás, durante la floración.',
+      b1Label: '🌸 Ayer no importa; importa la floración',
+      b1Text: 'Las cerezas de mayo dependen de las flores de agosto–octubre. El clima inmediato solo mete ruido.',
+      b2Label: '🛠️ Solución: mirar una ventana',
+      b2Text: 'Sumar la lluvia y la sequedad del aire (VPD) acumuladas en la floración.',
       formula: 'Yₜ = f( Xₜ₋τ )  con τ ∈ [6, 8] meses  │  Feature_Flor = ∫ₜ₋₈ᵗ⁻⁶ (Σ Lluvia, VPD) dm',
       hint: 'Cambia el retardo (τ) abajo y mira cómo reacciona el poder predictivo',
-      quote: '“Si usted alimenta su red neuronal con la lluvia de ayer para predecir la cosecha de mañana, el modelo va a fracasar. Tiene que enseñarle a mirar por el retrovisor exactamente de seis a ocho meses atrás, cuando el árbol estaba en flor.”',
+      quote: 'La cosecha de hoy se decidió en la floración, meses atrás.',
       icon: '⏳',
       canvasTitle: 'Ingeniería de Características Fenológicas: Lag Inmediato (t−1) vs. Retardo Biológico (τ = 6–8 meses)',
-      ovLeft: '🌧️ Arriba: Serie Climática y Ventana donde ocurrió la Floración (hace τ meses)',
-      ovRight: '🎯 Abajo: Poder Explicativo según el Retardo τ elegido por el Data Scientist',
+      ovLeft: '',
+      ovRight: '',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Ventana Crítica τ = 6–8 meses (Floración)</span><span class="leg-item"><i class="leg-line dashed" style="--c:#ff5277"></i> Lag ingenuo t−1 (Ruido sin relación)</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Cosecha Final (Yₜ)</span>',
       nextLabel: 'Explorar Umbrales Fatales (VPD) ─▶'
     },
     vpd: {
       accent: 'var(--danger)',
-      tag: 'ACTO 3 DE 4 · LEY 2: UMBRALES FATALES Y SED DEL AIRE (VPD)',
-      title: '3. Umbrales Fatales: Cuando el aire siente sed (VPD > 1.8 kPa)',
-      lead: 'Las plantas no responden en línea recta. Tienen un <b>interruptor hidráulico de emergencia</b> que apaga la fotosíntesis de golpe aunque todavía quede agua en el suelo.',
-      b1Label: '💨 ¿QUÉ ES EL VPD (“SED DEL AIRE”) Y EL INTERRUPTOR ESTOMÁTICO?',
-      b1Text: 'El <b>Déficit de Presión de Vapor (VPD = eₛ(T) − eₐ)</b> mide cuán seco y hambriento de agua está el aire. Cuando supera <b>1.8 kPa</b> (o la temperatura pasa de <b>32 °C</b>), el aire succiona tan fuerte que la hoja <b>cierra sus poros (estomas)</b> para no deshidratarse, frenando en seco la entrada de CO₂.',
-      b2Label: '🧱 EL DOBLE PELIGRO: ABORTO FLORAL Y MESETA PLANA DEL ÁRBOL',
-      b2Text: 'A más de 32 °C el polen se cocina y la flor cae en 2 semanas. Y cuidado: un árbol de decisión (<b>LightGBM</b>) encerrado en su rango histórico (<i>convex hull</i>) proyectará una <b>meseta plana</b> sin ver el desplome a cero.',
+      tag: 'UMBRALES FATALES',
+      title: 'Cuando el aire tiene sed, la planta cierra sus poros',
+      lead: 'Las plantas tienen un <b>interruptor hidráulico</b> que frena la fotosíntesis aunque haya agua en suelo.',
+      b1Label: '💨 Aire seco cierra los poros',
+      b1Text: 'El VPD mide la sequedad del aire; sobre 1.8 kPa, los poros se cierran.',
+      b2Label: '🧱 Los árboles no ven el colapso',
+      b2Text: 'Sobre 32 °C el polen muere. Modelos como LightGBM proyectan mesetas planas sin prever el colapso.',
       formula: 'VPD = eₛ(T) − eₐ > 1.8 kPa  ó  T > 32°C  ──▶  Cierre Estomático y Aborto Floral',
       hint: 'Sube la Sed del Aire (VPD) para ver cerrarse el poro de la hoja',
-      quote: '“El VPD es una esponja atmosférica. Cuando pasa de 1.8 kilopascales o 32 grados, la planta siente que el aire la va a secar viva, cierra las compuertas de sus hojas y aborta la flor para salvar el tronco.”',
+      quote: 'Aire muy seco: la hoja cierra poros y sacrifica la flor.',
       icon: '🔥',
       canvasTitle: 'Interruptor Hidráulico Estomático (VPD > 1.8 kPa) y Falla de Meseta Plana ante el Colapso',
-      ovLeft: '🍃 Izquierda: Poro de la Hoja (Estoma) cerrándose ante la Sed del Aire',
-      ovRight: '📉 Derecha: Colapso Biológico Real vs. Meseta Plana de Árboles (GBDT)',
+      ovLeft: '',
+      ovRight: '',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Entrada de CO₂ / Transpiración</span><span class="leg-item"><i class="leg-line" style="--c:#ff5277"></i> Colapso Real por Cierre Estomático</span><span class="leg-item"><i class="leg-line dashed" style="--c:#ffc05c"></i> Meseta Plana Ciega (Árbol GBDT)</span>',
-      nextLabel: 'Ver N=24 No Perdona y Pase a Diapo 22 ─▶'
+      nextLabel: 'Ver N=24 No Perdona ─▶'
     },
     n24: {
       accent: 'var(--purple)',
-      tag: 'ACTO 4 DE 4 · LEY 3: N=24 NO PERDONA Y PASE A LA DIAPOSITIVA 22',
-      title: '4. “N=24 no perdona”: Cómo reducir 4× el error con Fenología',
-      lead: 'En finanzas tienes millones de datos por minuto; en un cafetal comercial solo tienes <b>1 cosecha al año</b>: 24 años de historia equivalen a apenas <b>N = 24 filas</b>.',
-      b1Label: '📉 LA MALDICIÓN DE LA DIMENSIONALIDAD (p = 500 ≫ N = 24)',
-      b1Text: 'Si intentas entrenar un Transformer o LSTM crudo metiendo <b>p = 500 variables climáticas y satelitales sobre N = 24 cosechas</b>, el modelo memoriza el ruido casual de esos 24 años (sobreajuste fatal) y colapsa en la campaña 25.',
-      b2Label: '🚀 EL REMEDIO (4× MENOS ERROR) Y PASE A LA DIAPOSITIVA 22',
-      b2Text: 'Al comprimir esas 500 variables dentro de las <b>3 ventanas del Reloj Fenológico</b> y respetar el techo de la <i>“Maceta Agrícola”</i> de Verhulst (<b>kL/4</b>), <b>el error de predicción se reduce 4×</b>. ¡Veamos ese Reloj en la <b>Diapositiva 22</b>!',
+      tag: 'POCOS DATOS, MUCHAS VARIABLES',
+      title: 'Con solo 24 cosechas, la fenología reduce el error 4 veces',
+      lead: '24 años de historia agrícola equivalen a solo <b>N = 24 filas</b> anuales de cosecha.',
+      b1Label: '📉 Demasiadas variables, pocos datos',
+      b1Text: '500 variables satelitales sobre 24 campañas llevan a memorizar ruido y fallar en la campaña 25.',
+      b2Label: '🚀 La fenología como ancla',
+      b2Text: 'Comprimir las señales en 3 ventanas fenológicas y usar el techo de Verhulst reduce el error 4×.',
       formula: '500 Variables Crudas sobre N=24 = Overfit  │  Restricción Fenológica = Error ÷ 4',
-      hint: 'Alterna entre IA Cruda y IA con Fenología abajo antes de ir a la Diapo 22',
-      quote: '“Tener veinticuatro años de historia suena a mucho, pero en el agro son apenas veinticuatro cosechas: veinticuatro puntos en una gráfica. Si metemos quinientas variables a lo bruto, el modelo memoriza basura; pero si las ordenamos con el reloj fenológico de la planta, reducimos el error cuatro veces. Pasemos a la Diapositiva 22 para abrir ese reloj.”',
+      hint: 'Alterna entre IA Cruda y IA con Fenología abajo antes de seguir',
+      quote: 'Con 24 cosechas, ordenar por fenología reduce el error 4×.',
       icon: '📅',
       canvasTitle: 'El Dilema N=24 (p ≫ N): Memorización de Ruido vs. Reducción 4× del Error con Fenología',
-      ovLeft: '📊 Izquierda: 24 Campañas Anuales (N=24) · IA Cruda vs. IA Guiada por Fenología',
-      ovRight: '⏭️ Derecha: Reducción 4× del Error y Pase a la Diapo 22 (Reloj del Café)',
+      ovLeft: '',
+      ovRight: '',
       legend: '<span class="leg-item"><i class="leg-line dashed" style="--c:#ff5277"></i> IA Cruda p=500 (Memoriza ruido en N=24)</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> IA + Fenología (Error reducido 4×)</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> 24 Cosechas Históricas</span>',
       nextLabel: 'Reiniciar bucle (Física Biológica) ↺'
     }
@@ -1210,11 +1207,11 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#fde68a';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('⚙️ MECÁNICA DEL RETRASO (τ = 6 A 8 MESES)', pad + 14, padT + 20);
 
-    const midY = padT + usableH * 0.52;
+    const midY = padT + usableH * 0.46;
     const stimX = pad + leftW * 0.17;
     const gearX = pad + leftW * 0.50;
     const harvX = pad + leftW * 0.83;
@@ -1235,10 +1232,10 @@ input[type="range"] {
 
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#e2eeff';
-    ctx.font = '700 10.5px "Space Grotesk", sans-serif';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
     ctx.fillText('Estímulo Hoy', stimX, midY + 48);
     ctx.fillStyle = '#38efff';
-    ctx.font = '600 9px "JetBrains Mono"';
+    ctx.font = '600 11.5px "JetBrains Mono"';
     ctx.fillText('Ago–Oct (Flor)', stimX, midY + 61);
 
     // Flecha Estímulo -> Engranaje
@@ -1262,13 +1259,23 @@ input[type="range"] {
       '#ffc05c'
     );
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '700 10px "JetBrains Mono"';
+    // Placa sólida de alto contraste para el retardo en el centro del engranaje
+    ctx.save();
+    ctx.fillStyle = 'rgba(4, 9, 22, 0.94)';
+    ctx.strokeStyle = 'rgba(255, 192, 92, 0.75)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(gearX - 44, midY - 16, 88, 32, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#ffc05c';
+    ctx.font = '700 13.5px "JetBrains Mono"';
     ctx.textAlign = 'center';
-    ctx.fillText('Retraso (τ)', gearX, midY - 2);
-    ctx.fillStyle = '#fde68a';
-    ctx.font = '700 8.5px "JetBrains Mono"';
-    ctx.fillText('6–8 meses', gearX, midY + 11);
+    ctx.fillText('Lag τ = 6–8m', gearX, midY - 2);
+    ctx.fillStyle = '#edf5ff';
+    ctx.font = '500 11.5px sans-serif';
+    ctx.fillText('Memoria oculta', gearX, midY + 10);
+    ctx.restore();
 
     // Flecha Engranaje -> Cosecha Final
     ctx.strokeStyle = '#64748b';
@@ -1293,17 +1300,23 @@ input[type="range"] {
 
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#e2eeff';
-    ctx.font = '700 10.5px "Space Grotesk", sans-serif';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
     ctx.fillText('Cosecha Final', harvX, midY + 48);
     ctx.fillStyle = isCollapsed ? '#fda4af' : '#8ef7c7';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.fillText(isCollapsed ? 'Aborto (-50%)' : 'Mar–Jul (Sana)', harvX, midY + 61);
 
-    // Nota al pie de la tarjeta izquierda
+    // Nota al pie de la tarjeta izquierda (una línea, auto-ajustada al ancho para no salir de la caja)
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px "JetBrains Mono"';
     ctx.textAlign = 'center';
-    ctx.fillText('📅 + Restricción N=24: Solo 1 cosecha/año (Fenología reduce error 4×)', pad + leftW / 2, padT + usableH - 14);
+    const footLine = '📅 N=24: 1 cosecha/año · Fenología: −4× error';
+    let footFs = 12;
+    ctx.font = '500 ' + footFs + 'px "JetBrains Mono"';
+    while (footFs > 9.5 && ctx.measureText(footLine).width > leftW - 24) {
+      footFs -= 0.5;
+      ctx.font = '500 ' + footFs + 'px "JetBrains Mono"';
+    }
+    ctx.fillText(footLine, pad + leftW / 2, padT + usableH - 8);
     ctx.restore();
 
     // 2. MITAD DERECHA: GRÁFICO DE UMBRAL Y COLAPSO BIOLÓGICO (CURVA SIGMOIDE + QUIEBRE EN VPD > 1.8 kPa)
@@ -1319,9 +1332,15 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 10px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('📉 GRÁFICO DE UMBRAL Y COLAPSO BIOLÓGICO (VPD > 1.8 kPa / >32°C)', rx + 14, padT + 20);
+    const titleTxt = '📉 GRÁFICO DE UMBRAL Y COLAPSO BIOLÓGICO (VPD > 1.8 kPa / >32°C)';
+    let titleFs = 13;
+    ctx.font = '700 ' + titleFs + 'px "JetBrains Mono"';
+    while (titleFs > 10.5 && ctx.measureText(titleTxt).width > rw - 30) {
+      titleFs -= 0.5;
+      ctx.font = '700 ' + titleFs + 'px "JetBrains Mono"';
+    }
+    ctx.fillText(titleTxt, rx + 14, padT + 20);
 
     const gx = rx + 42, gy = padT + 38, gw = rw - 64, gh = usableH - 76;
     const X = u => gx + u * gw;         // u de 0 a 1 (Tiempo / Estrés Ambiental)
@@ -1339,6 +1358,15 @@ input[type="range"] {
     // Línea horizontal punteada del Umbral: sed del aire (VPD = 1.8 kPa)
     const uSplit = 0.56;
     const yThresh = Y(0.58);
+
+    // Sombreado de zonas: Verde (Fotosíntesis Normal) vs Rojo (Aborto Floral)
+    ctx.save();
+    ctx.fillStyle = 'rgba(110, 240, 180, 0.08)';
+    ctx.fillRect(gx, yThresh, gw, (gy + gh) - yThresh);
+    ctx.fillStyle = 'rgba(255, 82, 119, 0.09)';
+    ctx.fillRect(gx, gy, gw, yThresh - gy);
+    ctx.restore();
+
     ctx.strokeStyle = 'rgba(255, 192, 92, 0.85)';
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 4]);
@@ -1349,7 +1377,7 @@ input[type="range"] {
     ctx.setLineDash([]);
 
     ctx.fillStyle = '#fde68a';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('Umbral: sed del aire (VPD > 1.8 kPa / 32°C)', gx + gw - 6, yThresh - 7);
 
@@ -1396,11 +1424,21 @@ input[type="range"] {
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      ctx.fillStyle = '#fda4af';
-      ctx.font = '700 10.5px "JetBrains Mono"';
+      ctx.font = '700 12.5px "JetBrains Mono"';
       ctx.textAlign = 'left';
-      ctx.fillText('⚡ Colapso Biológico', X(uSplit + 0.20), Y(0.26));
-      ctx.fillText('   Total (Aborto)', X(uSplit + 0.20), Y(0.16));
+      const colTxt = '⚡ Colapso Biológico Total (Aborto)';
+      const colW = ctx.measureText(colTxt).width;
+      const colX = Math.min(X(uSplit + 0.20), rx + rw - 14 - colW);
+      const colY = Y(0.20);
+      ctx.fillStyle = 'rgba(5, 10, 22, 0.88)';
+      ctx.beginPath();
+      ctx.roundRect(colX - 7, colY - 15, colW + 14, 21, 7);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 82, 119, 0.55)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      ctx.fillStyle = '#fda4af';
+      ctx.fillText(colTxt, colX, colY);
     }
 
     // Punto indicador actual según state.stressVpd (0.8 a 2.6 kPa)
@@ -1415,7 +1453,7 @@ input[type="range"] {
     ctx.fill();
 
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px "JetBrains Mono"';
+    ctx.font = '500 12px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText('Tiempo / Estrés Ambiental (VPD y Temperatura) ──▶', gx + gw / 2, gy + gh + 22);
     ctx.restore();
@@ -1444,7 +1482,7 @@ input[type="range"] {
     ctx.fillRect(flStart, padT + 8, flEnd - flStart, topH - 28);
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText('🌸 FLORACIÓN REAL (τ = 6–8m atrás)', (flStart + flEnd) / 2, padT + 22);
 
@@ -1474,7 +1512,7 @@ input[type="range"] {
 
     months.forEach((m, i) => {
       ctx.fillStyle = i === 9 ? '#6ef0b4' : '#cbd5e1';
-      ctx.font = i === 9 ? '700 9.5px "JetBrains Mono"' : '500 9px "JetBrains Mono"';
+      ctx.font = i === 9 ? '700 12px "JetBrains Mono"' : '500 11.5px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(m, mX(i), padT + topH - 6);
     });
@@ -1492,7 +1530,7 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#a5f3fc';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('📊 PODER PREDICTIVO (CORRELACIÓN CON LA COSECHA) SEGÚN EL RETARDO τ ELEGIDO:', padL, botY + 18);
 
@@ -1524,7 +1562,7 @@ input[type="range"] {
       ctx.fill();
 
       ctx.fillStyle = isSel ? '#ffffff' : '#94a3b8';
-      ctx.font = isSel ? '700 9px "JetBrains Mono"' : '500 8.5px "JetBrains Mono"';
+      ctx.font = isSel ? '700 11.5px "JetBrains Mono"' : '500 11.5px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(`r=${c.r}`, bx + bw / 2, by - 5);
       ctx.fillText(c.label, bx + bw / 2, botY + botH - 7);
@@ -1550,7 +1588,7 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = isClosed ? '#fda4af' : '#a5f3fc';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('🍃 EL ESTOMA: INTERRUPTOR HIDRÁULICO DE LA HOJA', pad + 14, padT + 20);
 
@@ -1582,7 +1620,7 @@ input[type="range"] {
     ctx.fill();
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = '700 10.5px "JetBrains Mono"';
+    ctx.font = '700 13.5px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText(
       isClosed ? '🔒 ESTOMA CERRADO (VPD > 1.8 kPa)' : '🔓 ESTOMA ABIERTO (Entra CO₂)',
@@ -1591,7 +1629,7 @@ input[type="range"] {
     );
 
     ctx.fillStyle = isClosed ? '#fda4af' : '#8ef7c7';
-    ctx.font = '500 9.5px Inter, sans-serif';
+    ctx.font = '500 12px Inter, sans-serif';
     ctx.fillText(
       isClosed
         ? '¡Cero fotosíntesis y aborto floral aunque haya agua en el suelo!'
@@ -1613,7 +1651,7 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#fde68a';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('🧱 REALIDAD BIOLÓGICA VS. MESETA PLANA DEL ÁRBOL (GBDT)', rx + 14, padT + 20);
 
@@ -1631,7 +1669,7 @@ input[type="range"] {
     ctx.setLineDash([]);
 
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('Umbral VPD = 1.8 kPa (32°C)', gx + gw - 6, gy + 14);
 
@@ -1646,7 +1684,7 @@ input[type="range"] {
     ctx.setLineDash([]);
 
     ctx.fillStyle = '#fde68a';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('─ - Árbol GBDT: Predice Meseta Plana (Ignora el colapso)', gx + 8, Y(82) - 7);
 
@@ -1672,7 +1710,7 @@ input[type="range"] {
     ctx.beginPath(); ctx.arc(curX, curY, 6.5, 0, Math.PI * 2); ctx.fill();
 
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px "JetBrains Mono"';
+    ctx.font = '500 12px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText('Déficit de Presión de Vapor VPD (kPa) ──▶', gx + gw / 2, gy + gh + 22);
     ctx.restore();
@@ -1695,7 +1733,7 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#e9d5ff';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('📅 24 CAMPAÑAS EN 24 AÑOS: ¡SOLO N = 24 PUNTOS DE COSECHA!', pad + 14, padT + 20);
 
@@ -1713,7 +1751,7 @@ input[type="range"] {
     ctx.setLineDash([]);
 
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 8.5px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('Prueba Futura', gx + gw - 4, gy + 12);
 
@@ -1757,7 +1795,7 @@ input[type="range"] {
     });
 
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9px "JetBrains Mono"';
+    ctx.font = '500 11.5px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText('24 Campañas Cafetaleras (1 punto por año) ──▶', gx + gw / 2, gy + gh + 20);
     ctx.restore();
@@ -1775,7 +1813,7 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#6ef0b4';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('🏆 IMPACTO DE INTEGRAR FENOLOGÍA: REDUCE EL ERROR 4×', rx + 14, padT + 20);
 
@@ -1785,23 +1823,23 @@ input[type="range"] {
 
     // Barra 1: IA Cruda sin Biología (p=500 sobre N=24)
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.fillText('1. Red Neuronal Cruda (500 vars sobre N=24):', rx + 14, bTop);
     ctx.fillStyle = 'rgba(255, 82, 119, 0.78)';
     ctx.beginPath(); ctx.roundRect(rx + 14, bTop + 6, maxW * 0.92, 18, 5); ctx.fill();
     ctx.fillStyle = '#ffffff';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.fillText('Error Alto (4.0×) · Memoriza ruido', rx + 22, bTop + 18);
 
     // Barra 2: IA Guiada por Fenología (Ventanas de Floración, Llenado y Cosecha)
     const b2Top = bTop + 40;
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.fillText('2. IA + Restricciones Fenológicas (3 Ventanas):', rx + 14, b2Top);
     ctx.fillStyle = '#6ef0b4';
     ctx.beginPath(); ctx.roundRect(rx + 14, b2Top + 6, maxW * 0.23, 18, 5); ctx.fill();
     ctx.fillStyle = '#040812';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.fillText('1.0×', rx + 22, b2Top + 18);
     ctx.fillStyle = '#a7f3d0';
     ctx.fillText('¡Error reducido 4 veces!', rx + 22 + maxW * 0.23, b2Top + 18);
@@ -1814,11 +1852,11 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx + 14, cardY, rw - 28, cardH, 9); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#ffc05c';
-    ctx.font = '700 9.5px "JetBrains Mono"';
-    ctx.fillText('⏭️ PASE A LA DIAPOSITIVA 22: EL RELOJ FENOLÓGICO DEL CAFÉ', rx + 22, cardY + 18);
+    ctx.font = '700 12px "JetBrains Mono"';
+    ctx.fillText('⏭️ SIGUIENTE: EL RELOJ FENOLÓGICO DEL CAFÉ', rx + 22, cardY + 18);
 
     ctx.fillStyle = '#e2eeff';
-    ctx.font = '500 9.5px Inter, sans-serif';
+    ctx.font = '500 12px Inter, sans-serif';
     ctx.fillText('• 1. Floración (Ago–Oct): Explica el 56% de la varianza.', rx + 22, cardY + 36);
     ctx.fillText('• 2. Llenado (Nov–Feb): Define peso físico (r = 0.751).', rx + 22, cardY + 52);
     ctx.fillText('• 3. Cosecha (Mar–Jul): Recolección y corte en campo.', rx + 22, cardY + 68);

@@ -255,11 +255,11 @@ def test_user_e2e_hub_filters_and_both_talks(built_site_server: str) -> None:
             ).click()
             page.wait_for_load_state("domcontentloaded")
             expect(page.locator(".slide.active")).to_have_attribute("data-index", "1")
-            expect(page.locator("#slideIndicator")).to_have_text("01 / 30")
+            expect(page.locator("#slideIndicator")).to_have_text("01 / 31")
 
             page.keyboard.press("ArrowRight")
             expect(page.locator(".slide.active")).to_have_attribute("data-index", "2")
-            expect(page.locator("#slideIndicator")).to_have_text("02 / 30")
+            expect(page.locator("#slideIndicator")).to_have_text("02 / 31")
 
             page.keyboard.press("n")
             expect(page.locator("#speakerDrawer")).to_have_class(re.compile(r"\bopen\b"))

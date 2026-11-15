@@ -173,7 +173,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   color: var(--phi);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -347,7 +347,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   --stage-accent: var(--rupture);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: clamp(6px, 0.9vh, 10px);
   padding: clamp(10px, 1.2vw, 18px);
   border: 1px solid color-mix(in srgb, var(--stage-accent) 35%, rgba(133, 158, 192, 0.16));
@@ -356,7 +356,8 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
     radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--stage-accent) 12%, transparent), transparent 55%),
     linear-gradient(155deg, rgba(11, 19, 39, 0.95), rgba(5, 10, 24, 0.94));
   min-height: 0;
-  overflow-y: auto;
+  height: 100%;
+  overflow-y: hidden;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 82, 119, 0.3) rgba(5, 10, 24, 0.4);
@@ -411,13 +412,13 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .narr-title {
   margin: 0;
-  font: 700 clamp(17px, 1.45vw, 22px)/1.18 var(--display);
+  font: 700 clamp(18px, 1.45vw, 22.5px)/1.18 var(--display);
   color: #f8fbff;
 }
 
 .narr-lead {
   margin: 0;
-  font: 400 clamp(12px, 0.98vw, 13.8px)/1.45 var(--sans);
+  font: 400 clamp(13.5px, 1.02vw, 15.8px)/1.45 var(--sans);
   color: #b8cae0;
 }
 
@@ -428,9 +429,15 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   flex-direction: column;
   gap: 8px;
   min-height: 0;
+  flex: 1 1 auto;
+  justify-content: space-evenly;
 }
 
 .info-block {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 9px 12px;
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -442,7 +449,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--stage-accent);
@@ -450,7 +457,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .info-block-text {
   margin: 0;
-  font: 400 clamp(11.5px, 0.92vw, 13px)/1.42 var(--sans);
+  font: 400 clamp(13px, 0.98vw, 15.2px)/1.42 var(--sans);
   color: #cedcf0;
 }
 
@@ -475,22 +482,23 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   text-align: right;
 }
 
-.speaker-box {
-  padding: 10px 12px;
-  border-left: 3px solid var(--stage-accent);
-  border-radius: 0 10px 10px 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--stage-accent) 11%, rgba(8, 15, 32, 0.85)), rgba(8, 15, 32, 0.5));
-}
-
-.speaker-head {
+.speaker-box, .executive-takeaway {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
-  font: 700 9px/1 var(--mono);
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--stage-accent);
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(56, 239, 255, 0.28);
+  background: linear-gradient(135deg, rgba(14, 116, 144, 0.22), rgba(7, 13, 28, 0.9));
+  font: 600 clamp(10px, 0.76vw, 11.5px)/1.3 var(--sans);
+  color: #edf5ff;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.executive-takeaway strong { color: var(--ockham); white-space: nowrap; }
+
+.speaker-head {
+  display: none;
 }
 
 .speaker-quote {
@@ -840,6 +848,7 @@ input[type="range"] {
   h1 { font-size: 15px; }
   .topbar { padding-bottom: 4px; }
 }
+[data-expert]{font-size:.72em;font-weight:400;opacity:.62;letter-spacing:0}
 </style>
 </head>
 <body>
@@ -855,8 +864,8 @@ input[type="range"] {
         </svg>
       </div>
       <div>
-        <p class="eyebrow">Sección 3 · Continuación de Era 4 (Intervalos Garantizados) · El Cono de la Honestidad</p>
-        <h1>LA ILUSIÓN DE LA CERTEZA: <span class="era">El Cono de Incertidumbre</span> <span class="sub">· Lyapunov y Predicción Conforme (SCP)</span></h1>
+        <p class="eyebrow">Por qué un pronóstico honesto es un rango</p>
+        <h1>La ilusión de la certeza: <span class="era">el cono de incertidumbre</span></h1>
       </div>
     </div>
 
@@ -877,7 +886,7 @@ input[type="range"] {
   <!-- BARRA DE PROCESO EN BUCLE: 1. El Cono y Lyapunov ─▶ 2. Los 5 Pasos SCP ─▶ 3. Local vs Global & ERCOT ─▶ 4. Riesgo Asimétrico y Pase a Diapo 11 -->
   <nav class="flowbar" aria-label="Secuencia explicativa del Cono de Incertidumbre y Predicción Conforme">
     <div class="process-track" role="tablist">
-      <button class="proc-node" role="tab" type="button" data-step="cone" aria-selected="true">
+      <button class="proc-node" role="tab" type="button" data-step="cone" aria-selected="true" data-route="corta">
         <span class="proc-num">1</span>
         <div class="proc-text">
           <span class="proc-year">La Mentira del Punto Fijo</span>
@@ -888,7 +897,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="scp" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="scp" aria-selected="false" data-route="experta">
         <span class="proc-num">2</span>
         <div class="proc-text">
           <span class="proc-year">Receta Conforme (5 Pasos)</span>
@@ -899,7 +908,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="ercot" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="ercot" aria-selected="false" data-route="corta">
         <span class="proc-num">3</span>
         <div class="proc-text">
           <span class="proc-year">Local vs. Global &amp; ERCOT</span>
@@ -910,10 +919,10 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="bridge11" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="bridge11" aria-selected="false" data-route="corta">
         <span class="proc-num">4</span>
         <div class="proc-text">
-          <span class="proc-year">Asimetría ─▶ Diapo 11</span>
+          <span class="proc-year">Asimetría del riesgo</span>
           <span class="proc-sub">P10–P90 y ¿Cómo saber cuál elegir?</span>
         </div>
         <div class="proc-progress" id="prog-bridge11"></div>
@@ -935,28 +944,22 @@ input[type="range"] {
     <aside class="narrative-card" id="narrativeCard" aria-live="polite">
       <div class="narr-top">
         <div class="narr-badges">
-          <span class="stage-tag" id="stageTag">ACTO 1 DE 4 · LA MENTIRA DETERMINISTA</span>
+          <span class="stage-tag" id="stageTag">LA MENTIRA DE UN SOLO NÚMERO</span>
           <span class="stage-year-pill" id="stageKeyHint">Teclas 1 · 2 · 3 · 4</span>
         </div>
-        <h2 class="narr-title" id="narrTitle">1. La Ilusión de la Certeza: ¿Por qué un número único (ŷₜ) siempre miente?</h2>
-        <p class="narr-lead" id="narrLead">
-          Quien te prometa adivinar el punto exacto del próximo mes te está mintiendo. En cualquier sistema real, <b>pequeñas variaciones hoy se multiplican mañana como un abanico que se abre</b>.
-        </p>
+        <h2 class="narr-title" id="narrTitle">Un solo número siempre miente: el futuro es un cono</h2>
+        <p class="narr-lead" id="narrLead">Pequeños errores de hoy crecen con el tiempo, así que el pronóstico honesto es un rango, no un punto.</p>
       </div>
 
       <div class="narr-blocks">
         <div class="info-block">
-          <div class="info-block-label" id="block1Label">🌪️ EFECTO MARIPOSA Y EL LÍMITE DE LYAPUNOV</div>
-          <p class="info-block-text" id="block1Text">
-            Igual que en el pronóstico del clima, las posibles trayectorias futuras (<b>Monte Carlo</b>) divergen con la distancia: <b>σ(h) ∝ σ₁·√h</b>. Más allá del <b>Límite de Lyapunov</b>, una línea recta puntual pierde toda relación con la realidad.
-          </p>
+          <div class="info-block-label" id="block1Label">🌪️ Efecto mariposa</div>
+          <p class="info-block-text" id="block1Text">Las trayectorias posibles se abren con el tiempo; más lejos, un punto fijo pierde sentido.</p>
         </div>
 
         <div class="info-block">
-          <div class="info-block-label" id="block2Label">⚠️ LAS 3 TRAMPAS DE EXIGIR UN PUNTO FIJO EN PRODUCCIÓN</div>
-          <p class="info-block-text" id="block2Text">
-            1. <b>Oculta la asimetría del riesgo:</b> quedarse sin energía (apagón) cuesta 100 veces más que guardar reserva.<br>2. <b>Falsa sensación de control</b> ante directivos.<br>3. <b>Degradación exponencial</b> al alejar el horizonte <b>h</b>.
-          </p>
+          <div class="info-block-label" id="block2Label">⚠️ El riesgo no es simétrico</div>
+          <p class="info-block-text" id="block2Text">Quedarse sin energía cuesta 100 veces más que sobreprepararse. El valor está en el rango P10–P90.</p>
         </div>
 
         <div class="math-strip">
@@ -965,14 +968,8 @@ input[type="range"] {
         </div>
       </div>
 
-      <div class="speaker-box">
-        <div class="speaker-head">
-          <span>🎤 GUÍA DE EXPOSICIÓN (QUÉ DECIR)</span>
-          <span id="speakerTime">~15 seg</span>
-        </div>
-        <p class="speaker-quote" id="speakerQuote">
-          “Pedir un único número para el próximo mes es una apuesta ciega. La línea roja central es una ilusión: el futuro real serpentea dentro de este Cono de Incertidumbre. La IA moderna no elimina el azar: ilumina y mide el riesgo.”
-        </p>
+      <div class="executive-takeaway" id="speakerBox">
+        <strong>💡 Idea Clave:</strong> <span id="speakerQuote">Un pronóstico honesto da un rango, no un número.</span>
       </div>
     </aside>
 
@@ -993,8 +990,8 @@ input[type="range"] {
       <div class="canvas-wrap">
         <canvas id="stageCanvas"></canvas>
         <div class="canvas-overlay-top">
-          <span class="ov-badge left" id="ovLeft">⬜ Izquierda: Realidad Observada (Pasado Fijo)</span>
-          <span class="ov-badge right" id="ovRight">🌪️ Derecha: Cono de Incertidumbre y Trayectorias Caóticas</span>
+          <span class="ov-badge left" id="ovLeft">⬜ Realidad Observada (Historial)</span>
+          <span class="ov-badge right" id="ovRight">🌪️ Cono de Incertidumbre y Monte Carlo</span>
         </div>
       </div>
 
@@ -1017,7 +1014,7 @@ input[type="range"] {
           <div class="ctrl-item" id="ctrlAlphaWrap" hidden>
             <label for="sliderAlpha">🛡️ Nivel Cobertura (1−α):</label>
             <input id="sliderAlpha" type="range" min="75" max="98" step="1" value="90" style="accent-color:var(--phi)">
-            <output id="outAlpha">90% (α=0.10)</output>
+            <output id="outAlpha">90% <span data-expert>(α=0.10)</span></output>
           </div>
           <div class="ctrl-item" id="ctrlCalPctWrap" hidden>
             <label for="sliderCalPct">📊 % Historial a Calibración:</label>
@@ -1042,7 +1039,7 @@ input[type="range"] {
 
   <!-- FOOTER -->
   <footer class="footnote">
-    <span><strong>Síntesis Sección 3:</strong> La Mentira del Punto Fijo (Lyapunov σ(h) ∝ √h) ─▶ Split Conformal Prediction (5 pasos con garantía finita MCR ≥ 1−α) ─▶ Sinergia Zero-Shot + 80% Calibración en ERCOT ─▶ <strong>Pase a Diapo 11: ¿Cómo elegir tu modelo?</strong></span>
+    <span><strong>Síntesis Sección 3:</strong> La Mentira del Punto Fijo (Lyapunov σ(h) ∝ √h) ─▶ Split Conformal Prediction (5 pasos con garantía finita MCR ≥ 1−α) ─▶ Sinergia Zero-Shot + 80% Calibración en ERCOT ─▶ <strong>Siguiente: ¿Cómo elegir tu modelo?</strong></span>
     <span>Referencias: Lei et al. (2017) Split Conformal Prediction · Lorenz (1963) · Achour et al. (2025) ERCOT/NN5/M3</span>
   </footer>
 
@@ -1072,77 +1069,77 @@ input[type="range"] {
   const STAGE_CONTENT = {
     cone: {
       accent: 'var(--rupture)',
-      tag: 'ETAPA 1 DE 4 · LA MENTIRA DETERMINISTA',
-      title: '1. La Ilusión de la Certeza: ¿Por qué un número único (ŷₜ) siempre miente?',
-      lead: 'Quien te prometa adivinar el punto exacto del próximo mes te está mintiendo. En cualquier sistema real, <b>pequeñas variaciones hoy se multiplican mañana como un abanico que se abre</b>.',
-      b1Label: '🌪️ EFECTO MARIPOSA Y EL LÍMITE DE LYAPUNOV',
-      b1Text: 'Igual que en el pronóstico del clima, las posibles trayectorias futuras (<b>Monte Carlo</b>) divergen con la distancia: <b>σ(h) ∝ σ₁·√h</b>. Más allá del <b>Límite de Lyapunov</b>, una línea recta puntual pierde toda relación con la realidad.',
-      b2Label: '⚠️ LAS 3 TRAMPAS DE EXIGIR UN PUNTO FIJO EN PRODUCCIÓN',
-      b2Text: '1. <b>Oculta la asimetría del riesgo:</b> quedarse sin energía (apagón) cuesta 100 veces más que guardar reserva.<br>2. <b>Falsa sensación de control</b> ante directivos.<br>3. <b>Degradación exponencial</b> al alejar el horizonte <b>h</b>.',
+      tag: 'LA MENTIRA DE UN SOLO NÚMERO',
+      title: 'Un solo número siempre miente: el futuro es un cono',
+      lead: 'Pequeños errores de hoy crecen con el tiempo, así que el pronóstico honesto es un rango, no un punto.',
+      b1Label: '🌪️ Efecto mariposa',
+      b1Text: 'Las trayectorias posibles se abren con el tiempo; más lejos, un punto fijo pierde sentido.',
+      b2Label: '⚠️ El riesgo no es simétrico',
+      b2Text: 'Quedarse sin energía cuesta 100 veces más que sobreprepararse. El valor está en el rango P10–P90.',
       formula: 'σ(h) ∝ σ₁ · √h  ──▶  Bandas P25–P75 (50%) y P10–P90 (80%)',
       hint: 'La única decisión ejecutable vive en el abanico',
-      quote: '“Pedir un único número para el próximo mes es una apuesta ciega. La línea roja central es una ilusión: el futuro real serpentea dentro de este Cono de Incertidumbre. La IA moderna no elimina el azar: ilumina y mide el riesgo.”',
+      quote: 'Un pronóstico honesto da un rango, no un número.',
       icon: '🌪️',
       canvasTitle: 'El Cono de Incertidumbre: Divergencia de Monte Carlo y Límite de Lyapunov',
-      ovLeft: '⬜ Izquierda: Realidad Observada (Pasado Fijo)',
-      ovRight: '🌪️ Derecha: Cono de Incertidumbre y Trayectorias Caóticas',
+      ovLeft: '⬜ Realidad Observada (Historial)',
+      ovRight: '🌪️ Cono de Incertidumbre y Monte Carlo',
       legend: '<span class="leg-item"><i class="leg-line dashed" style="--c:#ff5277"></i> Punto Fijo ŷₜ (La Mentira Determinista)</span><span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Banda P10–P90 (80%)</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Trayectorias Monte Carlo</span>',
       nextLabel: 'Ver Receta Conforme (5 Pasos) ─▶'
     },
     scp: {
       accent: 'var(--phi)',
-      tag: 'ETAPA 2 DE 4 · SPLIT CONFORMAL PREDICTION (LEI ET AL., 2017)',
-      title: '2. Predicción Conforme (SCP): El Escudo Matemático en 5 Pasos',
-      lead: '¿Cómo construimos ese abanico sin inventar supuestos falsos de campanas de Gauss? La <b>Predicción Conforme</b> mide con honestidad <b>cuánto se equivocó tu modelo en el pasado reciente</b>.',
-      b1Label: '📏 LOS 5 PASOS SENCILLOS DE SPLIT CONFORMAL PREDICTION',
-      b1Text: '<b>1. Dividir:</b> Separar historia en Entreno (<i>Tr</i>) y Calibración (<i>Cal</i>).<br><b>2. Entrenar:</b> Ajustar el modelo f̂ en <i>Tr</i>.<br><b>3. Medir tropiezos (Sᵢ):</b> Calcular el error real en <i>Cal</i>: <b>Sᵢ = |f̂(xᵢ) − yᵢ|</b>.<br><b>4. Umbral q̂:</b> Ordenar los errores y tomar el percentil <b>(1−α)</b>.<br><b>5. Blindar el futuro:</b> Sumar y restar ese escudo: <b>I(x) = [f̂(x) − q̂, f̂(x) + q̂]</b>.',
-      b2Label: '✅ GARANTÍA REAL EN MUESTRAS FINITAS (SIN ASUMIR DISTRIBUCIONES)',
-      b2Text: 'Si eliges <b>90% de cobertura (α = 0.10)</b>, el escudo <b>±q̂</b> garantiza matemáticamente atrapar al menos 9 de cada 10 valores futuros reales, sin importar qué modelo uses por dentro.',
+      tag: 'EL ESCUDO EN 5 PASOS',
+      title: 'Un escudo en 5 pasos garantiza el rango',
+      lead: 'La predicción conforme crea intervalos confiables sin suponer que los errores siguen una campana.',
+      b1Label: '📏 Los 5 pasos',
+      b1Text: 'Separar datos, entrenar, medir errores recientes, tomar su margen y sumarlo y restarlo.',
+      b2Label: '✅ Garantía real',
+      b2Text: 'Cubre al menos el 90% de los casos con cualquier modelo, sin suposiciones teóricas.',
       formula: 'Sᵢ = |f̂(xᵢ) − yᵢ|  ──▶  q̂ = cuantil₁₋α(S_Cal)  ──▶  I(x) = [ f̂(x) ± q̂ ]',
       hint: 'Corrección finita: (1−α̂) = ⌈(|Cal|+1)(1−α)⌉ / |Cal|',
-      quote: '“La Predicción Conforme es pura honestidad ingenieril: revisamos los últimos 100 días, vemos que el 90% de las veces nos equivocamos por menos de q̂ unidades, y le ponemos ese margen ±q̂ al pronóstico de mañana. Garantizado sin magia.”',
+      quote: 'Medir los errores recientes garantiza un rango honesto.',
       icon: '📏',
       canvasTitle: 'Los 5 Pasos de Split Conformal Prediction: De Errores Históricos (Sᵢ) al Escudo ±q̂',
-      ovLeft: '📊 Arriba: Errores de Calibración Sᵢ ordenados hasta el cuantil q̂',
-      ovRight: '🛡️ Abajo: Intervalo Garantizado I(x) = [f̂(x) − q̂, f̂(x) + q̂]',
+      ovLeft: '📊 Residuos de Calibración Sᵢ',
+      ovRight: '🛡️ Intervalo Garantizado [f̂ ± q̂]',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Residuos Absolutos Sᵢ = |f̂ − y|</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Umbral Conforme q̂</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Banda Blindada [f̂ ± q̂]</span>',
       nextLabel: 'Ver Local vs Global y ERCOT ─▶'
     },
     ercot: {
       accent: 'var(--lab)',
-      tag: 'ETAPA 3 DE 4 · EVIDENCIA EMPÍRICA (ACHOUR ET AL., 2025)',
-      title: '3. Cuantil Local vs. Global y la Victoria Zero-Shot en ERCOT',
-      lead: 'Al aplicar Predicción Conforme en la industria aparecen dos secretos prácticos: <b>cómo calibrar múltiples series</b> y <b>por qué los Foundation Models aplastan a LightGBM cuando hay pocos datos</b>.',
-      b1Label: '🔀 CUANTIL LOCAL (q̂ⱼ) VS. CUANTIL GLOBAL (q̂_global)',
-      b1Text: '• <b>Cuantil Local (q̂ⱼ):</b> Calcula un escudo propio para cada serie; ideal cuando tienes productos muy volátiles junto a otros estables.<br>• <b>Cuantil Global (∪ S_Cal,j):</b> Une los errores de todas las series cuando cada producto tiene un historial muy corto.',
-      b2Label: '🏆 HALLAZGO EN ERCOT 2232: ¿POR QUÉ COLAPSA LIGHTGBM Y GANA CHRONOS-BOLT?',
-      b2Text: 'Si das pocos datos a <b>LightGBM</b> para guardar 80% en calibración, crear los <i>lags</i> llena la tabla de vacíos (<b>NaNs</b>) y destruye el entrenamiento (<b>MASE se dispara a 1.195</b>). Como <b>Chronos-Bolt es Zero-Shot (0% entreno)</b>, dedica el <b>80%–90% de tus datos a calibrar |Cal|</b>, logrando <b>MASE 0.362, banda estrecha MSIW 0.312 y cobertura 91.3%</b>.',
+      tag: 'PRUEBA EN TEXAS',
+      title: 'En Texas, el modelo sin entrenar y calibrado ganó',
+      lead: 'En ERCOT 2232, combinar un modelo preentrenado con calibración superó con claridad a los árboles de tabla.',
+      b1Label: '🔀 Local frente a global',
+      b1Text: 'El local calibra cada serie por separado; el global junta errores cuando cada historial es corto.',
+      b2Label: '🏆 La paradoja de Texas',
+      b2Text: 'LightGBM falla con pocos datos (MASE 1.195); Chronos-Bolt usa 80% para calibrar y logra 0.362.',
       formula: 'ERCOT-2232: Chronos-Bolt (MASE 0.362, MSIW 0.312) vs. LightGBM (1.195)',
       hint: 'Zero-Shot no destruye filas con lags y maximiza la muestra |Cal|',
-      quote: '“Cuando tienes pocos datos históricos, LightGBM sufre una paradoja: si entrenas mucho te quedas sin datos para calibrar el cono, y si entrenas poco los lags destruyen la muestra. Un modelo Zero-Shot regala casi todo el historial a la calibración.”',
+      quote: 'Entrenar menos y calibrar más blinda los intervalos.',
       icon: '🏆',
       canvasTitle: 'Cuantil Local vs. Global y Benchmark en ERCOT-2232 (Chronos-Bolt vs. LightGBM)',
-      ovLeft: '🔀 Izquierda: Cuantil Local (q̂ⱼ) vs. Global (q̂_global)',
-      ovRight: '🏆 Derecha: Evidencia ERCOT-2232 (Achour et al., 2025)',
+      ovLeft: '🔀 Cuantil Local vs Global',
+      ovRight: '🏆 Benchmark ERCOT (Achour et al., 2025)',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Chronos-Bolt + 80% Cal (MASE 0.362)</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> LightGBM 80/20 (0.659)</span><span class="leg-item"><i class="leg-line" style="--c:#ff5277"></i> LightGBM 20/80 Colapso (1.195)</span>',
-      nextLabel: 'Ver Asimetría y Pase a Diapo 11 ─▶'
+      nextLabel: 'Ver Asimetría ─▶'
     },
     bridge11: {
       accent: 'var(--ockham)',
-      tag: 'ETAPA 4 DE 4 · DECISIÓN BAJO RIESGO Y PASE A DIAPO 11',
-      title: '4. Decidir con P10–P90 y el Pase al Árbol de Decisión (Diapo 11)',
-      lead: 'El Cono de la Honestidad transforma un pronóstico en una <b>decisión financiera inteligente</b> y nos deja listos para la <b>última diapositiva (Diapo 11): ¿Cómo elegir el modelo ideal hoy?</b>',
-      b1Label: '⚖️ ASIMETRÍA DEL RIESGO: ¿CUÁNDO USAR P90, P50 O P10?',
-      b1Text: '• <b>Escenario P90 (Techo seguro):</b> Úsalo para despachar energía eléctrica o stock médico crítico donde <b>faltar cuesta un apagón o vidas</b>.<br>• <b>Escenario P50 (Mediana):</b> Planificación financiera base.<br>• <b>Escenario P10 (Piso conservador):</b> Flujo de caja mínimo garantizado.',
-      b2Label: '🧭 PASE A LA DIAPOSITIVA 11: ARQUITECTURA DE DECISIÓN (LAS 4 VÍAS)',
-      b2Text: 'Ya dominamos las <b>4 Eras</b> y el <b>Cono Conforme</b>. En la <b>Diapositiva 11 (Cierre General)</b> responderemos con <b>3 preguntas simples</b> (Volumen de datos <b>N</b>, Latencia <b>CPU vs GPU</b> y <b>Riesgo de Récords</b>) cuál de las 4 Vías debes desplegar en tu negocio.',
-      formula: '4 Eras + Cono Conforme (P10–P90) ──▶ Diapo 11: Árbol de Decisión en 3 Preguntas',
+      tag: 'DECIDIR CON RANGOS',
+      title: 'Decidir con el rango P10–P90 protege del peor caso',
+      lead: 'Las bandas permiten decisiones distintas según el riesgo y abren paso al árbol de decisión que sigue.',
+      b1Label: '⚖️ Decidir según el riesgo',
+      b1Text: 'P90 para riesgos fatales (energía, salud), P50 como valor esperado y P10 como presupuesto mínimo.',
+      b2Label: '🧭 Siguiente: elegir modelo',
+      b2Text: 'Con las cuatro familias y el cono conforme claros, pasamos al árbol de decisión ejecutiva.',
+      formula: '4 Eras + Cono Conforme (P10–P90) ──▶ Siguiente: Árbol de Decisión en 3 Preguntas',
       hint: 'Siguiente Diapo (Cierre Final) · Matriz Ejecutiva y Árbol de Decisión Sectorial',
-      quote: '“Nunca tomes una decisión crítica con un número desnudo: usa el P90 cuando fallar hacia abajo sea catastrófico. Y ahora que conocemos las 4 Eras y el Cono Conforme, pasemos a la última diapositiva: el mapa definitivo para saber cuál modelo elegir.”',
+      quote: 'Decidir con rangos protege de la ruina.',
       icon: '🧭',
-      canvasTitle: 'Toma de Decisiones Asimétrica (P10 / P50 / P90) y Puente a la Diapositiva 11',
-      ovLeft: '⚖️ Izquierda: Decisión Ejecutiva sobre el Cono (P10 · P50 · P90)',
-      ovRight: '⏭️ Derecha: Pase a la Diapo 11 (¿Qué modelo usar hoy?)',
+      canvasTitle: 'Toma de Decisiones Asimétrica (P10 / P50 / P90)',
+      ovLeft: '⚖️ Toma de Decisiones Asimétrica (P10/P90)',
+      ovRight: '⏭️ Siguiente: Árbol de Decisión',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> P90 (Cobertura Antiapagón / Stock Crítico)</span><span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> P50 (Valor Esperado)</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> P10 (Escenario Conservador)</span>',
       nextLabel: 'Reiniciar bucle (Cono) ↺'
     }
@@ -1151,6 +1148,37 @@ input[type="range"] {
   const $ = id => document.getElementById(id);
   const canvas = $('stageCanvas');
   const ctx = canvas.getContext('2d');
+
+  // Red de seguridad F12 (1366×768): ningún texto del lienzo se sale del borde; si no cabe se reduce
+  // la fuente (mín. 11 px) y, como último recurso, se comprime con maxWidth.
+  (function guardCanvasText() {
+    const rawFill = ctx.fillText.bind(ctx);
+    ctx.fillText = function (text, x, y, maxW) {
+      const W = canvas.clientWidth || 0;
+      const t = String(text);
+      if (W > 0 && maxW === undefined) {
+        const tw = ctx.measureText(t).width;
+        const a = ctx.textAlign;
+        const avail = (a === 'right' || a === 'end') ? x - 12
+          : (a === 'center') ? 2 * Math.min(x, W - x) - 24
+          : W - x - 12;
+        if (tw > avail && avail > 40) {
+          const base = ctx.font;
+          const m = /(\d+(?:\.\d+)?)px/.exec(base);
+          let px = m ? parseFloat(m[1]) : 0;
+          while (m && px > 11 && ctx.measureText(t).width > avail) {
+            px -= 0.5;
+            ctx.font = base.replace(/(\d+(?:\.\d+)?)px/, px + 'px');
+          }
+          const fits = ctx.measureText(t).width <= avail;
+          fits ? rawFill(t, x, y) : rawFill(t, x, y, avail);
+          ctx.font = base;
+          return;
+        }
+      }
+      if (maxW === undefined) rawFill(text, x, y); else rawFill(text, x, y, maxW);
+    };
+  })();
 
   function fitCanvas() {
     const r = canvas.getBoundingClientRect();
@@ -1216,7 +1244,7 @@ input[type="range"] {
     } else {
       $('kpi1').innerHTML = `Decisión Elegida: <strong style="color:var(--ockham)">Cuantil P${state.targetQuantile}</strong>`;
       $('kpi2').innerHTML = `Riesgo Apagón: <strong style="color:var(--lab)">Blindado</strong>`;
-      $('kpi3').innerHTML = `Siguiente Diapo: <strong style="color:var(--phi)">11. Árbol de Decisión</strong>`;
+      $('kpi3').innerHTML = `Siguiente: <strong style="color:var(--phi)">Árbol de Decisión</strong>`;
     }
 
     document.querySelectorAll('.proc-node').forEach(btn => {
@@ -1256,6 +1284,26 @@ input[type="range"] {
     ctx.restore();
   }
 
+  function drawPillLabel(ctx, text, x, y, textColor, borderColor) {
+    ctx.save();
+    ctx.font = '700 11.5px "JetBrains Mono", monospace';
+    const padX = 7;
+    const tw = ctx.measureText(text).width;
+    const rx = x - tw - padX * 2, ry = y - 9, rw = tw + padX * 2, rh = 18;
+    ctx.fillStyle = 'rgba(4, 9, 22, 0.88)';
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(rx, ry, rw, rh, 5);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, rx + padX, y);
+    ctx.restore();
+  }
+
   // ACTO 1: EL CONO DE INCERTIDUMBRE Y DIVERGENCIA CAÓTICA (FIEL A 10_El_cono_de_incertidumbre.png)
   function drawConeStage(w, h) {
     const padL = 36, padR = 32, padT = 46, padB = 34;
@@ -1282,7 +1330,7 @@ input[type="range"] {
     ];
     ticks.forEach(tk => {
       ctx.fillStyle = '#94a3b8';
-      ctx.font = '600 9px "JetBrains Mono"';
+      ctx.font = '600 11.5px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(tk.label, tk.x, padT + ph - 2);
     });
@@ -1409,24 +1457,16 @@ input[type="range"] {
     ctx.stroke();
     ctx.restore();
 
-    // Etiquetas claras dentro del lienzo
+    // Etiquetas claras dentro del lienzo con pastillas de alto contraste
     ctx.fillStyle = '#ffffff';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText('Frontera (Hoy)', splitX, padT + 14);
 
-    ctx.fillStyle = '#fda4af';
-    ctx.font = '700 10px "JetBrains Mono"';
-    ctx.textAlign = 'right';
-    ctx.fillText('Pronóstico Puntual ŷₜ (La Mentira Determinista)', padL + pw - 10, cy - 8);
-
-    ctx.fillStyle = '#67e8f9';
-    ctx.font = '700 9.5px "JetBrains Mono"';
-    ctx.fillText('Núcleo 50% (P25–P75)', padL + pw - 10, cy - maxSpread * 0.26);
-    ctx.fillStyle = '#a5f3fc';
-    ctx.fillText('Banda Operativa 80% (P10–P90)', padL + pw - 10, cy + maxSpread * 0.56);
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('Velo 99% (Límites Físicos)', padL + pw - 10, cy + maxSpread * 0.90);
+    drawPillLabel(ctx, 'Pronóstico Puntual ŷₜ (La Mentira Determinista)', padL + pw - 6, cy - 8, '#fda4af', 'rgba(255, 82, 119, 0.45)');
+    drawPillLabel(ctx, 'Núcleo 50% (P25–P75)', padL + pw - 6, cy - maxSpread * 0.26, '#67e8f9', 'rgba(56, 239, 255, 0.45)');
+    drawPillLabel(ctx, 'Banda Operativa 80% (P10–P90)', padL + pw - 6, cy + maxSpread * 0.56, '#a5f3fc', 'rgba(14, 116, 144, 0.5)');
+    drawPillLabel(ctx, 'Velo 99% (Límites Físicos)', padL + pw - 6, cy + maxSpread * 0.90, '#94a3b8', 'rgba(148, 163, 184, 0.35)');
   }
 
   // ACTO 2: LOS 5 PASOS DE SPLIT CONFORMAL PREDICTION (SCP - LEI ET AL., 2017)
@@ -1447,7 +1487,7 @@ input[type="range"] {
     const qVal = (8.5 + (state.coveragePct - 75) * 0.72).toFixed(1);
 
     ctx.fillStyle = '#a5f3fc';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText(`PASOS 1–4: Medir errores reales Sᵢ = |f̂(xᵢ) − yᵢ| en Calibración (Cal) y tomar el cuantil ${state.coveragePct}% ➔ q̂ = ${qVal}`, boxX + 12, boxY + 18);
 
@@ -1480,7 +1520,7 @@ input[type="range"] {
         ctx.restore();
 
         ctx.fillStyle = '#ffe1a8';
-        ctx.font = '700 9.5px "JetBrains Mono"';
+        ctx.font = '700 12px "JetBrains Mono"';
         ctx.textAlign = 'right';
         ctx.fillText(`Umbral q̂ (${state.coveragePct}%) = ±${qVal} u.`, bLeft + bW - 4, y - 5);
       }
@@ -1550,7 +1590,7 @@ input[type="range"] {
     }
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText(`PASO 5: Intervalo Garantizado I(x) = [ f̂(x) − ${qVal}, f̂(x) + ${qVal} ] · Cobertura empírica ≥ ${state.coveragePct}%`, sx + 10, chartY + 16);
   }
@@ -1569,9 +1609,9 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(lx, ly, lw, boxH, 11); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#a5f3fc';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('🔀 CUANTIL LOCAL (q̂ⱼ) VS. GLOBAL (q̂_global)', lx + 14, ly + 20);
+    fitFill('🔀 CUANTIL LOCAL (q̂ⱼ) VS. GLOBAL (q̂_global)', lx + 14, ly + 20, lw - 28);
 
     // Serie 1: Estable (Con Cuantil Local estrecho vs Global inflado)
     const s1Y = ly + 36, sH = (boxH - 60) / 2;
@@ -1580,15 +1620,15 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(lx + 12, s1Y, lw - 24, sH, 8); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 9px "JetBrains Mono"';
-    ctx.fillText('✅ CUANTIL LOCAL (q̂ⱼ): Traje a medida por serie', lx + 20, s1Y + 16);
+    ctx.font = '700 11.5px "JetBrains Mono"';
+    fitFill('✅ CUANTIL LOCAL (q̂ⱼ): Traje a medida por serie', lx + 20, s1Y + 16, lw - 40);
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px Inter, sans-serif';
-    ctx.fillText('• Evita que una serie volátil ensanche artificialmente', lx + 20, s1Y + 34);
-    ctx.fillText('  las bandas de tus productos o regiones estables.', lx + 20, s1Y + 50);
+    ctx.font = '500 12px Inter, sans-serif';
+    fitFill('• Evita que una serie volátil ensanche artificialmente', lx + 20, s1Y + 34, lw - 40);
+    fitFill('  las bandas de tus productos o regiones estables.', lx + 20, s1Y + 50, lw - 40);
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '600 9px "JetBrains Mono"';
-    ctx.fillText('q̂ⱼ = q₁₋α( S_Cal, j )  [Ideal en varianzas heterogéneas]', lx + 20, s1Y + sH - 12);
+    ctx.font = '600 11.5px "JetBrains Mono"';
+    fitFill('q̂ⱼ = q₁₋α( S_Cal, j )  [Ideal en varianzas heterogéneas]', lx + 20, s1Y + sH - 12, lw - 40);
 
     // Serie 2: Cuantil Global
     const s2Y = s1Y + sH + 10;
@@ -1597,15 +1637,15 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(lx + 12, s2Y, lw - 24, sH, 8); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#d8b4fe';
-    ctx.font = '700 9px "JetBrains Mono"';
-    ctx.fillText('🌐 CUANTIL GLOBAL (q̂_global): Agrupa M series cortas', lx + 20, s2Y + 16);
+    ctx.font = '700 11.5px "JetBrains Mono"';
+    fitFill('🌐 CUANTIL GLOBAL (q̂_global): Agrupa M series cortas', lx + 20, s2Y + 16, lw - 40);
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px Inter, sans-serif';
-    ctx.fillText('• Cuando cada serie individual tiene muy pocos puntos', lx + 20, s2Y + 34);
-    ctx.fillText('  (|Calⱼ| corto), une los errores para estabilizar q̂.', lx + 20, s2Y + 50);
+    ctx.font = '500 12px Inter, sans-serif';
+    fitFill('• Cuando cada serie individual tiene muy pocos puntos', lx + 20, s2Y + 34, lw - 40);
+    fitFill('  (|Calⱼ| corto), une los errores para estabilizar q̂.', lx + 20, s2Y + 50, lw - 40);
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '600 9px "JetBrains Mono"';
-    ctx.fillText('q̂_global = q₁₋α( ⋃ S_Cal, j )  [Ideal en series cortas NN5/M3]', lx + 20, s2Y + sH - 12);
+    ctx.font = '600 11.5px "JetBrains Mono"';
+    fitFill('q̂_global = q₁₋α( ⋃ S_Cal, j )  [Ideal en series cortas NN5/M3]', lx + 20, s2Y + sH - 12, lw - 40);
     ctx.restore();
 
     // DERECHA: EVIDENCIA NUMÉRICA EN ERCOT 2232 (ACHOUR ET AL., 2025)
@@ -1619,13 +1659,13 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx, ry, rw, boxH, 11); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#6ef0b4';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('🏆 ESTUDIO ACHOUR ET AL. (2025) · ERCOT 2232 PUNTOS', rx + 14, ry + 20);
+    fitFill('🏆 ESTUDIO ACHOUR ET AL. (2025) · ERCOT 2232 PUNTOS', rx + 14, ry + 20, rw - 28, ['🏆 ACHOUR ET AL. (2025) · ERCOT 2232']);
 
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px Inter, sans-serif';
-    ctx.fillText(`Al asignar ${state.calibShare}% del historial a Calibración (|Cal|), mira qué ocurre con el error (MASE) y el ancho (MSIW):`, rx + 14, ry + 38);
+    ctx.font = '500 12px Inter, sans-serif';
+    fitFill(`Al asignar ${state.calibShare}% del historial a Calibración (|Cal|), mira qué ocurre con el error (MASE) y el ancho (MSIW):`, rx + 14, ry + 38, rw - 28, [`Con ${state.calibShare}% del historial en Calibración (|Cal|):`]);
 
     const benchmarks = [
       {
@@ -1664,30 +1704,51 @@ input[type="range"] {
       ctx.beginPath(); ctx.roundRect(rx + 12, by, rw - 24, cardH - 4, 8); ctx.fill(); ctx.stroke();
 
       ctx.fillStyle = b.color;
-      ctx.font = '700 9.5px "JetBrains Mono"';
+      ctx.font = '700 12px "JetBrains Mono"';
       ctx.textAlign = 'left';
-      ctx.fillText(b.name, rx + 20, by + 16);
+      const mcrTxt = `Cobertura MCR: ${b.mcr}`;
+      const mcrW = ctx.measureText(mcrTxt).width;
+      const nameMax = rw - 44 - mcrW - 12;
+      const shortName = b.name.replace(/ · [^)]*\)/, ')');
+      fitFill(b.name, rx + 20, by + 16, nameMax, [shortName, shortName.replace(/(\d+)% Train \/ (\d+)% Cal/, '$1/$2'), b.name.split(' (')[0]]);
 
       ctx.fillStyle = '#e2eeff';
       ctx.textAlign = 'right';
-      ctx.fillText(`Cobertura MCR: ${b.mcr}`, rx + rw - 22, by + 16);
+      ctx.fillText(mcrTxt, rx + rw - 22, by + 16);
 
       // Barra de MASE
-      const barMaxW = rw - 210;
+      const barMaxW = Math.max(60, rw - 260);
       const bw = (b.mase / maxMase) * barMaxW;
       ctx.fillStyle = b.color;
       ctx.fillRect(rx + 20, by + 24, bw, 11);
 
       ctx.fillStyle = '#ffffff';
-      ctx.font = '700 9px "JetBrains Mono"';
+      ctx.font = '700 11.5px "JetBrains Mono"';
       ctx.textAlign = 'left';
       ctx.fillText(`MASE: ${b.mase} · Ancho MSIW: ${b.msiw}`, rx + 26 + bw, by + 33);
 
       ctx.fillStyle = '#94a3b8';
-      ctx.font = '500 9px Inter, sans-serif';
-      ctx.fillText(b.note, rx + 20, by + cardH - 12);
+      ctx.font = '500 11.5px Inter, sans-serif';
+      fitFill(b.note, rx + 20, by + cardH - 12, rw - 44, [b.note.split(':')[0]]);
     });
     ctx.restore();
+  }
+
+  // Dibuja texto dentro de maxW: prueba alternativas más cortas y, si hace falta, reduce la fuente (mín. 11 px)
+  function fitFill(text, x, y, maxW, alts) {
+    const cands = [text].concat(alts || []);
+    let pick = cands.find(t => ctx.measureText(t).width <= maxW);
+    if (!pick) {
+      pick = cands[cands.length - 1];
+      const m = /(\d+(?:\.\d+)?)px/.exec(ctx.font);
+      let px = m ? parseFloat(m[1]) : 13;
+      const base = ctx.font;
+      while (px > 11 && ctx.measureText(pick).width > maxW) {
+        px -= 0.5;
+        ctx.font = base.replace(/(\d+(?:\.\d+)?)px/, px + 'px');
+      }
+    }
+    ctx.fillText(pick, x, y);
   }
 
   // ACTO 4: ASIMETRÍA DEL RIESGO (P10 / P50 / P90) Y PASE A LA DIAPOSITIVA 11 (ÁRBOL DE DECISIÓN)
@@ -1704,7 +1765,7 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(lx, ly, lw, boxH, 11); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('⚖️ EL CONO DE LA HONESTIDAD: DECISIÓN ASIMÉTRICA', lx + 14, ly + 20);
 
@@ -1776,7 +1837,7 @@ input[type="range"] {
     ctx.setLineDash([]);
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 9px "JetBrains Mono"';
+    ctx.font = '700 11.5px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('P90 (Reserva Antiapagón)', cLeft + cW - 4, cy - maxS - 5);
     ctx.fillStyle = '#a5f3fc';
@@ -1791,11 +1852,11 @@ input[type="range"] {
     // Explicación de los 3 Axiomas al pie de la caja izquierda
     const axY = cTop + cH + 20;
     ctx.fillStyle = '#e2eeff';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('📌 AXIOMA DE CERTIDUMBRE PROBABILÍSTICA:', lx + 14, axY);
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 9.5px Inter, sans-serif';
+    ctx.font = '500 12px Inter, sans-serif';
     ctx.fillText('Subestimar demanda eléctrica o médica cuesta un colapso;', lx + 14, axY + 18);
     ctx.fillText(`por eso planificamos sobre la banda superior calibrada (P${state.targetQuantile}).`, lx + 14, axY + 34);
     ctx.restore();
@@ -1812,16 +1873,16 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx, ry, rw, boxH, 11); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#38efff';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('⏭️ PASE A LA DIAPOSITIVA 11 (EL CIERRE EJECUTIVO)', rx + 14, ry + 20);
+    ctx.fillText('⏭️ SIGUIENTE: EL CIERRE EJECUTIVO', rx + 14, ry + 20);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '700 13px "Space Grotesk", sans-serif';
     ctx.fillText('Arquitectura de Decisión: ¿Qué modelo usar hoy?', rx + 14, ry + 40);
 
     ctx.fillStyle = '#b8cae0';
-    ctx.font = '500 9.5px Inter, sans-serif';
+    ctx.font = '500 12px Inter, sans-serif';
     ctx.fillText('En la siguiente diapositiva cruzaremos las 4 Eras con 3 filtros prácticos:', rx + 14, ry + 58);
 
     const filters = [
@@ -1850,11 +1911,11 @@ input[type="range"] {
       ctx.beginPath(); ctx.roundRect(rx + 12, fy, rw - 24, fH - 4, 8); ctx.fill(); ctx.stroke();
 
       ctx.fillStyle = f.c;
-      ctx.font = '700 9.5px "JetBrains Mono"';
+      ctx.font = '700 12px "JetBrains Mono"';
       ctx.fillText(f.q, rx + 20, fy + 18);
 
       ctx.fillStyle = '#e2eeff';
-      ctx.font = '500 9.5px Inter, sans-serif';
+      ctx.font = '500 12px Inter, sans-serif';
       ctx.fillText(f.a, rx + 20, fy + 36);
     });
     ctx.restore();

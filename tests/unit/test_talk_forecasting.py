@@ -112,7 +112,7 @@ def test_manifest_and_shared_assets_valid() -> None:
     assert manifest.engine == "python-deck"
     assert manifest.entry == "index.html"
     assert manifest.cover == "docs/images/front/bg_cover_official.png"
-    assert manifest.slides_count == 30
+    assert manifest.slides_count == 31
     assert manifest.duration_min == 35
     assert manifest.tags == ("Forecasting", "ML/DL", "SENAMHI", "NDVI")
     assert "notebooks" in manifest.extras
@@ -176,7 +176,7 @@ def test_user_simulation_build_deck_to_output_dir(tmp_path: Path) -> None:
     assert "window.DECK_DATA" in html_text
     assert "Chart.defaults" in html_text
     assert "IQUITOS" in html_text and "DATA FEST 2026" in html_text
-    assert 'data-index="30"' in html_text
+    assert 'data-index="31"' in html_text
 
     raw_deck_json = _extract_deck_data_json(html_text)
     assert re.search(r"(?<!\")\bNaN\b(?!\")", raw_deck_json) is None, (

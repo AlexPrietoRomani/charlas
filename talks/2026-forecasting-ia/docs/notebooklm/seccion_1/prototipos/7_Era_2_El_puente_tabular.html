@@ -27,7 +27,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html, body { width: 100%; min-height: 100%; margin: 0; }
+html, body { width: 100%; height: 100%; min-height: 100%; margin: 0; }
 
 body {
   min-height: 100svh;
@@ -166,7 +166,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   color: var(--phi);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -340,7 +340,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   --stage-accent: var(--phi);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: clamp(6px, 0.9vh, 10px);
   padding: clamp(10px, 1.2vw, 18px);
   border: 1px solid color-mix(in srgb, var(--stage-accent) 35%, rgba(133, 158, 192, 0.16));
@@ -349,7 +349,8 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
     radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--stage-accent) 12%, transparent), transparent 55%),
     linear-gradient(155deg, rgba(11, 19, 39, 0.95), rgba(5, 10, 24, 0.94));
   min-height: 0;
-  overflow-y: auto;
+  height: 100%;
+  overflow-y: hidden;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(56, 239, 255, 0.3) rgba(5, 10, 24, 0.4);
@@ -404,13 +405,13 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .narr-title {
   margin: 0;
-  font: 700 clamp(17px, 1.45vw, 22px)/1.18 var(--display);
+  font: 700 clamp(18px, 1.45vw, 22.5px)/1.18 var(--display);
   color: #f8fbff;
 }
 
 .narr-lead {
   margin: 0;
-  font: 400 clamp(12px, 0.98vw, 13.8px)/1.45 var(--sans);
+  font: 400 clamp(13.5px, 1.02vw, 15.8px)/1.45 var(--sans);
   color: #b8cae0;
 }
 
@@ -421,9 +422,15 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   flex-direction: column;
   gap: 8px;
   min-height: 0;
+  flex: 1 1 auto;
+  justify-content: space-evenly;
 }
 
 .info-block {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 9px 12px;
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -435,7 +442,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
-  font: 700 9.5px/1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--stage-accent);
@@ -443,7 +450,7 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
 
 .info-block-text {
   margin: 0;
-  font: 400 clamp(11.5px, 0.92vw, 13px)/1.42 var(--sans);
+  font: 400 clamp(13px, 0.98vw, 15.2px)/1.42 var(--sans);
   color: #cedcf0;
 }
 
@@ -468,21 +475,24 @@ h1 span.sub { font-weight: 500; font-size: 0.82em; color: #a3b8d4; }
   text-align: right;
 }
 
-.speaker-box {
-  padding: 10px 12px;
-  border-left: 3px solid var(--stage-accent);
-  border-radius: 0 10px 10px 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--stage-accent) 11%, rgba(8, 15, 32, 0.85)), rgba(8, 15, 32, 0.5));
-}
-
-.speaker-head {
+.speaker-box, .executive-takeaway {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
-  font: 700 9px/1 var(--mono);
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(56, 239, 255, 0.28);
+  background: linear-gradient(135deg, rgba(14, 116, 144, 0.22), rgba(7, 13, 28, 0.9));
+  font: 600 clamp(10px, 0.76vw, 11.5px)/1.3 var(--sans);
+  color: #edf5ff;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.executive-takeaway strong { color: var(--ockham); white-space: nowrap; }
+
+.speaker-head {
+  display: none;
+}
   color: var(--stage-accent);
 }
 
@@ -848,14 +858,14 @@ input[type="range"] {
         </svg>
       </div>
       <div>
-        <p class="eyebrow">Continuación de Era 1 (Fallo ante No-Linealidad) · Saga Evolutiva (Era 2 de 4)</p>
-        <h1>VÍA 2: <span class="era">El Puente Tabular</span> <span class="sub">· El Truco de los Lags y Árboles (LightGBM, XGBoost)</span></h1>
+        <p class="eyebrow">Cuando la fórmula simple no alcanza</p>
+        <h1>De series a tablas: <span class="era">el puente tabular</span></h1>
       </div>
     </div>
 
     <div class="via-card" aria-label="Condiciones operativas de la Vía 2">
       <div class="via-title">
-        <span>⚡ FICHA OPERATIVA VÍA 2</span>
+        <span>⚡ FICHA OPERATIVA</span>
         <span>MATRIZ SUPERVISADA + GBDT</span>
       </div>
       <div class="via-pills">
@@ -870,7 +880,7 @@ input[type="range"] {
   <!-- BARRA DE PROCESO EN BUCLE: Lags ─▶ Walmart M5 ─▶ Trampa del Árbol ─▶ Crisis Texas & Pase a Era 3 -->
   <nav class="flowbar" aria-label="Proceso evolutivo de la Era 2">
     <div class="process-track" role="tablist">
-      <button class="proc-node" role="tab" type="button" data-step="lags" aria-selected="true">
+      <button class="proc-node" role="tab" type="button" data-step="lags" aria-selected="true" data-route="corta">
         <span class="proc-num">1</span>
         <div class="proc-text">
           <span class="proc-year">El Truco de los Lags</span>
@@ -881,7 +891,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="m5" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="m5" aria-selected="false" data-route="corta">
         <span class="proc-num">2</span>
         <div class="proc-text">
           <span class="proc-year">Reinado Walmart M5</span>
@@ -892,7 +902,7 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="trap" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="trap" aria-selected="false" data-route="experta">
         <span class="proc-num">3</span>
         <div class="proc-text">
           <span class="proc-year">Trampa de los Árboles</span>
@@ -903,11 +913,11 @@ input[type="range"] {
 
       <span class="proc-arrow" aria-hidden="true">─▶</span>
 
-      <button class="proc-node" role="tab" type="button" data-step="ercot" aria-selected="false">
+      <button class="proc-node" role="tab" type="button" data-step="ercot" aria-selected="false" data-route="corta">
         <span class="proc-num">4</span>
         <div class="proc-text">
-          <span class="proc-year">Texas 2021 ─▶ Era 3</span>
-          <span class="proc-sub">Apagón ERCOT y pase a Parches</span>
+          <span class="proc-year">Texas 2021 ─▶ Redes neuronales</span>
+          <span class="proc-sub">Apagón de Texas 2021</span>
         </div>
         <div class="proc-progress" id="prog-ercot"></div>
       </button>
@@ -928,28 +938,22 @@ input[type="range"] {
     <aside class="narrative-card" id="narrativeCard" aria-live="polite">
       <div class="narr-top">
         <div class="narr-badges">
-          <span class="stage-tag" id="stageTag">ACTO 1 DE 4 · EL ORIGEN DE LA ERA 2</span>
+          <span class="stage-tag" id="stageTag">EL TRUCO DE LOS REZAGOS</span>
           <span class="stage-year-pill" id="stageKeyHint">Teclas 1 · 2 · 3 · 4</span>
         </div>
-        <h2 class="narr-title" id="narrTitle">1. El “Truco de los Lags”: ¿Cómo convertir el tiempo en una tabla?</h2>
-        <p class="narr-lead" id="narrLead">
-          En la Era 1 vimos que una fórmula rígida colapsa cuando entran lluvias, precios o promociones. Para usar <b>Machine Learning</b>, primero hubo que enseñarle a leer el tiempo como si fuera una <b>hoja de Excel</b>.
-        </p>
+        <h2 class="narr-title" id="narrTitle">Convertir el tiempo en una tabla de Excel</h2>
+        <p class="narr-lead" id="narrLead">Para usar aprendizaje automático, primero hubo que enseñarle a leer el pasado como columnas de una tabla.</p>
       </div>
 
       <div class="narr-blocks">
         <div class="info-block">
-          <div class="info-block-label" id="block1Label">🪟 LA ANALOGÍA DE LA VENTANA DESLIZANTE</div>
-          <p class="info-block-text" id="block1Text">
-            Un algoritmo de árboles no tiene reloj ni entiende qué es una secuencia. El <b>“truco de los lags”</b> consiste en deslizar una ventana por el pasado y copiar en columnas <b>cuánto vendimos ayer (yₜ₋₁), hace 7 días (yₜ₋₇) y el promedio móvil</b>, para predecir mañana (<b>yₜ₊ₕ</b>).
-          </p>
+          <div class="info-block-label" id="block1Label">🪟 Una ventana deslizante</div>
+          <p class="info-block-text" id="block1Text">Se desliza por el pasado y copia en columnas ayer, hace 7 días y promedios móviles.</p>
         </div>
 
         <div class="info-block">
-          <div class="info-block-label" id="block2Label">🧩 EL GRAN BENEFICIO: SUMAR CUALQUIER VARIABLE</div>
-          <p class="info-block-text" id="block2Text">
-            Una vez que el tiempo es una tabla supervisada, podemos añadir al lado <b>columnas de clima, descuentos, feriados o categorías</b>. El modelo ignora el orden temporal y aprende reglas directas de esa matriz estática.
-          </p>
+          <div class="info-block-label" id="block2Label">🧩 Sumar cualquier variable</div>
+          <p class="info-block-text" id="block2Text">Permite añadir clima, promociones o feriados. El árbol aprende reglas fijas, no secuencias.</p>
         </div>
 
         <div class="math-strip">
@@ -958,14 +962,8 @@ input[type="range"] {
         </div>
       </div>
 
-      <div class="speaker-box">
-        <div class="speaker-head">
-          <span>🎤 GUÍA DE EXPOSICIÓN (QUÉ DECIR)</span>
-          <span id="speakerTime">~15 seg</span>
-        </div>
-        <p class="speaker-quote" id="speakerQuote">
-          “Un árbol de decisión no sabe qué es un reloj. Por eso inventamos el truco de los lags: tomamos fotos de ayer y de la semana pasada y las ponemos como columnas de Excel junto al precio y al clima para adivinar mañana.”
-        </p>
+      <div class="executive-takeaway" id="speakerBox">
+        <strong>💡 Idea Clave:</strong> <span id="speakerQuote">Deslizar ventanas convierte una serie en una tabla.</span>
       </div>
     </aside>
 
@@ -1065,77 +1063,77 @@ input[type="range"] {
   const STAGE_CONTENT = {
     lags: {
       accent: 'var(--phi)',
-      tag: 'ETAPA 1 DE 4 · EL TRUCO DE LOS LAGS',
-      title: '1. El “Truco de los Lags”: ¿Cómo convertir el tiempo en una tabla?',
-      lead: 'En la Era 1 vimos que una fórmula rígida colapsa cuando entran lluvias, precios o promociones. Para usar <b>Machine Learning</b>, primero hubo que enseñarle a leer el tiempo como si fuera una <b>hoja de Excel</b>.',
-      b1Label: '🪟 LA ANALOGÍA DE LA VENTANA DESLIZANTE',
-      b1Text: 'Un algoritmo de árboles no tiene reloj ni entiende qué es una secuencia. El <b>“truco de los lags”</b> consiste en deslizar una ventana por el pasado y copiar en columnas <b>cuánto vendimos ayer (yₜ₋₁), hace 7 días (yₜ₋₇) y el promedio móvil</b>, para predecir mañana (<b>yₜ₊ₕ</b>).',
-      b2Label: '🧩 EL GRAN BENEFICIO: SUMAR CUALQUIER VARIABLE',
-      b2Text: 'Una vez que el tiempo es una tabla supervisada, podemos añadir al lado <b>columnas de clima, descuentos, feriados o categorías</b>. El modelo ignora el orden temporal y aprende reglas directas de esa matriz estática.',
+      tag: 'EL TRUCO DE LOS REZAGOS',
+      title: 'Convertir el tiempo en una tabla de Excel',
+      lead: 'Para usar aprendizaje automático, primero hubo que enseñarle a leer el pasado como columnas de una tabla.',
+      b1Label: '🪟 Una ventana deslizante',
+      b1Text: 'Se desliza por el pasado y copia en columnas ayer, hace 7 días y promedios móviles.',
+      b2Label: '🧩 Sumar cualquier variable',
+      b2Text: 'Permite añadir clima, promociones o feriados. El árbol aprende reglas fijas, no secuencias.',
       formula: 'Vector Xₜ = [ yₜ₋₁, yₜ₋₇, Media₇, Promoₜ, Climaₜ ] ──▶ yₜ₊ₕ',
       hint: 'De secuencia 1D a matriz supervisada 2D',
-      quote: '“Un árbol de decisión no sabe qué es un reloj. Por eso inventamos el truco de los lags: tomamos fotos de ayer y de la semana pasada y las ponemos como columnas de Excel junto al precio y al clima para adivinar mañana.”',
+      quote: 'Deslizar ventanas convierte una serie en una tabla.',
       icon: '🪟',
       canvasTitle: 'Ventana Deslizante en Vivo: De Serie Temporal a Matriz Supervisada',
-      ovLeft: '🪟 Arriba: Ventana deslizándose por la serie',
-      ovRight: '📋 Abajo: Filas creadas para entrenar el árbol',
+      ovLeft: '🪟 Ventana Deslizante (Lags)',
+      ovRight: '📋 Matriz Supervisada 2D',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Serie continua (yₜ)</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Lags capturados (yₜ₋₁ … yₜ₋ₙ)</span><span class="leg-item"><i class="leg-line" style="--c:#6ef0b4"></i> Objetivo futuro (yₜ₊₁)</span>',
       nextLabel: 'Ir al Reinado Walmart M5 ─▶'
     },
     m5: {
       accent: 'var(--lab)',
-      tag: 'ETAPA 2 DE 4 · SUPERPODER EN RETAIL MASIVO',
-      title: '2. ¿Por qué LightGBM y XGBoost dominaron Walmart M5?',
-      lead: 'Al transformar miles de series en una gran tabla, los árboles potenciados (<b>GBDT: LightGBM, XGBoost, CatBoost</b>) arrasaron en la competencia mundial <b>Walmart M5 (30,490 productos)</b>.',
-      b1Label: '🛒 EL SUPERPODER: INTERACCIONES NO LINEALES SIN GPU',
-      b1Text: 'En un supermercado, bajar el precio un viernes soleado multiplica las ventas de bebidas, pero un martes lluvioso no. Los árboles descubren solos estas <b>combinaciones no lineales entre miles de variables exógenas</b> en milisegundos sobre CPU.',
-      b2Label: '✅ ¿CUÁNDO ES IMBATIBLE LA VÍA 2?',
-      b2Text: 'Cuando tienes entre <b>1,000 y 100,000 datos</b>, múltiples tablas cruzadas (precios, promociones, stock) y <b>el futuro se comporta dentro de los rangos ya conocidos en el historial</b>.',
+      tag: 'SUPERPODER EN RETAIL',
+      title: 'Árboles de decisión dominaron las ventas de Walmart',
+      lead: 'Con la serie convertida en tabla, LightGBM y XGBoost (árboles de decisión) ganaron en tiendas masivas.',
+      b1Label: '🛒 Cruces sin GPU',
+      b1Text: 'Descubren relaciones entre miles de productos, precios y clima en milisegundos, con CPU común.',
+      b2Label: '✅ Dónde funcionan',
+      b2Text: 'Imbatibles con 1,000 a 100,000 datos y variables extra, si el futuro no rompe récords.',
       formula: 'LightGBM( Lags + Rolling_Mean + Precio + Promo ) ──▶ 30,490 SKUs',
       hint: 'Ganador indiscutible en Retail Masivo (Makridakis et al., 2022)',
-      quote: '“¿Por qué LightGBM ganó en Walmart M5 frente a modelos complejos? Porque puede cruzar 30,000 productos con promociones y feriados en segundos usando una laptop normal, siempre que el mundo no rompa un récord histórico.”',
+      quote: 'LightGBM ganó en Walmart cruzando 30 mil productos sin GPU.',
       icon: '🛒',
       canvasTitle: 'Walmart M5: Árboles (LightGBM) Capturando Picos por Promociones y Clima',
-      ovLeft: '🛒 30,490 SKUs + Precios + Promociones',
-      ovRight: '⚡ Precisión milimétrica dentro del rango histórico',
+      ovLeft: '🛒 Walmart M5: 30,490 SKUs + Covariables',
+      ovRight: '⚡ Precisión milimétrica dentro del rango',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Demanda Real Retail</span><span class="leg-item"><i class="leg-line dashed" style="--c:#6ef0b4"></i> Predicción LightGBM (Con Covariables)</span><span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Días de Super-Promoción</span>',
       nextLabel: 'Ver La Trampa del Árbol ─▶'
     },
     trap: {
       accent: 'var(--ockham)',
-      tag: 'ETAPA 3 DE 4 · EL PUNTO CIEGO MATEMÁTICO',
-      title: '3. “La Trampa de los Árboles”: ¿Por qué jamás pueden extrapolar?',
-      lead: 'Aquí está el talón de Aquiles de la Era 2: <b>un árbol de decisión solo sabe encerrar el pasado en cajas rectangulares</b>; es matemáticamente incapaz de imaginar un valor superior al máximo que vio.',
-      b1Label: '📦 CAJAS CERRADAS (PARTICIÓN ORTOGONAL X_min, X_max)',
-      b1Text: 'Un árbol aprende cortando los datos en escalones: <i>“Si hace más de 35°C, la demanda máxima que vi en mi vida fue 65 GW”</i>. No aprende una pendiente ni una ley física; solo <b>promedia los puntos que cayeron dentro de su última caja</b>.',
-      b2Label: '🧱 EL TECHO DE CRISTAL: LA MESETA PLANA ESTÁTICA',
-      b2Text: 'Si mañana ocurre un evento extremo fuera del rango histórico de entrenamiento, el dato cae en esa misma hoja final y el árbol repite como un loro el mismo tope antiguo: proyecta una <b>meseta plana ciega (y = constante)</b>.',
+      tag: 'EL PUNTO CIEGO',
+      title: 'Los árboles no pueden pronosticar lo que nunca vieron',
+      lead: 'El talón de Aquiles: los árboles dividen los datos en cajas fijas y repiten promedios.',
+      b1Label: '📦 Cajas fijas',
+      b1Text: 'Un árbol no aprende pendientes; solo promedia los puntos dentro de su última caja.',
+      b2Label: '🧱 Resultado: línea plana',
+      b2Text: 'Ante un evento fuera del rango histórico, repite su último promedio: una meseta plana.',
       formula: 'Si X_nuevo > X_máx_histórico ──▶ Árbol devuelve constante (Meseta Plana)',
       hint: 'Incapacidad matemática de extrapolación fuera del rango',
-      quote: '“Imaginen que un árbol guarda todo lo que aprendió dentro de cajas cerradas. Si lo más alto que vio en su vida fue 65, aunque mañana el mundo se duplique, el árbol se queda clavado en 65 dibujando una línea plana.”',
+      quote: 'Un árbol no puede salirse del rango que ya vio.',
       icon: '📦',
       canvasTitle: 'Anatomía de la Falla: Escalones del Árbol vs. Frontera del Historial [X_min, X_max]',
-      ovLeft: '📦 Caja de Entrenamiento (El árbol funciona bien)',
-      ovRight: '🧱 Fuera de Caja: Meseta Plana Estática (y = cte)',
+      ovLeft: '📦 Rango Histórico de Entrenamiento',
+      ovRight: '🧱 Meseta Plana fuera de rango (y = cte)',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#ffc05c"></i> Escalones del Árbol (GBDT)</span><span class="leg-item"><i class="leg-line" style="--c:#ff5277"></i> Realidad Física Continua</span><span class="leg-item"><i class="leg-line dashed" style="--c:#38efff"></i> Frontera Histórica X_máx</span>',
-      nextLabel: 'Ver Crisis Texas y Pase a Era 3 ─▶'
+      nextLabel: 'Ver Crisis Texas ─▶'
     },
     ercot: {
       accent: 'var(--rupture)',
-      tag: 'ETAPA 4 DE 4 · COLAPSO EN TEXAS Y PASE A ERA 3',
-      title: '4. El Apagón de Texas (ERCOT 2021) y el Salto a la Era 3',
-      lead: 'En febrero de 2021, esta limitación matemática se convirtió en una catástrofe real durante la <b>tormenta invernal Uri en Texas</b>, motivando el salto hacia el <b>Deep Learning</b>.',
-      b1Label: '❄️ EL CASO REAL: RÉCORD DE -18 °C Y FALLO DE +20 GW',
-      b1Text: 'La temperatura cayó a <b>-18 °C</b> (un frío jamás visto en 50 años). Como ese número no existía en la tabla histórica, los modelos tabulares proyectaron una <b>meseta plana de 65 GW</b>, pero la demanda real subió a <b>85 GW (+20 GW de error)</b>: 4 días de apagón y $195 mil millones en pérdidas.',
-      b2Label: '🚀 EL PASE A LA SIGUIENTE DIAPOSITIVA (ERA 3: DEEP LEARNING Y PARCHES)',
-      b2Text: 'Para no cortar el tiempo en celdas aisladas ni chocar con mesetas planas, la <b>Era 3 (LSTM, TFT y PatchTST)</b> lee la serie como <b>bloques o “parches” continuos de señal</b> que capturan la aceleración y pendiente real.',
+      tag: 'EL APAGÓN DE TEXAS',
+      title: 'Texas 2021: el frío extremo rompió el pronóstico',
+      lead: 'En 2021 la tormenta Uri causó un error de +20 GW y obligó a buscar modelos más flexibles.',
+      b1Label: '❄️ Caso Texas (-18 °C)',
+      b1Text: 'A -18 °C proyectaron 65 GW; la demanda real fue 85 GW (+20 GW de error).',
+      b2Label: '🚀 Siguiente paso: parches',
+      b2Text: 'Las redes neuronales leen la serie en trozos continuos llamados parches, sin escalones planos.',
       formula: 'Fallo Meseta Plana (-20 GW) ──▶ Salto a Era 3: Parches Continuos (PatchTST)',
       hint: 'Siguiente Diapo · Era 3: Deep Learning Secuencial y de Parches',
-      quote: '“En Texas 2021, cuando el termómetro marcó un récord de -18°C, los árboles predijeron una meseta plana y faltaron 20 Gigavatios. Para romper ese techo plano, dejamos las tablas y pasamos a leer parches continuos con Deep Learning: la Era 3.”',
+      quote: 'Texas 2021: la meseta plana dejó 20 GW sin cubrir.',
       icon: '❄️',
       canvasTitle: 'Crisis ERCOT Texas 2021 (+20 GW de Error) y Transición a la Era 3 (Parches)',
-      ovLeft: '❄️ Izquierda: Crisis ERCOT Texas 2021 (Meseta vs +20 GW)',
-      ovRight: '⏭️ Derecha: Pase a Era 3 (Parches Continuos PatchTST)',
+      ovLeft: '❄️ Crisis ERCOT Texas 2021 (+20 GW)',
+      ovRight: '⏭️ Siguiente: Parches PatchTST',
       legend: '<span class="leg-item"><i class="leg-line" style="--c:#ff5277"></i> Demanda Real ERCOT (85 GW)</span><span class="leg-item"><i class="leg-line" style="--c:#38efff"></i> Meseta Plana GBDT (65 GW)</span><span class="leg-item"><i class="leg-line" style="--c:#b48eff"></i> Salto a Era 3 (Parches)</span>',
       nextLabel: 'Reiniciar bucle (Lags) ↺'
     }
@@ -1144,6 +1142,37 @@ input[type="range"] {
   const $ = id => document.getElementById(id);
   const canvas = $('stageCanvas');
   const ctx = canvas.getContext('2d');
+
+  // Red de seguridad F12 (1366×768): ningún texto del lienzo se sale del borde; si no cabe se reduce
+  // la fuente (mín. 11 px) y, como último recurso, se comprime con maxWidth.
+  (function guardCanvasText() {
+    const rawFill = ctx.fillText.bind(ctx);
+    ctx.fillText = function (text, x, y, maxW) {
+      const W = canvas.clientWidth || 0;
+      const t = String(text);
+      if (W > 0 && maxW === undefined) {
+        const tw = ctx.measureText(t).width;
+        const a = ctx.textAlign;
+        const avail = (a === 'right' || a === 'end') ? x - 12
+          : (a === 'center') ? 2 * Math.min(x, W - x) - 24
+          : W - x - 12;
+        if (tw > avail && avail > 40) {
+          const base = ctx.font;
+          const m = /(\d+(?:\.\d+)?)px/.exec(base);
+          let px = m ? parseFloat(m[1]) : 0;
+          while (m && px > 11 && ctx.measureText(t).width > avail) {
+            px -= 0.5;
+            ctx.font = base.replace(/(\d+(?:\.\d+)?)px/, px + 'px');
+          }
+          const fits = ctx.measureText(t).width <= avail;
+          fits ? rawFill(t, x, y) : rawFill(t, x, y, avail);
+          ctx.font = base;
+          return;
+        }
+      }
+      if (maxW === undefined) rawFill(text, x, y); else rawFill(text, x, y, maxW);
+    };
+  })();
 
   function fitCanvas() {
     const r = canvas.getBoundingClientRect();
@@ -1250,6 +1279,26 @@ input[type="range"] {
     ctx.restore();
   }
 
+  function drawMappingArrow(ctx, x1, y1, x2, y2, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.setLineDash([4, 3]);
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1 + 5);
+    ctx.bezierCurveTo(x1, (y1 + y2) / 2, x2, (y1 + y2) / 2, x2, y2 - 5);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x2, y2 - 2);
+    ctx.lineTo(x2 - 4, y2 - 8);
+    ctx.lineTo(x2 + 4, y2 - 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
   // ACTO 1: EL TRUCO DE LOS LAGS (SERIE ARRIBA + VENTANA DESLIZANTE -> TABLA ABAJO)
   function drawLagsStage(w, h) {
     const padL = 34, padR = 26, padT = 44;
@@ -1287,7 +1336,7 @@ input[type="range"] {
     ctx.stroke();
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText(`🪟 Ventana de ${state.lagsCount} Lags (Pasado)`, (wx1 + wx2) / 2, padT + 18);
     ctx.restore();
@@ -1317,26 +1366,30 @@ input[type="range"] {
 
       if (isTarget) {
         ctx.fillStyle = '#8ef7c7';
-        ctx.font = '700 9.5px "JetBrains Mono"';
+        ctx.font = '700 12px "JetBrains Mono"';
         ctx.textAlign = 'center';
         ctx.fillText(`Objetivo yₜ=${vals[i]}`, xx, yy - 11);
       }
     }
 
-    // Flechas conectoras desde la ventana hacia la tabla supervisada
+    // Flechas conectoras directas desde la ventana hacia las columnas de la tabla supervisada
     const tableY = padT + topH + 18;
     const tableH = h - tableY - 14;
     const tableX = padL;
     const tableW = pw;
+    const colWidth = tableW / 6;
 
-    ctx.save();
-    ctx.strokeStyle = 'rgba(255, 192, 92, 0.45)';
-    ctx.setLineDash([4, 3]);
-    ctx.beginPath();
-    ctx.moveTo((wx1 + wx2) / 2, padT + topH - 2);
-    ctx.lineTo(tableX + tableW * 0.35, tableY - 2);
-    ctx.stroke();
-    ctx.restore();
+    // Flecha desde el último punto de la ventana (Lag 1) hasta columna 1 (Lag 1)
+    const lag1X = X(winEnd);
+    const lag1Y = Y(vals[winEnd]);
+    const col1TargetX = tableX + colWidth * 1.5;
+    drawMappingArrow(ctx, lag1X, lag1Y, col1TargetX, tableY, 'rgba(255, 192, 92, 0.75)');
+
+    // Flecha desde el punto objetivo (y_t) hasta columna 5 (Objetivo)
+    const tgtX = X(targetIdx);
+    const tgtY = Y(vals[targetIdx]);
+    const colTgtX = tableX + colWidth * 5.5;
+    drawMappingArrow(ctx, tgtX, tgtY, colTgtX, tableY, 'rgba(110, 240, 180, 0.85)');
 
     // TABLA SUPERVISADA INFERIOR
     ctx.save();
@@ -1363,7 +1416,7 @@ input[type="range"] {
     ctx.fillRect(tableX, tableY, tableW, rowH);
     cols.forEach((cName, ci) => {
       ctx.fillStyle = ci === 5 ? '#6ef0b4' : (ci >= 1 && ci <= 2 ? '#ffe1a8' : '#e2eeff');
-      ctx.font = '700 9.5px "JetBrains Mono"';
+      ctx.font = '700 12px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(cName, tableX + ci * colW + colW / 2, tableY + rowH * 0.65);
     });
@@ -1399,7 +1452,7 @@ input[type="range"] {
 
       rowCells.forEach((cell, ci) => {
         ctx.fillStyle = ci === 5 ? '#6ef0b4' : (isCurrent ? '#ffffff' : '#cbd5e1');
-        ctx.font = (ci === 5 || isCurrent) ? '700 10px "JetBrains Mono"' : '500 9.5px "JetBrains Mono"';
+        ctx.font = (ci === 5 || isCurrent) ? '700 13px "JetBrains Mono"' : '500 12px "JetBrains Mono"';
         ctx.textAlign = 'center';
         ctx.fillText(cell, tableX + ci * colW + colW / 2, ry + rowH * 0.66);
       });
@@ -1465,23 +1518,29 @@ input[type="range"] {
     // Etiquetas explicativas de los picos
     const pDay = 32;
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 10px "JetBrains Mono"';
-    ctx.textAlign = 'center';
-    ctx.fillText(`🏷️ Promo + Fin de Semana (+${state.promoBoost}%)`, X(pDay), Y(realS[pDay]) - 12);
+    ctx.font = '700 13px "JetBrains Mono"';
+    // Recuadro de Regla de Árbol GBDT en la esquina (ancho adaptable)
+    const bx = padL + 10, by = padT + 8, bh = 74;
+    const bw = 295;
 
-    // Recuadro de Regla de Árbol GBDT en la esquina
-    const bx = padL + 10, by = padT + 8, bw = 295, bh = 74;
+    // La etiqueta nunca invade el recuadro: se alinea a la derecha de su borde si hace falta
+    const promoLbl = `🏷️ Promo + Fin de Semana (+${state.promoBoost}%)`;
+    const promoW = ctx.measureText(promoLbl).width;
+    const promoX = Math.min(Math.max(X(pDay) - promoW / 2, bx + bw + 12), padL + pw - promoW - 4);
+    ctx.textAlign = 'left';
+    ctx.fillText(promoLbl, promoX, Math.max(Y(realS[pDay]) - 12, padT + 14));
+
     ctx.save();
     ctx.fillStyle = 'rgba(6, 12, 28, 0.9)';
     ctx.strokeStyle = 'rgba(110, 240, 180, 0.38)';
     ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 9); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#6ef0b4';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('🌲 REGLA APRENDIDA POR LIGHTGBM:', bx + 10, by + 18);
     ctx.fillStyle = '#e2eeff';
-    ctx.font = '500 10px "JetBrains Mono"';
+    ctx.font = '500 13px "JetBrains Mono"';
     ctx.fillText('SI (Lag_7 > 45) Y (Promo_Activa == SÍ)', bx + 10, by + 38);
     ctx.fillStyle = '#ffe1a8';
     ctx.fillText(`ENTONCES Salto No-Lineal = +${state.promoBoost}% ventas`, bx + 10, by + 56);
@@ -1509,7 +1568,7 @@ input[type="range"] {
     ctx.strokeRect(padL, Y(65), splitX - padL, padT + ph - Y(65));
 
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('📦 CAJA DE ENTRENAMIENTO HISTÓRICO [X_min, X_máx]', padL + 10, Y(65) + 18);
     ctx.restore();
@@ -1526,7 +1585,7 @@ input[type="range"] {
     ctx.restore();
 
     ctx.fillStyle = '#a5f3fc';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText('Frontera X_máx = 65', splitX, padT + 14);
 
@@ -1582,7 +1641,7 @@ input[type="range"] {
       ctx.restore();
 
       ctx.fillStyle = '#fda4af';
-      ctx.font = '700 10.5px "JetBrains Mono"';
+      ctx.font = '700 13.5px "JetBrains Mono"';
       ctx.textAlign = 'right';
       ctx.fillText(`⚠️ Error de No-Extrapolación: -${curU - 65} GW`, padL + pw - 10, pyReal + 16);
     }
@@ -1594,7 +1653,7 @@ input[type="range"] {
     ctx.beginPath(); ctx.arc(px, pyTree, 6, 0, Math.PI * 2); ctx.fill();
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'right';
     ctx.fillText('🧱 Meseta Plana GBDT (y = 65 constante)', padL + pw - 10, Y(65) + 18);
   }
@@ -1619,7 +1678,7 @@ input[type="range"] {
     ctx.strokeRect(padL, Y(65), sx - padL, padT + ph - Y(65));
 
     ctx.fillStyle = '#ffe1a8';
-    ctx.font = '700 9.5px "JetBrains Mono"';
+    ctx.font = '700 12px "JetBrains Mono"';
     ctx.textAlign = 'left';
     ctx.fillText('Historial ERCOT (Techo conocido: 65 GW)', padL + 8, Y(65) - 7);
     ctx.restore();
@@ -1679,7 +1738,7 @@ input[type="range"] {
     ctx.restore();
 
     ctx.fillStyle = '#fda4af';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'center';
     ctx.fillText(`❄️ Récord ${state.uriTemp}°C (+${Math.round(extraGW)} GW no vistos)`, X(peakIdx), peakRealY - 8);
     ctx.fillStyle = '#a5f3fc';
@@ -1698,9 +1757,9 @@ input[type="range"] {
     ctx.beginPath(); ctx.roundRect(rx, ry, rw, rh, 12); ctx.fill(); ctx.stroke();
 
     ctx.fillStyle = '#d8b4fe';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.textAlign = 'left';
-    ctx.fillText('⏭️ PASE A LA SIGUIENTE DIAPO: ERA 3', rx + 14, ry + 22);
+    ctx.fillText('⏭️ SIGUIENTE: REDES NEURONALES', rx + 14, ry + 22);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '700 13px "Space Grotesk", sans-serif';
@@ -1720,7 +1779,7 @@ input[type="range"] {
       ctx.beginPath(); ctx.roundRect(px, py0, pBoxW, pBoxH, 8); ctx.fill(); ctx.stroke();
 
       ctx.fillStyle = '#e9d5ff';
-      ctx.font = '700 9px "JetBrains Mono"';
+      ctx.font = '700 11.5px "JetBrains Mono"';
       ctx.textAlign = 'center';
       ctx.fillText(`Parche P=${p + 1}`, px + pBoxW / 2, py0 + 14);
 
@@ -1742,12 +1801,12 @@ input[type="range"] {
     // Explicación inferior del salto a Era 3
     const ty = py0 + pBoxH + 22;
     ctx.fillStyle = '#cbd5e1';
-    ctx.font = '500 10.5px Inter, sans-serif';
+    ctx.font = '500 13.5px Inter, sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText('• Deja de ver puntos sueltos en cajas cerradas.', rx + 14, ty);
     ctx.fillText('• Agrupa 16 días en “Parches” con pendiente y forma.', rx + 14, ty + 18);
     ctx.fillStyle = '#8ef7c7';
-    ctx.font = '700 10px "JetBrains Mono"';
+    ctx.font = '700 13px "JetBrains Mono"';
     ctx.fillText('• Reduce costo cuadrático O(L²) a O((L/P)²).', rx + 14, ty + 38);
     ctx.restore();
   }

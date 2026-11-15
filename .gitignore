@@ -88,3 +88,13 @@ docs/logs/
 CLAUDE.md
 AGENTS.md
 .project-suite/
+
+# --- Versiones MP4 retiradas / previsualizaciones TTS (PR #2) ---
+talks/*/video/**/*_v[0-9]*.mp4
+talks/*/video/historia_completa/_voz/
+talks/*/video/historia_completa/_preview/
+talks/*/video/historia_completa/*_mudo.mp4
+
+# Guion personal del ponente (PDF local, no se versiona - PR #4)
+guion/
+talks/*/guion/

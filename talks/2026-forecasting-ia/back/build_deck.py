@@ -6,49 +6,15 @@ Autor: Alex Prieto <alexprieto1997@gmail.com>
 Descripción:
 Motor de compilación autónomo para el deck interactivo de la charla
 `2026-forecasting-ia` (`python-deck`). Ensambla estilos, diapositivas,
-notas del orador, branding institucional, prototipos embebidos, librería
-Chart.js offline y payloads reales de Caso 1 (SENAMHI Punchana) y Caso 2
-(Café Jaén) en un archivo HTML autocontenido.
-
-Acciones Principales:
-    - Carga y sanitiza (`clean_nans`) los CSV y JSON reales de `data/`.
-    - Embebe prototipos HTML interactivos, SVGs anatómicos y branding Base64.
-    - Resuelve `chart.umd.min.js` desde `shared/python_deck/assets/` con
-      respaldo local en `front/assets/`.
-    - Genera `presentacion.html` e `index.html` en `output_dir` o `BASE_DIR`.
-    - Copia los datasets procesados (`data/caso_1`, `data/caso_2`) cuando
-      `output_dir` difiere de `BASE_DIR`.
-
-Estructura Interna:
-    - `clean_nans`: Sanitiza recursivamente `NaN` e infinitos hacia `None`.
-    - `_load_deck_data`: Lee y transforma los CSV/JSON de ambos casos.
-    - `_encode_first_existing`: Codifica en Base64 el primer prototipo existente.
-    - `_load_chartjs_bundle`: Carga Chart.js compartido o local como fallback.
-    - `_sync_runtime_assets`: Copia los datasets procesados hacia `target_dir`.
-    - `_render_html_document`: Renderiza el documento HTML completo del deck.
-    - `build_deck`: Orquesta la compilación hacia `output_dir` o `BASE_DIR`.
-    - `main`: Punto de entrada CLI con soporte `--output-dir`.
-
-Entradas / Dependencias:
-    - `front/` (`deck_styles`, `deck_slides_p1`, `deck_slides_p2`, `deck_notes`, `deck_branding`).
-    - `data/caso_1/*`, `data/caso_2/*`, `docs/notebooklm/*`, `docs/images/front/*`.
-    - `shared/python_deck/assets/chart.umd.min.js` y `pandas`.
-
-Salidas / Efectos:
-    - Escribe `presentacion.html` e `index.html` en el directorio destino.
+notas del orador, branding institucional, prototipos embebidos (motor F10),
+gates cinemáticos de video, librería Chart.js offline y payloads reales de
+Caso 1 (SENAMHI Punchana) y Caso 2 (Café Jaén) en un HTML autocontenido.
 
 Ejecución:
     python talks/2026-forecasting-ia/back/build_deck.py [--output-dir RUTA]
-
-Ejemplo de Uso:
-    python talks/2026-forecasting-ia/back/build_deck.py --output-dir _site/2026-forecasting-ia
-
-Argumentos:
-    - --output-dir: Path | None - Directorio destino de compilación (opcional).
 """
 
 import argparse
-import base64
 import json
 import math
 import shutil
@@ -62,7 +28,6 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent
 REPO_ROOT: Path = BASE_DIR.parent.parent
 FRONT_DIR: Path = BASE_DIR / "front"
 
-# Prioriza los módulos de `front/` propios de esta charla frente a cualquier ruta previa.
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 if str(FRONT_DIR) not in sys.path:
@@ -73,105 +38,56 @@ from deck_notes import get_speaker_notes  # noqa: E402
 from deck_slides_p1 import get_slides_part1  # noqa: E402
 from deck_slides_p2 import get_slides_part2  # noqa: E402
 from deck_styles import get_deck_css  # noqa: E402
+from front.prototype_engine import (  # noqa: E402
+    ENGINE_DECK_GATE_CSS,
+    ENGINE_DECK_GATE_JS,
+    VIDEO_SLIDE_CANDIDATES,
+    discover_slide_video,
+    load_prototype_b64,
+    render_slide_video_gate,
+)
 
 SHARED_CHARTJS_PATH: Path = REPO_ROOT / "shared" / "python_deck" / "assets" / "chart.umd.min.js"
 LOCAL_CHARTJS_FALLBACK_PATH: Path = BASE_DIR / "front" / "assets" / "chart.umd.min.js"
 
-PROTOTYPE_CANDIDATES: dict[str, tuple[str, ...]] = {
-    "b64_sim_html": (
-        "docs/notebooklm/seccion_1/prototipos/5_Anatomia_de_la_senal_temporal_v3.html",
-        "docs/notebooklm/seccion_1/5_Anatomia_de_la_senal_temporal_v3.html",
-        "docs/notebooklm/seccion_1/prototipos/5_anatomia_senal_temporal_mejorada.html",
-        "docs/notebooklm/seccion_1/5_anatomia_senal_temporal_mejorada.html",
-        "docs/notebooklm/seccion_1/anatomia_senal_temporal_mejorada.html",
-        "docs/notebooklm/seccion_1/5_anatom_a_ontol_gica_f_sica_vs_ruido.html",
-        "docs/notebooklm/seccion_1/anatom_a_ontol_gica_f_sica_vs_ruido.html",
-    ),
-    "b64_era1_html": (
-        "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal_v3.html",
-        "docs/notebooklm/seccion_1/6_Era_1_La_parsimonia_lineal_v3.html",
-        "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal.html",
-        "docs/notebooklm/seccion_1/6_Era_1_La_parsimonia_lineal.html",
-    ),
-    "b64_era2_html": (
-        "docs/notebooklm/seccion_1/prototipos/7_Era_2_El_puente_tabular.html",
-        "docs/notebooklm/seccion_1/7_Era_2_El_puente_tabular.html",
-    ),
-    "b64_era3_html": (
-        "docs/notebooklm/seccion_1/prototipos/8_Era_3_Deep_Learning_y_Parches.html",
-        "docs/notebooklm/seccion_1/8_Era_3_Deep_Learning_y_Parches.html",
-    ),
-    "b64_era4_html": (
-        "docs/notebooklm/seccion_1/prototipos/9_Era_4_Modelos_Fundacionales_Zero_Shot.html",
-        "docs/notebooklm/seccion_1/9_Era_4_Modelos_Fundacionales_Zero_Shot.html",
-    ),
-    "b64_cono_html": (
-        "docs/notebooklm/seccion_1/prototipos/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html",
-        "docs/notebooklm/seccion_1/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html",
-    ),
-    "b64_decision_html": (
-        "docs/notebooklm/seccion_1/prototipos/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html",
-        "docs/notebooklm/seccion_1/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html",
-    ),
-    "b64_p19_html": (
-        "docs/notebooklm/seccion_3/prototipos/19_c_mo_el_agro_invent_el_forecasting.html",
-    ),
-    "b64_p20_html": (
-        "docs/notebooklm/seccion_3/prototipos/20_del_almanaque_al_sat_lite.html",
-    ),
-    "b64_p21_html": (
-        "docs/notebooklm/seccion_3/prototipos/21_f_sica_biol_gica_y_el_l_mite_algor_tmico.html",
-    ),
-    "b64_p22_html": (
-        "docs/notebooklm/seccion_3/prototipos/22_reloj_fenol_gico_del_caf.html",
-    ),
-    "b64_p23_html": (
-        "docs/notebooklm/seccion_3/prototipos/23_precisi_n_actual_y_las_tres_trampas.html",
-    ),
-    "b64_p13_html": (
-        "docs/notebooklm/seccion_2/prototipos/13_Datos_SENAMHI_Punchana.html",
-    ),
-    "b64_p14_html": (
-        "docs/notebooklm/seccion_2/prototipos/14_Trampa_Arboles_Meseta_vs_Diferencias.html",
-    ),
-    "b64_p15_html": (
-        "docs/notebooklm/seccion_2/prototipos/15_Benchmark_14_Modelos_Tierra_vs_Supercomputo.html",
-    ),
-    "b64_p16_html": (
-        "docs/notebooklm/seccion_2/prototipos/16_Pronostico_7_Dias_Cono_P10_P90.html",
-    ),
-    "b64_p17_html": (
-        "docs/notebooklm/seccion_2/prototipos/17_Pipeline_Codigo_Diferencias_ExtraTrees.html",
-    ),
-}
+PROTOTYPE_MAP: tuple[tuple[str, str, int, int], ...] = (
+    ("b64_sim_html", "docs/notebooklm/seccion_1/prototipos/5_Anatomia_de_la_senal_temporal_v3.html", 5, 1),
+    ("b64_era1_html", "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal_v3.html", 6, 1),
+    ("b64_era2_html", "docs/notebooklm/seccion_1/prototipos/7_Era_2_El_puente_tabular.html", 7, 1),
+    ("b64_era3_html", "docs/notebooklm/seccion_1/prototipos/8_Era_3_Deep_Learning_y_Parches.html", 8, 1),
+    ("b64_era4_html", "docs/notebooklm/seccion_1/prototipos/9_Era_4_Modelos_Fundacionales_Zero_Shot.html", 9, 1),
+    ("b64_cono_html", "docs/notebooklm/seccion_1/prototipos/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html", 10, 1),
+    ("b64_decision_html", "docs/notebooklm/seccion_1/prototipos/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html", 11, 1),
+    ("b64_p19_html", "docs/notebooklm/seccion_3/prototipos/19_c_mo_el_agro_invent_el_forecasting.html", 20, 3),
+    ("b64_p20_html", "docs/notebooklm/seccion_3/prototipos/20_del_almanaque_al_sat_lite.html", 21, 3),
+    ("b64_p21_html", "docs/notebooklm/seccion_3/prototipos/21_f_sica_biol_gica_y_el_l_mite_algor_tmico.html", 22, 3),
+    ("b64_p22_html", "docs/notebooklm/seccion_3/prototipos/22_reloj_fenol_gico_del_caf.html", 23, 3),
+    ("b64_p23_html", "docs/notebooklm/seccion_3/prototipos/23_precisi_n_actual_y_las_tres_trampas.html", 24, 3),
+    ("b64_p12_html", "docs/notebooklm/seccion_2/prototipos/12_Caso_1_Auditoria_Iquitos.html", 13, 2),
+    ("b64_p13_html", "docs/notebooklm/seccion_2/prototipos/13_Datos_SENAMHI_Punchana.html", 14, 2),
+    ("b64_p14_html", "docs/notebooklm/seccion_2/prototipos/14_Trampa_Arboles_Meseta_vs_Diferencias.html", 15, 2),
+    ("b64_p15_html", "docs/notebooklm/seccion_2/prototipos/15_Benchmark_14_Modelos_Tierra_vs_Supercomputo.html", 16, 2),
+    ("b64_p16_html", "docs/notebooklm/seccion_2/prototipos/16_Pronostico_7_Dias_Cono_P10_P90.html", 17, 2),
+    ("b64_p17_html", "docs/notebooklm/seccion_2/prototipos/17_Pipeline_Codigo_Diferencias_ExtraTrees.html", 18, 2),
+    ("b64_p25_html", "docs/notebooklm/seccion_4/prototipos/25_Datos_24_Campanias_Jaen.html", 26, 4),
+    ("b64_p26_html", "docs/notebooklm/seccion_4/prototipos/26_Trampa_Satelite_NDVI_vs_Clima.html", 27, 4),
+    ("b64_p27_html", "docs/notebooklm/seccion_4/prototipos/27_Validacion_WalkForward_Benchmark_Jaen.html", 28, 4),
+)
 
 
 def clean_nans(obj: Any) -> Any:
-    """
-    Reemplaza recursivamente valores `NaN` o infinitos por `None` para serializar JSON válido.
-
-    Args:
-        obj (Any): Estructura arbitraria compuesta por diccionarios, listas o escalares.
-
-    Returns:
-        Any: Estructura equivalente libre de `NaN` e infinitos no válidos en JSON.
-    """
-    if isinstance(obj, float) and (pd.isna(obj) or math.isnan(obj) or math.isinf(obj)):
+    """Convierte recursivamente valores NaN e infinitos en None para serializar JSON válido."""
+    if isinstance(obj, float) and (pd.isna(obj) or not math.isfinite(obj)):
         return None
     if isinstance(obj, dict):
-        return {key: clean_nans(value) for key, value in obj.items()}
+        return {k: clean_nans(v) for k, v in obj.items()}
     if isinstance(obj, list):
-        return [clean_nans(item) for item in obj]
+        return [clean_nans(v) for v in obj]
     return obj
 
 
 def _load_deck_data() -> dict[str, Any]:
-    """
-    Carga y sanitiza los datasets auditados de Caso 1 y Caso 2 desde `BASE_DIR / "data"`.
-
-    Returns:
-        dict[str, Any]: Diccionario listo para inyectar en `window.DECK_DATA`.
-    """
+    """Carga y sanitiza los datasets auditados de Caso 1 y Caso 2 desde `BASE_DIR / "data"`."""
     bench_df = pd.read_csv(BASE_DIR / "data/caso_1/benchmark_punchana.csv")
     forecast_7d_df = pd.read_csv(BASE_DIR / "data/caso_1/senamhi_forecast_7d.csv")
     extrap_df = pd.read_csv(BASE_DIR / "data/caso_1/experimento_extrapolacion.csv")
@@ -200,30 +116,8 @@ def _load_deck_data() -> dict[str, Any]:
     return clean_nans(raw_payload)
 
 
-def _encode_first_existing(candidates: tuple[str, ...]) -> str:
-    """
-    Codifica en Base64 ASCII el primer archivo candidato existente bajo `BASE_DIR`.
-
-    Args:
-        candidates (tuple[str, ...]): Rutas relativas ordenadas por prioridad.
-
-    Returns:
-        str: Cadena Base64 del archivo encontrado, o cadena vacía si ninguno existe.
-    """
-    for rel_path in candidates:
-        candidate_path = BASE_DIR / rel_path
-        if candidate_path.is_file():
-            return base64.b64encode(candidate_path.read_bytes()).decode("ascii")
-    return ""
-
-
 def _load_chartjs_bundle() -> str:
-    """
-    Lee el bundle UMD de Chart.js compartido, usando la copia local como respaldo.
-
-    Returns:
-        str: Código fuente de `chart.umd.min.js` o cadena vacía si no existe ninguno.
-    """
+    """Lee el bundle UMD de Chart.js compartido, usando la copia local como respaldo."""
     for candidate_path in (SHARED_CHARTJS_PATH, LOCAL_CHARTJS_FALLBACK_PATH):
         if candidate_path.is_file():
             return candidate_path.read_text(encoding="utf-8")
@@ -231,12 +125,7 @@ def _load_chartjs_bundle() -> str:
 
 
 def _sync_runtime_assets(target_dir: Path) -> None:
-    """
-    Copia los datasets procesados de `data/` hacia `target_dir` excluyendo `raw/`.
-
-    Args:
-        target_dir (Path): Directorio de salida distinto de `BASE_DIR`.
-    """
+    """Copia datasets de `data/` y videos (`*.mp4`, `*.vtt`) hacia `target_dir`."""
     if target_dir.resolve() == BASE_DIR.resolve():
         return
 
@@ -250,32 +139,27 @@ def _sync_runtime_assets(target_dir: Path) -> None:
             if item.is_file():
                 shutil.copy2(item, dst_case_dir / item.name)
 
+    video_root = BASE_DIR / "video"
+    if video_root.is_dir():
+        for asset in video_root.rglob("*"):
+            if asset.is_file() and asset.suffix.lower() in {".mp4", ".vtt"}:
+                rel = asset.relative_to(BASE_DIR)
+                dst = target_dir / rel
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(asset, dst)
+
 
 def _render_html_document(
     *,
     data_json: str,
     notes_json: str,
-    branding: dict[str, str],
+    branding: dict[str, Any],
     css_content: str,
     slides_p1: str,
     slides_p2: str,
     chartjs_local_code: str,
 ) -> str:
-    """
-    Ensambla el documento HTML completo del deck con estilos, datos y scripts interactivos.
-
-    Args:
-        data_json (str): JSON serializado para `window.DECK_DATA`.
-        notes_json (str): JSON serializado con las notas del orador por diapositiva.
-        branding (dict[str, str]): Diccionario con recursos gráficos en Base64 y SVGs.
-        css_content (str): Hoja de estilos CSS completa del deck.
-        slides_p1 (str): Markup HTML de la primera mitad de diapositivas (1-14).
-        slides_p2 (str): Markup HTML de la segunda mitad de diapositivas (15-30).
-        chartjs_local_code (str): Bundle offline de Chart.js como fallback del CDN.
-
-    Returns:
-        str: Contenido HTML completo listo para escribir en disco.
-    """
+    """Ensambla el documento HTML completo del deck con datos, estilos, videos y JS."""
     b64_header_logo = branding["b64_header"]
 
     return f"""<!DOCTYPE html>
@@ -302,6 +186,7 @@ def _render_html_document(
 <style>
 {css_content}
 </style>
+{ENGINE_DECK_GATE_CSS}
 </head>
 <body>
 
@@ -327,12 +212,13 @@ def _render_html_document(
       </span>
     </div>
     <div style="width:1px; height:18px; background:rgba(18, 200, 252, 0.25); margin:0 4px;"></div>
-    <div style="font-weight:700; font-size:13px; color:#12C8FC;" class="mono" id="slideIndicator">01 / 30</div>
+    <div style="font-weight:700; font-size:13px; color:#12C8FC;" class="mono" id="slideIndicator">01 / 31</div>
     <div style="font-size:12px; color:var(--text-faint);" class="mono" id="actIndicator">Apertura · Portada</div>
   </div>
 
   <div style="display:flex; align-items:center; gap:8px;">
     <button class="nav-btn" onclick="toggleSpeakerNotes()" title="Ver notas y guion del orador (N)">[N] Notas</button>
+    <button class="nav-btn" onclick="toggleExpertMode()" title="Modo experto: muestra las etapas técnicas (D)">[D] Experto</button>
     <button class="nav-btn" onclick="prevSlide()" title="Diapositiva anterior (&larr; / PageUp)">&larr; Prev</button>
     <button class="nav-btn" onclick="nextSlide()" title="Siguiente diapositiva (&rarr; / Espacio)">Next &rarr;</button>
   </div>
@@ -363,10 +249,13 @@ def _render_html_document(
   window.DECK_DATA = {data_json};
 </script>
 
+<!-- COMPUERTA DE ENTRADA CINEMÁTICA DE VIDEO (F10 ↔ F11) -->
+{ENGINE_DECK_GATE_JS}
+
 <!-- SCRIPTS DE NAVEGACIÓN Y VISUALES -->
 <script>
   let currentSlide = 1;
-  const totalSlides = 30;
+  const totalSlides = 31;
 
   const notesBySlide = {notes_json};
 
@@ -398,8 +287,12 @@ def _render_html_document(
           ifr.contentWindow.postMessage({{ type: "activate" }}, "*");
         }} catch (err) {{}}
       }}
+      postExpertState();
 
       initSlideVisuals(index);
+      if (window.__deckCinematicEnterSlide) {{
+        window.__deckCinematicEnterSlide(index);
+      }}
     }}
   }}
 
@@ -412,6 +305,33 @@ def _render_html_document(
 
   function toggleDarkMode() {{
     document.body.classList.toggle("dark-mode");
+  }}
+
+  // Modo experto (tecla D): muestra las etapas técnicas ocultas de los prototipos
+  function postExpertState() {{
+    const on = document.documentElement.hasAttribute("data-expert");
+    document.querySelectorAll(".slide iframe").forEach(ifr => {{
+      try {{
+        ifr.contentWindow.postMessage({{ type: "expert", on: on }}, "*");
+      }} catch (err) {{}}
+    }});
+    return on;
+  }}
+
+  function toggleExpertMode() {{
+    document.documentElement.toggleAttribute("data-expert");
+    const on = postExpertState();
+    let toast = document.getElementById("expertToast");
+    if (!toast) {{
+      toast = document.createElement("div");
+      toast.id = "expertToast";
+      toast.style.cssText = "position:fixed;left:50%;bottom:64px;transform:translateX(-50%);z-index:9999;padding:8px 18px;border-radius:8px;background:rgba(10,18,40,.92);color:#12C8FC;font:700 14px 'IBM Plex Mono',monospace;border:1px solid rgba(18,200,252,.4);pointer-events:none;";
+      document.body.appendChild(toast);
+    }}
+    toast.textContent = "Modo experto: " + (on ? "ON" : "OFF");
+    toast.style.display = "block";
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {{ toast.style.display = "none"; }}, 1500);
   }}
 
   function openLightbox(src) {{
@@ -431,6 +351,10 @@ def _render_html_document(
   }}
 
   window.addEventListener("message", (e) => {{
+    if (e.data && e.data.type === "expert_query") {{
+      postExpertState();
+      return;
+    }}
     if (e.data && e.data.type === "deck_key") {{
       const key = e.data.key;
       if (key === "ArrowRight" || key === "PageDown") {{
@@ -444,6 +368,8 @@ def _render_html_document(
       }} else if (key.toLowerCase() === "n") {{
         toggleSpeakerNotes();
       }} else if (key.toLowerCase() === "d") {{
+        toggleExpertMode();
+      }} else if (key.toLowerCase() === "m") {{
         toggleDarkMode();
       }} else if (key.toLowerCase() === "f") {{
         if (!document.fullscreenElement) {{
@@ -486,6 +412,9 @@ def _render_html_document(
       e.preventDefault();
       toggleSpeakerNotes();
     }} else if (e.key.toLowerCase() === "d") {{
+      e.preventDefault();
+      toggleExpertMode();
+    }} else if (e.key.toLowerCase() === "m") {{
       e.preventDefault();
       toggleDarkMode();
     }} else if (e.key.toLowerCase() === "f") {{
@@ -682,8 +611,8 @@ def _render_html_document(
         renderAlphaBars(0.35);
       }}
 
-      // Slide 14: Experimento Extrapolación (Antes diapo 10)
-      if (idx === 14 && !charts["extrap"]) {{
+      // Slide 15: Experimento Extrapolación (Antes diapo 10)
+      if (idx === 15 && !charts["extrap"]) {{
         const canvas = document.getElementById("chartExtrap") || document.getElementById("chartExtrapolacion");
         if (canvas) {{
           const ctx = canvas.getContext("2d");
@@ -739,8 +668,8 @@ def _render_html_document(
         }}
       }}
 
-      // Slide 14: Discrepancia NOAA vs ECMWF (Antes diapo 10)
-      if (idx === 14 && !charts["noaaEcmwf"]) {{
+      // Slide 15: Discrepancia NOAA vs ECMWF (Antes diapo 10)
+      if (idx === 15 && !charts["noaaEcmwf"]) {{
         const canvas = document.getElementById("chartNoaaEcmwf");
         if (canvas) {{
           const ctx = canvas.getContext("2d");
@@ -776,8 +705,8 @@ def _render_html_document(
         }}
       }}
 
-      // Slide 16: Serie histórica reciente SENAMHI (Antes diapo 12)
-      if (idx === 16 && !charts["senamhiReciente"]) {{
+      // Slide 17: Serie histórica reciente SENAMHI (Antes diapo 12)
+      if (idx === 17 && !charts["senamhiReciente"]) {{
         const canvas = document.getElementById("chartSenamhiReciente");
         if (canvas) {{
           const ctx = canvas.getContext("2d");
@@ -818,8 +747,8 @@ def _render_html_document(
         }}
       }}
 
-      // Slide 15: Benchmark Punchana (Antes diapo 11)
-      if (idx === 15 && !charts["benchmark"]) {{
+      // Slide 16: Benchmark Punchana (Antes diapo 11)
+      if (idx === 16 && !charts["benchmark"]) {{
         const canvas = document.getElementById("chartBenchmark");
         if (canvas) {{
           const ctx = canvas.getContext("2d");
@@ -870,8 +799,8 @@ def _render_html_document(
         }}
       }}
 
-      // Slide 16: Demo Pronóstico 7 Días con Bandas (Antes diapo 12)
-      if (idx === 16 && !charts["demo7d"]) {{
+      // Slide 17: Demo Pronóstico 7 Días con Bandas (Antes diapo 12)
+      if (idx === 17 && !charts["demo7d"]) {{
         const canvas = document.getElementById("chartDemo7d");
         if (canvas) {{
           const ctx = canvas.getContext("2d");
@@ -989,8 +918,8 @@ def _render_html_document(
         }}
       }}
 
-      // Slide 19: Jaén Histórico (Antes diapo 15)
-      if (idx === 19 && !charts["jaenHist"]) {{
+      // Slide 20: Jaén Histórico (Antes diapo 15)
+      if (idx === 20 && !charts["jaenHist"]) {{
         const canvas = document.getElementById("chartJaenHistorico");
         if (canvas) {{
           const ctx = canvas.getContext("2d");
@@ -1030,65 +959,6 @@ def _render_html_document(
         }}
       }}
 
-      // Slide 26: Scatter NDVI vs Rendimiento
-      if (idx === 26 && !charts["scatterNdvi"]) {{
-        const canvas = document.getElementById("chartScatterNdvi");
-        if (canvas) {{
-          const ctx = canvas.getContext("2d");
-          const d = window.DECK_DATA.cafe_campanias;
-          const valid = d.filter(r => r.rendimiento_qq_ha !== null);
-          charts["scatterNdvi"] = new Chart(ctx, {{
-            type: "scatter",
-            data: {{
-              datasets: [
-                {{
-                  label: "Campañas Auditadas (MODIS NDVI Anual)",
-                  data: valid.map(r => ({{ x: r.ndvi_anual, y: r.rendimiento_qq_ha, anio: r.campania, val: r.ndvi_anual, unidad: "NDVI" }})),
-                  backgroundColor: valid.map(r => r.campania === 2014 ? "#DC2626" : "#2563EB"),
-                  pointRadius: valid.map(r => r.campania === 2014 ? 8 : 5)
-                }},
-                {{
-                  type: "line",
-                  label: "Tendencia Lineal NDVI (r = 0.154, p = 0.600 — Pendiente Nula)",
-                  data: [{{ x: 0.69, y: 19.96 }}, {{ x: 0.78, y: 22.17 }}],
-                  borderColor: "#94A3B8",
-                  borderDash: [4, 4],
-                  borderWidth: 1.8,
-                  pointRadius: 0,
-                  fill: false
-                }}
-              ]
-            }},
-            options: {{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {{
-                legend: {{ position: "top", labels: {{ font: {{ family: "IBM Plex Mono", size: 10 }} }} }},
-                tooltip: {{
-                  callbacks: {{
-                    label: (ctx) => {{
-                      if (ctx.raw.anio) {{
-                        const notaRoya = ctx.raw.anio === 2014 ? " [⚠️ CRISIS DE LA ROYA AMARILLA -56%]" : "";
-                        return `Campaña ${{ctx.raw.anio}}: ${{ctx.raw.val !== undefined ? ctx.raw.val.toFixed(2) : ctx.raw.x}} ${{ctx.raw.unidad || ''}} -> Rend: ${{ctx.raw.y.toFixed(2)}} qq/ha${{notaRoya}}`;
-                      }}
-                      return ctx.dataset.label;
-                    }}
-                  }}
-                }}
-              }},
-              scales: {{
-                x: {{ min: 0.68, max: 0.80, title: {{ display: true, text: "NDVI MODIS Anual (r = 0.154, p = 0.600 — Señal Saturada)" }} }},
-                y: {{ min: 8, max: 38, title: {{ display: true, text: "Rendimiento (qq/ha)" }} }}
-              }}
-            }}
-          }});
-        }}
-      }}
-
-      // Slide 27: Demo 2 Validación expansiva Jaén
-      if (idx === 27 && !charts["demoJaen"]) {{
-        switchJaenViewMode("trajectory");
-      }}
     }} catch (err) {{
       console.warn("Visual initialization notice on slide", idx, err);
     }}
@@ -1153,181 +1023,6 @@ def _render_html_document(
     chart.update();
   }}
 
-  function switchScatterVariable(varType) {{
-    const chart = charts["scatterNdvi"];
-    if (!chart) return;
-    const d = window.DECK_DATA.cafe_campanias;
-    const valid = d.filter(r => r.rendimiento_qq_ha !== null);
-
-    ["btnScatterNdvi", "btnScatterDef", "btnScatterLluvia"].forEach(id => {{
-      const b = document.getElementById(id);
-      if (b) b.classList.remove("active");
-    }});
-
-    if (varType === "ndvi") {{
-      document.getElementById("btnScatterNdvi")?.classList.add("active");
-      chart.data.datasets[0].label = "Campañas Auditadas (MODIS NDVI Anual)";
-      chart.data.datasets[0].data = valid.map(r => ({{ x: r.ndvi_anual, y: r.rendimiento_qq_ha, anio: r.campania, val: r.ndvi_anual, unidad: "NDVI" }}));
-      chart.data.datasets[1].label = "Tendencia Lineal NDVI (r = 0.154, p = 0.600 — Pendiente Nula)";
-      chart.data.datasets[1].data = [{{ x: 0.69, y: 19.96 }}, {{ x: 0.78, y: 22.17 }}];
-      chart.options.scales.x.min = 0.68;
-      chart.options.scales.x.max = 0.80;
-      chart.options.scales.x.title.text = "NDVI MODIS Anual (r = 0.154, p = 0.600 — Señal Saturada)";
-    }} else if (varType === "deficit") {{
-      document.getElementById("btnScatterDef")?.classList.add("active");
-      chart.data.datasets[0].label = "Campañas Auditadas (Déficit Hídrico Floración)";
-      chart.data.datasets[0].data = valid.map(r => ({{ x: r.def_hidrico_flor_mm, y: r.rendimiento_qq_ha, anio: r.campania, val: r.def_hidrico_flor_mm, unidad: "mm" }}));
-      chart.data.datasets[1].label = "Tendencia Lineal Déficit (r = 0.756, p = 0.002 — Fuerte Causalidad)";
-      chart.data.datasets[1].data = [{{ x: -280, y: 16.67 }}, {{ x: 480, y: 27.63 }}];
-      chart.options.scales.x.min = -300;
-      chart.options.scales.x.max = 500;
-      chart.options.scales.x.title.text = "Balance Hídrico Floración P - PET (mm) · ERA5 (r = 0.756, p = 0.002)";
-    }} else if (varType === "lluvia") {{
-      document.getElementById("btnScatterLluvia")?.classList.add("active");
-      chart.data.datasets[0].label = "Campañas Auditadas (Lluvia en Floración)";
-      chart.data.datasets[0].data = valid.map(r => ({{ x: r.lluvia_flor_mm, y: r.rendimiento_qq_ha, anio: r.campania, val: r.lluvia_flor_mm, unidad: "mm" }}));
-      chart.data.datasets[1].label = "Tendencia Lineal Lluvia (r = 0.751, p = 0.002 — Señal Crítica)";
-      chart.data.datasets[1].data = [{{ x: 50, y: 16.48 }}, {{ x: 800, y: 27.52 }}];
-      chart.options.scales.x.min = 50;
-      chart.options.scales.x.max = 820;
-      chart.options.scales.x.title.text = "Precipitación Acumulada Floración Ago-Oct (mm) · ERA5 (r = 0.751, p = 0.002)";
-    }}
-    chart.update();
-  }}
-
-  function switchJaenViewMode(mode) {{
-    const canvas = document.getElementById("chartDemoJaen");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-
-    ["btnJaenTraj", "btnJaenBench"].forEach(id => {{
-      const b = document.getElementById(id);
-      if (b) b.classList.remove("active");
-    }});
-
-    if (mode === "benchmark") {{
-      document.getElementById("btnJaenBench")?.classList.add("active");
-      if (charts["demoJaen"]) {{
-        charts["demoJaen"].destroy();
-      }}
-      const bm = window.DECK_DATA.cafe_benchmark || [];
-      charts["demoJaen"] = new Chart(ctx, {{
-        type: "bar",
-        data: {{
-          labels: bm.map(r => r.modelo),
-          datasets: [{{
-            label: "MAE Walk-Forward (qq/ha)",
-            data: bm.map(r => r.mae_walkforward),
-            extraData: bm,
-            backgroundColor: bm.map(r => {{
-              if (r.modelo && r.modelo.includes("Random Forest")) return "#059669";
-              if (r.modelo && r.modelo.includes("Déficit Hídrico")) return "#0284C7";
-              if (r.modelo && r.modelo.includes("NDVI Anual")) return "#DC2626";
-              if (r.familia && r.familia.includes("Baseline")) return "#94A3B8";
-              if (r.p_valor_vs_mejor >= 0.05) return "#10B981";
-              return "#8B5CF6";
-            }})
-          }}]
-        }},
-        options: {{
-          indexAxis: "y",
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {{
-            legend: {{ display: false }},
-            tooltip: {{
-              callbacks: {{
-                label: (ctx) => {{
-                  const row = ctx.dataset.extraData ? ctx.dataset.extraData[ctx.dataIndex] : null;
-                  if (!row) return `MAE: ${{ctx.raw}} qq/ha`;
-                  return [
-                    `MAE Walk-Forward: ${{row.mae_walkforward}} qq/ha | RMSE: ${{row.rmse_walkforward}} qq/ha`,
-                    `MAPE: ${{row.mape_walkforward}}% | Error en Récord 2020: ${{row.error_abs_2020}} qq/ha`,
-                    `Familia: ${{row.familia}} | Hardware: ${{row.hardware}} (${{row.tiempo_ms}} ms)`,
-                    `p-valor vs RF: ${{row.p_valor_vs_mejor >= 0.05 ? row.p_valor_vs_mejor + ' (Sin dif. sig.)' : row.p_valor_vs_mejor + ' (Inferior)'}}`
-                  ];
-                }}
-              }}
-            }}
-          }},
-          scales: {{
-            x: {{ min: 3.0, max: 9.0, title: {{ display: true, text: "MAE Walk-Forward (qq/ha) — Menor es mejor" }} }}
-          }}
-        }}
-      }});
-    }} else {{
-      document.getElementById("btnJaenTraj")?.classList.add("active");
-      if (charts["demoJaen"]) {{
-        charts["demoJaen"].destroy();
-      }}
-      const d = window.DECK_DATA.cafe_predicciones || window.DECK_DATA.cafe_resultados;
-      charts["demoJaen"] = new Chart(ctx, {{
-        type: "line",
-        data: {{
-          labels: d.map(r => r.campania),
-          datasets: [
-            {{
-              label: "Observado Oficial SIEA (qq/ha)",
-              data: d.map(r => r.rendimiento_real !== undefined ? r.rendimiento_real : r.rendimiento_obs),
-              borderColor: "#FFFFFF",
-              borderWidth: 3.2,
-              pointRadius: 4.5
-            }},
-            {{
-              label: "M12: Random Forest (Líder MAE 3.72)",
-              data: d.map(r => r["M12: Random Forest Parsimonioso (d=2)"] !== undefined ? r["M12: Random Forest Parsimonioso (d=2)"] : r.pred_m4_fusion),
-              borderColor: "#059669",
-              borderWidth: 2.5,
-              pointRadius: 3.5
-            }},
-            {{
-              label: "M08: Solo Déficit Hídrico (MAE 3.90)",
-              data: d.map(r => r["M08: Solo Déficit Hídrico Floración"] !== undefined ? r["M08: Solo Déficit Hídrico Floración"] : r.pred_m3_clima),
-              borderColor: "#0284C7",
-              borderWidth: 2.0,
-              borderDash: [4, 3],
-              pointRadius: 3
-            }},
-            {{
-              label: "M11: ElasticNet Multimodal (MAE 4.33)",
-              data: d.map(r => r["M11: ElasticNet Multimodal (L1+L2)"] !== undefined ? r["M11: ElasticNet Multimodal (L1+L2)"] : r.pred_m4_fusion),
-              borderColor: "#8B5CF6",
-              borderWidth: 2.0,
-              borderDash: [3, 2],
-              pointRadius: 2.5
-            }},
-            {{
-              label: "M05: Solo NDVI Anual (Trampa MAE 5.45)",
-              data: d.map(r => r["M05: Solo NDVI Anual (Saturado)"] !== undefined ? r["M05: Solo NDVI Anual (Saturado)"] : r.pred_m2_satelite),
-              borderColor: "#DC2626",
-              borderWidth: 2.2,
-              borderDash: [5, 4],
-              pointRadius: 3
-            }}
-          ]
-        }},
-        options: {{
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {{
-            legend: {{ position: "top", labels: {{ font: {{ family: "IBM Plex Mono", size: 10.5 }} }} }},
-            tooltip: {{
-              callbacks: {{
-                afterLabel: (ctx) => {{
-                  if (ctx.label === "2020") return "⚠️ AÑO RÉCORD NACIONAL (42.5 qq/ha) — Desafío de extrapolación";
-                  return "";
-                }}
-              }}
-            }}
-          }},
-          scales: {{
-            y: {{ min: 12, max: 46, title: {{ display: true, text: "Rendimiento (qq/ha)" }} }}
-          }}
-        }}
-      }});
-    }}
-  }}
-
   function switchPunchanaView(mode) {{
     const chartBox = document.getElementById("punchanaChartContainer");
     const anatomyBox = document.getElementById("punchanaAnatomyContainer");
@@ -1345,26 +1040,6 @@ def _render_html_document(
       if (btnAnatomy) btnAnatomy.classList.remove("active");
       if (btnChart) btnChart.classList.add("active");
       if (charts["benchmark"]) charts["benchmark"].resize();
-    }}
-  }}
-
-  function switchCafeSystemView(mode) {{
-    const chartBox = document.getElementById("cafeChartContainer");
-    const anatomyBox = document.getElementById("cafeAnatomyContainer");
-    const btnChart = document.getElementById("btnCafeChart");
-    const btnAnatomy = document.getElementById("btnCafeAnatomy");
-
-    if (mode === "anatomy") {{
-      if (chartBox) chartBox.style.display = "none";
-      if (anatomyBox) anatomyBox.style.display = "flex";
-      if (btnChart) btnChart.classList.remove("active");
-      if (btnAnatomy) btnAnatomy.classList.add("active");
-    }} else {{
-      if (anatomyBox) anatomyBox.style.display = "none";
-      if (chartBox) chartBox.style.display = "flex";
-      if (btnAnatomy) btnAnatomy.classList.remove("active");
-      if (btnChart) btnChart.classList.add("active");
-      if (charts["scatterNdvi"]) charts["scatterNdvi"].resize();
     }}
   }}
 
@@ -1417,16 +1092,7 @@ def _render_html_document(
 
 
 def build_deck(output_dir: Path | None = None) -> Path:
-    """
-    Compila el deck interactivo de 30 diapositivas y retorna la ruta a `index.html`.
-
-    Args:
-        output_dir (Path | None, opcional): Directorio destino de compilación. Si es
-            `None`, escribe directamente en `BASE_DIR`.
-
-    Returns:
-        Path: Ruta al archivo `index.html` generado.
-    """
+    """Compila el deck interactivo de 31 diapositivas y retorna la ruta a `index.html`."""
     target_dir = Path(output_dir) if output_dir is not None else BASE_DIR
     target_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1435,10 +1101,30 @@ def build_deck(output_dir: Path | None = None) -> Path:
     notes_json = json.dumps(get_speaker_notes(), ensure_ascii=False, allow_nan=False)
 
     branding = get_branding()
-    for key, candidates in PROTOTYPE_CANDIDATES.items():
-        branding[key] = _encode_first_existing(candidates)
+    for key, rel_path, slide_num, section_num in PROTOTYPE_MAP:
+        proto_path = BASE_DIR / rel_path
+        branding[key] = (
+            load_prototype_b64(proto_path, slide_num=slide_num, section_num=section_num)
+            if proto_path.is_file()
+            else ""
+        )
 
-    # Carga los diagramas anatómicos SVG generados con Anatomy Framework.
+    cinematic_gates: dict[int, str] = {}
+    for section_num, slide_num in VIDEO_SLIDE_CANDIDATES:
+        video_path = discover_slide_video(BASE_DIR, section_num, slide_num)
+        if video_path is None:
+            continue
+        video_rel = video_path.relative_to(BASE_DIR).as_posix()
+        gate_id = "cinematicVideoGate" if slide_num == 5 else f"cinematicVideoGate{slide_num}"
+        cinematic_gates[slide_num] = render_slide_video_gate(
+            section_num,
+            slide_num,
+            video_rel,
+            gate_id=gate_id,
+            vtt_path=video_path.parent / "narration.vtt",
+        )
+    branding["cinematic_gates"] = cinematic_gates
+
     anatomy_c1_path = BASE_DIR / "front/components/anatomy/anatomy_estacion_vs_malla.svg"
     anatomy_c2_path = BASE_DIR / "front/components/anatomy/anatomy_cafe_sombra_ndvi.svg"
     branding["anatomy_c1_svg"] = (
@@ -1472,16 +1158,14 @@ def build_deck(output_dir: Path | None = None) -> Path:
     _sync_runtime_assets(target_dir)
 
     print(
-        f"Deck interactivo de 30 diapositivas generado con éxito en: "
+        f"Deck interactivo de 31 diapositivas generado con éxito en: "
         f"{presentation_path} e {index_path} ({len(html_content)} bytes)"
     )
     return index_path
 
 
 def main() -> None:
-    """
-    Ejecuta la compilación del deck desde línea de comandos aceptando `--output-dir`.
-    """
+    """Ejecuta la compilación del deck desde línea de comandos aceptando `--output-dir`."""
     parser = argparse.ArgumentParser(
         description="Compila el deck interactivo de la charla 2026-forecasting-ia."
     )

@@ -7,7 +7,7 @@
   "engine": "python-deck",
   "entry": "index.html",
   "cover": "docs/images/front/bg_cover_official.png",
-  "slides_count": 30,
+  "slides_count": 31,
   "duration_min": 35,
   "tags": ["Forecasting", "ML/DL", "SENAMHI", "NDVI"],
   "extras": {

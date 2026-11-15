@@ -9,6 +9,12 @@ def get_deck_css(branding=None):
     bg_portada_css = f"url('data:image/png;base64,{b64_bg_portada}')" if b64_bg_portada else "#03050F"
     bg_closing_css = f"url('data:image/png;base64,{b64_bg_closing}')" if b64_bg_closing else bg_portada_css
     bg_section_css = bg_portada_css
+    b64_act_bg = branding.get("b64_act_bg", {})
+    act_bg_css = "".join(
+        f"\n  .slide.act-bg-{act} {{{{ background-image: url('data:image/jpeg;base64,{b64}'); "
+        f"background-size: cover; background-position: center; }}}}"
+        for act, b64 in b64_act_bg.items() if b64
+    )
 
     return f"""
   :root {{
@@ -138,6 +144,9 @@ def get_deck_css(branding=None):
     z-index: 10;
   }}
 
+  /* FONDOS POR ACTO (separadores y cierre) */
+  {act_bg_css}
+
   /* TÍTULO ESTÁNDAR SUPERIOR */
   .slide-main-title {{
     font-size: clamp(26px, 2.5vw, 36px);
@@ -184,40 +193,59 @@ def get_deck_css(branding=None):
   .cover-tag span {{
     color: var(--fest-cyan);
   }}
+  .cover-main {{ display: flex; flex-direction: column; align-items: flex-start; }}
   .cover-title {{
-    font-size: clamp(38px, 3.8vw, 54px);
+    font-size: clamp(40px, min(4.6vw, 8.2vh), 88px);
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
     color: var(--text-main);
-    max-width: 820px;
-    margin-bottom: clamp(16px, 2vh, 24px);
+    max-width: 62%;
+    margin-bottom: clamp(14px, 2vh, 26px);
   }}
   .cover-subtitle {{
-    font-size: clamp(17px, 1.4vw, 21px);
-    color: #94A3B8;
-    max-width: 720px;
+    font-size: clamp(18px, 1.35vw, 28px);
+    color: #CBD5E1;
+    max-width: 52%;
     line-height: 1.4;
-    margin-bottom: clamp(28px, 3.5vh, 44px);
+    margin-bottom: clamp(16px, 2.4vh, 30px);
+  }}
+  .cover-pills {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(8px, 0.8vw, 14px);
+    max-width: 88%;
+    margin-bottom: clamp(18px, 2.8vh, 34px);
+  }}
+  .cover-pill {{
+    padding: 0.4em 1em;
+    border-radius: 999px;
+    font-size: clamp(14px, 1vw, 20px);
+    font-weight: 600;
+    color: var(--fest-cyan);
+    background: rgba(18, 200, 252, 0.12);
+    border: 1.5px solid rgba(18, 200, 252, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }}
   .cover-speaker-card {{
-    background: rgba(11, 22, 56, 0.75);
+    background: rgba(11, 22, 56, 0.78);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1.5px solid var(--fest-cyan);
+    border-left: 6px solid var(--fest-cyan);
     border-radius: 16px;
-    padding: 18px 28px;
+    padding: clamp(12px, 1.6vh, 20px) clamp(20px, 2vw, 36px);
     width: fit-content;
-    min-width: 380px;
-    max-width: 480px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 24px rgba(18, 200, 252, 0.18);
   }}
   .cover-speaker-name {{
-    font-size: 21px;
+    font-size: clamp(24px, 2vw, 38px);
     font-weight: 700;
     color: var(--text-main);
   }}
   .cover-speaker-role {{
-    font-size: 15px;
+    font-size: clamp(15px, 1.1vw, 21px);
     color: var(--fest-cyan);
     margin-top: 5px;
     font-family: var(--font-mono);
@@ -227,169 +255,280 @@ def get_deck_css(branding=None):
   /* ======================================================== */
   /* ARQUETIPO 2: SOBRE EL PONENTE (page-02.png)             */
   /* ======================================================== */
-  .speaker-layout {{
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: clamp(24px, 3.5vw, 60px);
-    align-items: center;
+  .sp-layout {{
     flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 31% 1fr;
+    gap: clamp(20px, 2.4vw, 44px);
   }}
-  .speaker-avatar-wrap {{
+  .sp-id {{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 0;
+    padding: clamp(14px, 1.3vw, 24px);
+    background: rgba(11, 22, 56, 0.82);
+    border: 1.5px solid rgba(18, 200, 252, 0.35);
+    border-radius: var(--card-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
   }}
-  .speaker-avatar {{
-    width: clamp(220px, 20vw, 290px);
-    height: clamp(220px, 20vw, 290px);
+  .sp-photo {{
+    width: clamp(140px, 24vh, 250px);
+    height: clamp(140px, 24vh, 250px);
+    padding: 5px;
+    flex-shrink: 0;
     border-radius: 50%;
-    padding: 8px;
-    border: 3.5px solid var(--fest-cyan);
-    box-shadow: 0 0 35px rgba(18, 200, 252, 0.4), inset 0 0 20px rgba(18, 200, 252, 0.25);
+    border: 3px solid var(--fest-cyan);
+    box-shadow: 0 0 30px rgba(18, 200, 252, 0.35);
     background: rgba(11, 22, 56, 0.9);
   }}
-  .speaker-avatar img {{
-    width: 100%;
-    height: 100%;
+  .sp-photo img {{
+    width: 100%; height: 100%;
     border-radius: 50%;
     object-fit: cover;
     display: block;
   }}
-  .speaker-info {{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }}
-  .speaker-name {{
-    font-size: clamp(26px, 2.5vw, 36px);
+  .sp-name {{
+    margin-top: clamp(10px, 1.4vh, 18px);
+    font-size: clamp(30px, 3vw, 58px);
     font-weight: 700;
+    line-height: 1.08;
     color: var(--text-main);
   }}
-  .speaker-role {{
-    font-size: clamp(14px, 1.1vw, 16.5px);
-    color: var(--fest-cyan);
+  .sp-headline {{
+    margin-top: 8px;
+    font-size: clamp(16px, 1.3vw, 25px);
     font-weight: 600;
-    margin-bottom: 8px;
-    font-family: "IBM Plex Mono", monospace;
+    color: var(--fest-cyan);
+    line-height: 1.25;
   }}
-  .speaker-bullets {{
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
-  }}
-  .speaker-bullet-item {{
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: clamp(13.5px, 0.95vw, 15px);
-    line-height: 1.45;
+  .sp-role {{
+    margin-top: 6px;
+    font-size: clamp(13px, 0.95vw, 18px);
     color: var(--text-sub);
   }}
-  .speaker-bullet-dot {{
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--fest-cyan);
-    margin-top: 8px;
-    flex-shrink: 0;
+  .sp-pitch {{
+    margin-top: clamp(10px, 1.4vh, 18px);
+    padding-left: 14px;
+    border-left: 3px solid var(--fest-amber);
+    font-size: clamp(15px, 1.15vw, 22px);
+    line-height: 1.45;
+    color: var(--text-main);
   }}
-  .speaker-socials {{
+  .sp-contact {{
+    margin-top: auto;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 6px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-faint);
   }}
-  .speaker-social-link {{
+  .sp-socials {{ display: flex; flex-direction: column; gap: 8px; min-width: 0; }}
+  .sp-link {{
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13.5px;
+    gap: 8px;
+    font-size: clamp(11px, 0.8vw, 15px);
     color: var(--fest-cyan);
     text-decoration: none;
     font-family: "IBM Plex Mono", monospace;
-    transition: opacity 0.15s;
+    white-space: nowrap;
   }}
-  .speaker-social-link:hover {{
-    opacity: 0.8;
+  .sp-link svg {{ width: 1.3em; height: 1.3em; fill: currentColor; flex-shrink: 0; }}
+  .sp-qr {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(10px, 0.7vw, 13px);
+    color: var(--text-sub);
+    flex-shrink: 0;
+  }}
+  .sp-qr-box {{ background: #FFFFFF; border-radius: 10px; padding: 6px; line-height: 0; }}
+  .sp-qr-box svg {{ width: clamp(70px, 6.2vw, 118px); height: auto; }}
+  .sp-main {{
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 1.8vh, 22px);
+    min-height: 0;
+  }}
+  .sp-cols {{
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(12px, 1.4vw, 26px);
+  }}
+  .sp-col {{
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: clamp(14px, 1.3vw, 24px);
+    background: rgba(11, 22, 56, 0.82);
+    border: 1.5px solid rgba(18, 200, 252, 0.35);
+    border-radius: var(--card-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  }}
+  .sp-col-title {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(18px, 1.5vw, 28px);
+    font-weight: 700;
+    color: var(--fest-cyan);
+    padding-bottom: clamp(8px, 1.2vh, 14px);
+    margin-bottom: clamp(8px, 1.4vh, 16px);
+    border-bottom: 1px solid var(--line-border);
+  }}
+  .sp-col-title svg {{ width: 1.2em; height: 1.2em; fill: currentColor; flex-shrink: 0; }}
+  .sp-tl, .sp-do {{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+    gap: clamp(8px, 1.4vh, 16px);
+  }}
+  .sp-tl li {{
+    position: relative;
+    padding-left: 20px;
+    border-left: 2px solid var(--line-border);
+  }}
+  .sp-tl li::before {{
+    content: "";
+    position: absolute;
+    left: -6px; top: 0.45em;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--fest-cyan);
+  }}
+  .sp-tl li.sp-tl-key::before {{ background: var(--fest-cyan); box-shadow: 0 0 10px rgba(18, 200, 252, 0.7); }}
+  .sp-tl-what {{
+    font-size: clamp(16px, 1.3vw, 25px);
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.25;
+  }}
+  .sp-tl-where {{
+    margin-top: 3px;
+    font-size: clamp(13px, 1.05vw, 20px);
+    color: var(--text-sub);
+    line-height: 1.3;
+  }}
+  .sp-do li {{ display: flex; align-items: flex-start; gap: 14px; }}
+  .sp-do-ico {{
+    flex-shrink: 0;
+    width: clamp(34px, 2.6vw, 50px);
+    height: clamp(34px, 2.6vw, 50px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(18, 200, 252, 0.14);
+    border: 1px solid var(--line-border);
+    color: var(--fest-cyan);
+  }}
+  .sp-do-ico svg {{ width: 60%; height: 60%; fill: currentColor; }}
+  .sp-stack {{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(5px, 0.45vw, 9px);
+    flex-shrink: 0;
+  }}
+  .sp-stack-label {{
+    font-size: clamp(11px, 0.8vw, 15px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-right: 4px;
+  }}
+  .sp-chip {{
+    padding: 0.3em 0.8em;
+    border-radius: 999px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 0.88vw, 17px);
+    font-weight: 600;
+    color: var(--text-main);
+    background: rgba(18, 200, 252, 0.12);
+    border: 1px solid var(--line-border);
   }}
 
   /* ======================================================== */
   /* ARQUETIPO 3: AGENDA (page-03.png)                       */
   /* ======================================================== */
-  .agenda-grid {{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: clamp(18px, 2vw, 28px);
-    flex: 1;
-  }}
-  .agenda-card {{
-    background: rgba(11, 22, 56, 0.82);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-radius: var(--card-radius);
-    padding: clamp(20px, 2.2vw, 32px);
+  .agenda-list {{
     display: flex;
-    align-items: center;
-    gap: clamp(18px, 2.2vw, 32px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }}
-  .agenda-card:hover {{
-    transform: translateY(-3px);
-  }}
-  .agenda-card.item-1 {{ border: 1.5px solid var(--fest-cyan); box-shadow: 0 8px 25px rgba(18, 200, 252, 0.12); }}
-  .agenda-card.item-2 {{ border: 1.5px solid var(--fest-blue); box-shadow: 0 8px 25px rgba(30, 123, 255, 0.12); }}
-  .agenda-card.item-3 {{ border: 1.5px solid var(--fest-purple); box-shadow: 0 8px 25px rgba(155, 92, 255, 0.12); }}
-  .agenda-card.item-4 {{ border: 1.5px solid var(--fest-magenta); box-shadow: 0 8px 25px rgba(224, 64, 251, 0.12); }}
-  .agenda-card.item-5 {{ border: 1.5px solid #2EE6A6; box-shadow: 0 8px 25px rgba(46, 230, 166, 0.12); }}
-
-  .agenda-grid-5 {{
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: 1fr 1fr;
-    gap: clamp(14px, 1.6vw, 22px);
+    flex-direction: column;
+    gap: clamp(10px, 1.4vh, 16px);
     flex: 1;
     min-height: 0;
   }}
-  .agenda-grid-5 .agenda-card {{
-    padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.8vw, 26px);
-    gap: clamp(14px, 1.6vw, 24px);
+  .agenda-row {{
+    flex: 1;
+    display: grid;
+    grid-template-columns: clamp(64px, 5.5vw, 96px) clamp(44px, 3.6vw, 60px) 1fr auto;
+    align-items: center;
+    gap: clamp(14px, 1.6vw, 26px);
+    padding: 0 clamp(18px, 2vw, 30px);
+    background: rgba(11, 22, 56, 0.82);
+    border-radius: var(--card-radius);
+    border-left: 6px solid var(--row-accent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   }}
-  .agenda-grid-5 .agenda-card.item-1 {{ grid-column: span 2; }}
-  .agenda-grid-5 .agenda-card.item-2 {{ grid-column: span 2; }}
-  .agenda-grid-5 .agenda-card.item-3 {{ grid-column: span 2; }}
-  .agenda-grid-5 .agenda-card.item-4 {{ grid-column: 1 / span 3; }}
-  .agenda-grid-5 .agenda-card.item-5 {{ grid-column: 4 / span 3; }}
-
+  .agenda-row.item-1 {{ --row-accent: var(--fest-cyan); }}
+  .agenda-row.item-2 {{ --row-accent: var(--fest-blue); }}
+  .agenda-row.item-3 {{ --row-accent: var(--fest-purple); }}
+  .agenda-row.item-4 {{ --row-accent: var(--fest-magenta); }}
+  .agenda-row.item-5 {{ --row-accent: #2EE6A6; }}
   .agenda-num {{
-    font-size: clamp(38px, 3.4vw, 52px);
+    font-size: clamp(40px, 3.6vw, 56px);
     font-weight: 700;
     line-height: 1;
     font-family: "Space Grotesk", sans-serif;
+    color: var(--row-accent);
   }}
-  .agenda-card.item-1 .agenda-num {{ color: var(--fest-cyan); }}
-  .agenda-card.item-2 .agenda-num {{ color: var(--fest-blue); }}
-  .agenda-card.item-3 .agenda-num {{ color: var(--fest-purple); }}
-  .agenda-card.item-4 .agenda-num {{ color: var(--fest-magenta); }}
-  .agenda-card.item-5 .agenda-num {{ color: #2EE6A6; }}
-
-  .agenda-text-wrap {{
+  .agenda-icon {{
+    font-size: clamp(30px, 2.6vw, 40px);
+    line-height: 1;
+  }}
+  .agenda-text {{
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+    min-width: 0;
   }}
-  .agenda-card-title {{
-    font-size: clamp(16px, 1.25vw, 19px);
+  .agenda-question {{
+    font-size: clamp(26px, 1.6vw, 34px);
     font-weight: 700;
     color: var(--text-main);
+    line-height: 1.2;
   }}
-  .agenda-card-desc {{
-    font-size: clamp(12.5px, 0.95vw, 14px);
+  .agenda-takeaway {{
+    font-size: 18px;
     color: var(--text-faint);
-    line-height: 1.4;
+    line-height: 1.35;
+  }}
+  .agenda-minutes {{
+    font-family: var(--font-mono);
+    font-size: 22px;
+    color: var(--text-sub);
+    white-space: nowrap;
+  }}
+  .agenda-total {{
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-faint);
+    text-align: right;
+    margin-top: 12px;
+    flex-shrink: 0;
   }}
 
   /* ======================================================== */
@@ -687,50 +826,173 @@ def get_deck_css(branding=None):
   }}
 
   /* ======================================================== */
+  /* ======================================================== */
   /* ARQUETIPO 9: CONCLUSIONES (page-09.png)                  */
   /* ======================================================== */
   .conclusions-3col-grid {{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(18px, 2vw, 28px);
+    gap: clamp(16px, 1.8vw, 26px);
     flex: 1;
+    min-height: 0;
     align-items: stretch;
   }}
   .conclusion-card {{
-    background: rgba(11, 22, 56, 0.85);
-    backdrop-filter: blur(14px);
+    background: rgba(11, 22, 56, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: var(--card-radius);
-    padding: clamp(24px, 2.5vw, 36px);
+    padding: clamp(20px, 2.0vw, 28px);
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+    justify-content: space-between;
+    gap: clamp(12px, 1.3vw, 16px);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
   }}
-  .conclusion-card.card-1 {{ border: 1.5px solid var(--fest-cyan); box-shadow: 0 8px 30px rgba(18, 200, 252, 0.12); }}
-  .conclusion-card.card-2 {{ border: 1.5px solid var(--fest-purple); box-shadow: 0 8px 30px rgba(155, 92, 255, 0.12); }}
-  .conclusion-card.card-3 {{ border: 1.5px solid var(--fest-magenta); box-shadow: 0 8px 30px rgba(224, 64, 251, 0.12); }}
+  .conclusion-card.card-1 {{ border: 1.5px solid var(--fest-cyan); box-shadow: 0 10px 32px rgba(18, 200, 252, 0.16); }}
+  .conclusion-card.card-2 {{ border: 1.5px solid var(--fest-purple); box-shadow: 0 10px 32px rgba(155, 92, 255, 0.16); }}
+  .conclusion-card.card-3 {{ border: 1.5px solid var(--fest-magenta); box-shadow: 0 10px 32px rgba(224, 64, 251, 0.16); }}
 
-  .conclusion-icon-box {{
-    width: 48px;
-    height: 48px;
-    font-size: 32px;
+  .conclusion-card-head {{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }}
+  .conclusion-pill-tag {{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }}
+  .conclusion-card.card-1 .conclusion-pill-tag {{
+    background: rgba(18, 200, 252, 0.12);
+    border: 1px solid rgba(18, 200, 252, 0.45);
+    color: var(--fest-cyan);
+  }}
+  .conclusion-card.card-2 .conclusion-pill-tag {{
+    background: rgba(155, 92, 255, 0.12);
+    border: 1px solid rgba(155, 92, 255, 0.45);
+    color: var(--fest-purple);
+  }}
+  .conclusion-card.card-3 .conclusion-pill-tag {{
+    background: rgba(224, 64, 251, 0.12);
+    border: 1px solid rgba(224, 64, 251, 0.45);
+    color: var(--fest-magenta);
+  }}
+
+  .conclusion-card-title-row {{
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: 12px;
   }}
-  .conclusion-card.card-1 .conclusion-icon-box {{ color: var(--fest-cyan); }}
-  .conclusion-card.card-2 .conclusion-icon-box {{ color: var(--fest-purple); }}
-  .conclusion-card.card-3 .conclusion-icon-box {{ color: var(--fest-magenta); }}
+  .conclusion-icon-box {{
+    width: 46px;
+    height: 46px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+  }}
+  .conclusion-card.card-1 .conclusion-icon-box {{ color: var(--fest-cyan); border: 1px solid rgba(18, 200, 252, 0.35); }}
+  .conclusion-card.card-2 .conclusion-icon-box {{ color: var(--fest-purple); border: 1px solid rgba(155, 92, 255, 0.35); }}
+  .conclusion-card.card-3 .conclusion-icon-box {{ color: var(--fest-magenta); border: 1px solid rgba(224, 64, 251, 0.35); }}
 
   .conclusion-title {{
-    font-size: clamp(17px, 1.3vw, 20px);
-    font-weight: 700;
+    font-size: clamp(19px, 1.48vw, 23px);
+    font-weight: 800;
     color: var(--text-main);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }}
   .conclusion-desc {{
-    font-size: clamp(13px, 1.0vw, 15px);
+    font-size: clamp(13.5px, 1.02vw, 15px);
     color: var(--text-sub);
-    line-height: 1.5;
+    line-height: 1.48;
+  }}
+
+  .conclusion-trap-box {{
+    padding: 11px 15px;
+    border-radius: 9px;
+    background: rgba(239, 68, 68, 0.08);
+    border-left: 3px solid #f43f5e;
+    font-size: clamp(12.5px, 0.94vw, 13.8px);
+    color: #fecdd3;
+    line-height: 1.42;
+  }}
+  .conclusion-trap-box strong {{
+    color: #ffe4e6;
+    font-weight: 700;
+  }}
+
+  .conclusion-evidence {{
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 13px 16px;
+    border-radius: 11px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+  }}
+  .conclusion-evidence-title {{
+    font-size: clamp(11.5px, 0.88vw, 13px);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }}
+  .conclusion-card.card-1 .conclusion-evidence-title {{ color: var(--fest-cyan); }}
+  .conclusion-card.card-2 .conclusion-evidence-title {{ color: var(--fest-purple); }}
+  .conclusion-card.card-3 .conclusion-evidence-title {{ color: var(--fest-magenta); }}
+  .conclusion-evidence-list {{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: clamp(12.5px, 0.94vw, 14px);
+    color: var(--text-sub);
+    line-height: 1.42;
+  }}
+  .conclusion-evidence-list li {{
+    position: relative;
+    padding-left: 15px;
+  }}
+  .conclusion-evidence-list li::before {{
+    content: "▸";
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }}
+  .conclusion-card.card-1 .conclusion-evidence-list li::before {{ color: var(--fest-cyan); }}
+  .conclusion-card.card-2 .conclusion-evidence-list li::before {{ color: var(--fest-purple); }}
+  .conclusion-card.card-3 .conclusion-evidence-list li::before {{ color: var(--fest-magenta); }}
+  .conclusion-evidence-list strong {{ color: var(--text-main); font-weight: 700; }}
+
+  .conclusion-takeaway {{
+    padding: 11px 15px;
+    border-left: 3.5px solid var(--fest-cyan);
+    border-radius: 0 10px 10px 0;
+    background: rgba(18, 200, 252, 0.10);
+    font-size: clamp(13px, 0.96vw, 14.5px);
+    color: var(--text-main);
+    line-height: 1.42;
+  }}
+  .conclusion-card.card-2 .conclusion-takeaway {{
+    border-left-color: var(--fest-purple);
+    background: rgba(155, 92, 255, 0.10);
+  }}
+  .conclusion-card.card-3 .conclusion-takeaway {{
+    border-left-color: var(--fest-magenta);
+    background: rgba(224, 64, 251, 0.10);
   }}
 
   /* ======================================================== */
@@ -740,7 +1002,7 @@ def get_deck_css(branding=None):
     background-image: {bg_closing_css};
     background-size: cover;
     background-position: center;
-    padding: clamp(36px, 4vw, 64px) clamp(48px, 5.5vw, 90px);
+    padding: clamp(34px, 3.8vw, 60px) clamp(44px, 5vw, 84px);
     border: none;
     border-radius: 0;
     box-shadow: none;
@@ -751,7 +1013,7 @@ def get_deck_css(branding=None):
     font-weight: 800;
     color: var(--text-main);
     line-height: 1;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     letter-spacing: -0.02em;
   }}
   .closing-subtitle {{
@@ -761,69 +1023,155 @@ def get_deck_css(branding=None):
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }}
   .closing-cards-wrap {{
     display: flex;
-    gap: 20px;
+    gap: 30px;
     align-items: stretch;
-    max-width: 720px;
+    max-width: 1040px;
   }}
   .closing-contact-card {{
-    background: rgba(11, 22, 56, 0.75);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(11, 22, 56, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1.5px solid var(--fest-cyan);
-    border-radius: 16px;
-    padding: 20px 28px;
+    border-radius: 20px;
+    padding: 26px 36px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.65), 0 0 30px rgba(18, 200, 252, 0.12);
+  }}
+  .closing-name {{
+    font-size: clamp(30px, 2.6vw, 40px);
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }}
+  .closing-role-tag {{
+    font-size: 14.5px;
+    color: var(--fest-cyan);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 6px;
+  }}
+  .closing-contact-list {{
+    font-size: clamp(15.5px, 1.14vw, 17.5px);
+    color: #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }}
+  .closing-contact-item {{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }}
+  .closing-contact-item a {{
+    color: #E2E8F0;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }}
+  .closing-contact-item a:hover {{
+    color: var(--fest-cyan);
+    text-decoration: underline;
+  }}
+  .closing-card-footer {{
+    padding-top: 14px;
+    border-top: 1px solid rgba(148, 163, 184, 0.22);
+    font-size: 13.5px;
+    color: #94A3B8;
+    line-height: 1.4;
   }}
   .closing-qr-card {{
-    background: rgba(11, 22, 56, 0.75);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1.5px dashed var(--fest-cyan);
-    border-radius: 16px;
-    padding: 16px 20px;
-    width: 170px;
+    background: rgba(11, 22, 56, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid var(--fest-cyan);
+    border-radius: 20px;
+    padding: 24px 26px;
+    width: 275px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    gap: 14px;
+    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.65), 0 0 32px rgba(18, 200, 252, 0.18);
   }}
   .closing-qr-box {{
-    width: 120px;
-    height: 120px;
+    width: 220px;
+    height: 220px;
+    padding: 12px;
+    border-radius: 16px;
+    background: radial-gradient(circle at 50% 40%, rgba(18, 200, 252, 0.18), rgba(3, 7, 18, 0.98) 72%);
+    border: 1.5px solid rgba(18, 200, 252, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 28px rgba(18, 200, 252, 0.25);
   }}
-  .closing-qr-box img {{
+  .closing-qr-box svg {{
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    display: block;
+  }}
+  .closing-qr-caption {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }}
+  .closing-qr-title {{
+    font-size: 14px;
+    color: var(--fest-cyan);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }}
+  .closing-qr-sub {{
+    font-size: 12.5px;
+    color: #94A3B8;
+  }}
+  .closing-badges {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 13px;
+    margin-top: 20px;
+    max-width: 1040px;
+  }}
+  .closing-badge {{
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(18, 200, 252, 0.4);
+    background: rgba(11, 22, 56, 0.75);
+    font-size: 13.5px;
+    color: #E2E8F0;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   }}
   .closing-bottom-logos {{
     display: flex;
     align-items: center;
-    gap: 24px;
-    margin-top: 16px;
+    gap: 28px;
+    margin-top: 18px;
   }}
   .closing-bottom-logos img:first-child {{
-    height: clamp(52px, 4.8vw, 64px);
+    height: clamp(62px, 5.2vw, 76px);
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
   }}
   .closing-bottom-logos img:last-child {{
-    height: clamp(44px, 4.0vw, 54px);
+    height: clamp(52px, 4.4vw, 64px);
     width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
+  }}
     object-fit: contain;
     border-radius: 6px;
   }}
@@ -1095,4 +1443,61 @@ def get_deck_css(branding=None):
     font-family: var(--anatomy-mono);
   }}
   .iso-face-text[data-tone="hi"] {{ fill: var(--anatomy-strong); }}
+
+  /* ======================================================== */
+  /* DIAPO 29: TRES LECCIONES (frases grandes, sin tarjetas)  */
+  /* ======================================================== */
+  .slide-lessons {{
+    justify-content: center;
+  }}
+  .slide-lessons > .slide-main-title {{
+    padding: clamp(24px, 4vh, 40px) clamp(24px, 4vw, 90px) 0;
+    margin-bottom: 0;
+  }}
+  .lessons-stack {{
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(22px, 4.2vh, 52px);
+    padding: 0 clamp(24px, 4vw, 90px) clamp(24px, 4vh, 48px);
+  }}
+  .lesson-row {{
+    display: grid;
+    grid-template-columns: clamp(72px, 6vw, 112px) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(18px, 2vw, 36px);
+    padding: clamp(16px, 2.4vh, 30px) clamp(18px, 1.8vw, 30px);
+    border-left: 5px solid var(--fest-cyan);
+    border-radius: 0 12px 12px 0;
+    background: linear-gradient(90deg, rgba(18, 200, 252, 0.10), rgba(18, 200, 252, 0) 70%);
+  }}
+  .lesson-row-2 {{
+    border-left-color: var(--fest-purple);
+    background: linear-gradient(90deg, rgba(155, 92, 255, 0.12), rgba(155, 92, 255, 0) 70%);
+  }}
+  .lesson-row-3 {{
+    border-left-color: var(--fest-emerald);
+    background: linear-gradient(90deg, rgba(46, 230, 166, 0.10), rgba(46, 230, 166, 0) 70%);
+  }}
+  .lesson-icon {{
+    font-size: clamp(56px, 5vw, 84px);
+    line-height: 1;
+    text-align: center;
+  }}
+  .lesson-title {{
+    margin: 0;
+    font-size: clamp(32px, 3vw, 52px);
+    line-height: 1.12;
+    color: var(--text-main);
+  }}
+  .lesson-evidence {{
+    margin: clamp(6px, 0.8vh, 12px) 0 0;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.4;
+    color: var(--text-sub);
+  }}
 """
