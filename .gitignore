@@ -4,10 +4,14 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 venv/
+.pytest_cache/
+.ruff_cache/
 
-# OS
+# OS & Secrets
 .DS_Store
 Thumbs.db
+.env
+scripts/test_nlm_auth.py
 
 # Editors
 *.swp
@@ -16,11 +20,22 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
-# Astro / Node (si se migra el deck a Astro como Data_Wizard)
+# Astro / Node (charlas con motor Astro/Vite/Node)
 dist/
+talks/*/dist/
 .astro/
+talks/*/.astro/
 node_modules/
+talks/*/node_modules/
 package-lock.json
+
+# Build de sitio GitHub Pages y artefactos compilados pesados
+_site/
+talks/2026-forecasting-ia/presentacion.html
+talks/2026-forecasting-ia/index.html
+talks/2026-falsa-alarma/presentacion.html
+presentacion.html
+mockup_hub.html
 
 # Logs
 *.log
@@ -29,6 +44,8 @@ package-lock.json
 *.pdf
 articles/*.pdf
 articles/*.md
+talks/*/articles/*.pdf
+talks/*/articles/*.md
 !articles/README.md
 
 # --- Modelos y pesos (no versionar) ---
@@ -43,28 +60,31 @@ articles/*.md
 *.safetensors
 *.bin
 models/*
+talks/*/models/*
 !models/.gitkeep
 
 # --- Datos pesados / crudos ---
 data/raw/
-data/*.parquet
-data/*.nc
-data/*.grib
-data/*.grib2
-data/*.hdf5
+talks/*/data/raw/
+*.parquet
+*.nc
+*.grib
+*.grib2
 *.csv.gz
 
-# --- Imagenes generadas / pesadas (mantener solo las del deck) ---
+# --- Imagenes de auditoria / temporales ---
 images/raw/
+.playwright-mcp/
+screenshots/
+slide_*.png
+docs/audit_layout/
+talks/*/docs/audit_layout/
+docs/plantilla_assets/
 
 # project-suite (archivos de trabajo — locales, no se versionan)
 docs/task/
 docs/plan/
 docs/logs/
+CLAUDE.md
 AGENTS.md
 .project-suite/
-.playwright-mcp/
-screenshots/
-slide_*.png
-docs/audit_layout/
-docs/plantilla_assets/
