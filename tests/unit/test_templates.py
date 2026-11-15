@@ -99,7 +99,7 @@ def test_discover_talks_ignores_templates_and_returns_real_talks() -> None:
     discovered = discover_talks(TALKS_ROOT)
     slugs = [talk.slug for talk in discovered]
 
-    assert slugs == ["2026-forecasting-ia", "2026-falsa-alarma"]
+    assert slugs == ["2026-sdd-proyectos-reales", "2026-forecasting-ia", "2026-falsa-alarma"]
 
 
 @pytest.mark.parametrize(

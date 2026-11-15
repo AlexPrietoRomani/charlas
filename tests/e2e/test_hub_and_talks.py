@@ -165,6 +165,7 @@ def test_ephemeral_http_server_serves_hub_index(built_site_server: str) -> None:
     expected_paths = (
         "/",
         "/talks.json",
+        "/2026-sdd-proyectos-reales/",
         "/2026-forecasting-ia/",
         "/2026-falsa-alarma/",
     )
@@ -182,7 +183,11 @@ def test_ephemeral_http_server_serves_hub_index(built_site_server: str) -> None:
     ) as catalog_response:
         catalog = json.loads(catalog_response.read().decode("utf-8"))
         slugs = [talk["slug"] for talk in catalog["talks"]]
-        assert slugs == ["2026-forecasting-ia", "2026-falsa-alarma"]
+        assert slugs == [
+            "2026-sdd-proyectos-reales",
+            "2026-forecasting-ia",
+            "2026-falsa-alarma",
+        ]
 
 
 def test_user_e2e_hub_filters_and_both_talks(built_site_server: str) -> None:
@@ -215,22 +220,22 @@ def test_user_e2e_hub_filters_and_both_talks(built_site_server: str) -> None:
             assert page.locator('[src*="data_wizard_badge"]').count() == 0
 
             visible_cards = page.locator("#talksGrid .talk-card:visible")
-            expect(visible_cards).to_have_count(2)
+            expect(visible_cards).to_have_count(3)
 
             # 2. Valida búsqueda de texto en tiempo real y limpieza del campo.
             search_input = page.locator("#searchInput")
             search_input.fill("falsa")
             expect(visible_cards).to_have_count(1)
             search_input.fill("")
-            expect(visible_cards).to_have_count(2)
+            expect(visible_cards).to_have_count(3)
 
             # 3. Valida filtros de motor (Astro, Python Deck y Todas).
             page.locator('#filterPills .pill[data-filter="astro"]').click()
             expect(visible_cards).to_have_count(1)
             page.locator('#filterPills .pill[data-filter="python-deck"]').click()
-            expect(visible_cards).to_have_count(1)
-            page.locator('#filterPills .pill[data-filter="all"]').click()
             expect(visible_cards).to_have_count(2)
+            page.locator('#filterPills .pill[data-filter="all"]').click()
+            expect(visible_cards).to_have_count(3)
 
             # 4. Activa Modo Presentador y abre/cierra el modal { } Config.
             presenter_btn = page.locator("#presenterBtn")
@@ -282,6 +287,18 @@ def test_user_e2e_hub_filters_and_both_talks(built_site_server: str) -> None:
             expect(page.locator("#kpiBar")).to_be_visible()
             expect(page.locator("#deck")).to_be_visible()
             expect(page.locator("#kpi-acc")).not_to_be_empty()
+
+            # 7. Regresa al Hub y navega a 2026-sdd-proyectos-reales.
+            page.goto(f"{built_site_server}/", wait_until="domcontentloaded")
+            page.locator(
+                '.talk-card[data-slug="2026-sdd-proyectos-reales"] a.btn-primary'
+            ).click()
+            page.wait_for_load_state("domcontentloaded")
+            expect(page.locator(".slide.active")).to_have_attribute("data-index", "1")
+            page.keyboard.press("ArrowRight")
+            expect(page.locator(".slide.active")).to_have_attribute("data-index", "2")
+            page.keyboard.press("n")
+            assert page.evaluate("typeof window.Chart !== 'undefined'") is True
         finally:
             context.close()
             browser.close()
