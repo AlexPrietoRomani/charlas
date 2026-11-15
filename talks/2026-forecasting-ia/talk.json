@@ -1,0 +1,16 @@
+{
+  "slug": "2026-forecasting-ia",
+  "title": "¿Puede la IA predecir el futuro? Casos de forecasting real",
+  "subtitle": "Lecciones desde el mundo real con datos meteorológicos de SENAMHI y series agrícolas de Jaén",
+  "event": "Iquitos Data Fest 2026",
+  "date": "2026-10-05",
+  "engine": "python-deck",
+  "entry": "index.html",
+  "cover": "docs/images/front/bg_cover_official.png",
+  "slides_count": 30,
+  "duration_min": 35,
+  "tags": ["Forecasting", "ML/DL", "SENAMHI", "NDVI"],
+  "extras": {
+    "notebooks": "https://github.com/AlexPrietoRomani/charlas/tree/master/talks/2026-forecasting-ia/notebooks"
+  }
+}

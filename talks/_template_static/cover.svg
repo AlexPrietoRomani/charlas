@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="Portada plantilla Static">
+  <defs>
+    <linearGradient id="lightBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#EEF2FF"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1.4" fill="#94A3B8" fill-opacity="0.32"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#lightBg)"/>
+  <rect width="1200" height="675" fill="url(#dots)"/>
+
+  <rect x="64" y="64" width="1072" height="547" rx="28" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <rect x="64" y="64" width="1072" height="12" rx="6" fill="#0F766E"/>
+
+  <!-- Insignia superior -->
+  <rect x="116" y="122" width="248" height="36" rx="18" fill="#CCFBF1" stroke="#0F766E" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="240" y="145" text-anchor="middle" fill="#0F766E" font-family="monospace" font-size="14" font-weight="700" letter-spacing="1.6">STATIC / CUSTOM DECK</text>
+
+  <!-- Título de portada -->
+  <text x="116" y="246" fill="#0F172A" font-family="sans-serif" font-size="50" font-weight="700">Tu Charla con</text>
+  <text x="116" y="310" fill="#0F766E" font-family="sans-serif" font-size="50" font-weight="700">Diseño Libre y Claro</text>
+  <text x="116" y="366" fill="#475569" font-family="sans-serif" font-size="24">HTML/CSS puro, Reveal.js, Tailwind, Quarto o Slidev</text>
+
+  <!-- Tarjeta visual derecha -->
+  <g transform="translate(808, 178)">
+    <rect x="0" y="0" width="268" height="248" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+    <rect x="28" y="34" width="120" height="14" rx="7" fill="#0F766E" fill-opacity="0.85"/>
+    <rect x="28" y="66" width="212" height="12" rx="6" fill="#CBD5E1"/>
+    <rect x="28" y="90" width="180" height="12" rx="6" fill="#E2E8F0"/>
+    <rect x="28" y="132" width="96" height="82" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-opacity="0.35"/>
+    <rect x="144" y="132" width="96" height="82" rx="12" fill="#CCFBF1" stroke="#0F766E" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- Firma personal -->
+  <line x1="116" y1="504" x2="1084" y2="504" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="116" y="548" fill="#0F172A" font-family="sans-serif" font-size="22" font-weight="600">Alex Prieto Romani</text>
+  <text x="116" y="576" fill="#64748B" font-family="monospace" font-size="15">github.com/AlexPrietoRomani/charlas</text>
+</svg>

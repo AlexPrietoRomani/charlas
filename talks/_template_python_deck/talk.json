@@ -1,0 +1,14 @@
+{
+  "slug": "2027-nueva-charla-python",
+  "title": "Título de tu nueva charla (Python Deck)",
+  "subtitle": "Subtítulo conciso con el enfoque técnico, datos reales y aprendizaje clave",
+  "event": "Conferencia o Meetup 2027",
+  "date": "2027-01-15",
+  "engine": "python-deck",
+  "entry": "index.html",
+  "cover": "cover.svg",
+  "slides_count": 3,
+  "duration_min": 20,
+  "draft": true,
+  "tags": ["Python", "Data Science", "Chart.js"]
+}

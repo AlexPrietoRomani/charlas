@@ -1,0 +1,16 @@
+{
+  "slug": "2026-falsa-alarma",
+  "title": "Falsa alarma o amenaza real: el dilema oculto detrás de cada dato",
+  "subtitle": "Asimetría de errores (FP vs FN) y storytelling con datos en heladas de fresa del Valle del Elqui",
+  "event": "Storytelling con Datos · Valle del Elqui",
+  "date": "2026-07-23",
+  "engine": "astro",
+  "entry": "index.html",
+  "cover": "public/assets/strawberry_field_sprinklers_night.png",
+  "slides_count": 21,
+  "duration_min": 25,
+  "tags": ["Storytelling", "Astro", "Matriz de Confusión", "AgroTech"],
+  "extras": {
+    "repo": "https://github.com/AlexPrietoRomani/charlas/tree/master/talks/2026-falsa-alarma"
+  }
+}

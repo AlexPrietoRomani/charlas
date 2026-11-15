@@ -1,0 +1,14 @@
+{
+  "slug": "2027-nueva-charla-static",
+  "title": "Título de tu nueva charla (Estilo Libre)",
+  "subtitle": "Plantilla mínima autocontenida en estilo claro para HTML, Reveal.js, Quarto o Slidev",
+  "event": "Conferencia o Meetup 2027",
+  "date": "2027-02-15",
+  "engine": "static",
+  "entry": "index.html",
+  "cover": "cover.svg",
+  "slides_count": 3,
+  "duration_min": 20,
+  "draft": true,
+  "tags": ["Static", "HTML", "Storytelling"]
+}

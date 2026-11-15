@@ -1,0 +1,21 @@
+slide,seccion,referencia_texto,libro_articulo,autor,anio,url,tipo
+1,APERTURA,"Caso de estudio de agricultura de precisión, Valle del Elqui, Coquimbo, Chile (2025).",Caso de estudio,Alex Prieto Romani,2025,,propio
+2,TEORÍA,"Storytelling with Data",Storytelling with Data,Cole Nussbaumer Knaflic,2015,https://github.com/AlexPrietoRomani/Falsa_alarma_o_amenaza_real/blob/master/articles/Storytelling-with-Data.pdf,libro
+3,METODOLOGÍA,"Metodología de Diseño de Visualizaciones de Datos, Cole Nussbaumer Knaflic.",Storytelling with Data,Cole Nussbaumer Knaflic,2015,,libro
+4,COMPARATIVA,"Flujos de decisiones analíticas en procesos agrícolas tradicionales vs. estratégicos.",Análisis de flujos de decisión,,,propio
+5,STORYTELLING PARA DA Y DS,"Storytelling with Data",Storytelling with Data,Cole Nussbaumer Knaflic,2015,https://github.com/AlexPrietoRomani/Falsa_alarma_o_amenaza_real/blob/master/articles/Storytelling-with-Data.pdf,libro
+6,CONTEXTO,"Datos climáticos vía API de Open-Meteo con downscaling de modelos NOAA GFS y ECMWF.",Open-Meteo API,Open-Meteo Team,,https://open-meteo.com/en/docs,api
+7,LA TENSIÓN,"Manual de operaciones de control de heladas en cultivos de Fragaria ananassa.",Manual de operaciones,,,propio
+8,CONCEPTOS,"Inferencia Estadística y Errores Tipo I y II, Neyman-Pearson (1928).",On the Problem of the Most Efficient Tests of Statistical Hypotheses,Jerzy Neyman; Egon Pearson,1933,https://www.joelvelasco.net/teaching/249/Neyman%20Pearson%201933.pdf,paper
+9,DIAGRAMAS,"Matriz de confusión estándar para clasificación binaria de riesgos climáticos.",Matriz de confusión,,,concepto
+10,VALORIZACIÓN,"Estructura de costos y tasación de pérdidas operativas, Valle del Elqui (2025).",Análisis de costos,Alex Prieto Romani,2025,,propio
+11,TRADE-OFF,"Teoría de detección de señales (SDT) y análisis de trade-off de errores.",Teoría de detección de señales,,,concepto
+12,MÉTRICAS,"Evaluación de modelos predictivos en conjuntos de datos desbalanceados.",Evaluación de modelos,,,concepto
+13,LOS DATOS,"Registro histórico del clima del Valle del Elqui (Invierno 2025).",Datos climáticos Open-Meteo,Open-Meteo Team,2025,https://open-meteo.com/en/docs/historical-weather-api,api
+14,EL CLÍMAX,"Reporte del evento crítico meteorológico del 18 de Julio de 2025.",Reporte de evento,Alex Prieto Romani,2025,,propio
+15,EL COSTO,"Reporte de pérdidas y rendimientos por sector, Agrícola Valle del Elqui (Julio 2025).",Reporte financiero,Alex Prieto Romani,2025,,propio
+16,CONTRAMEDIDAS,"Mitigación del riesgo de congelación celular mediante calor latente de fusión (80 cal/g).",Física de heladas,,,concepto
+17,ACCIÓN,"Storytelling with Data",Storytelling with Data,Cole Nussbaumer Knaflic,2015,https://github.com/AlexPrietoRomani/Falsa_alarma_o_amenaza_real/blob/master/articles/Storytelling-with-Data.pdf,libro
+18,OPTIMIZACIÓN,"Calibración de matrices de costo-beneficio para la optimización de activos.",Calibración de matrices,,,concepto
+19,UNIVERSALIDAD,"Clasificación binaria asimétrica en ingeniería de software, medicina y finanzas.",Clasificación binaria,,,concepto
+20,CIERRE,"Conclusión. Caso de estudio de Data Science, Data Wizard (2026).",Caso de estudio,Alex Prieto Romani,2026,,propio

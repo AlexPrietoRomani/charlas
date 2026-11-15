@@ -1,34 +1,177 @@
-import os
-import sys
+"""
+Archivo: talks/2026-forecasting-ia/back/build_deck.py
+Fecha de modificación: 15/11/2026
+Autor: Alex Prieto <alexprieto1997@gmail.com>
+
+Descripción:
+Motor de compilación autónomo para el deck interactivo de la charla
+`2026-forecasting-ia` (`python-deck`). Ensambla estilos, diapositivas,
+notas del orador, branding institucional, prototipos embebidos, librería
+Chart.js offline y payloads reales de Caso 1 (SENAMHI Punchana) y Caso 2
+(Café Jaén) en un archivo HTML autocontenido.
+
+Acciones Principales:
+    - Carga y sanitiza (`clean_nans`) los CSV y JSON reales de `data/`.
+    - Embebe prototipos HTML interactivos, SVGs anatómicos y branding Base64.
+    - Resuelve `chart.umd.min.js` desde `shared/python_deck/assets/` con
+      respaldo local en `front/assets/`.
+    - Genera `presentacion.html` e `index.html` en `output_dir` o `BASE_DIR`.
+    - Copia los datasets procesados (`data/caso_1`, `data/caso_2`) cuando
+      `output_dir` difiere de `BASE_DIR`.
+
+Estructura Interna:
+    - `clean_nans`: Sanitiza recursivamente `NaN` e infinitos hacia `None`.
+    - `_load_deck_data`: Lee y transforma los CSV/JSON de ambos casos.
+    - `_encode_first_existing`: Codifica en Base64 el primer prototipo existente.
+    - `_load_chartjs_bundle`: Carga Chart.js compartido o local como fallback.
+    - `_sync_runtime_assets`: Copia los datasets procesados hacia `target_dir`.
+    - `_render_html_document`: Renderiza el documento HTML completo del deck.
+    - `build_deck`: Orquesta la compilación hacia `output_dir` o `BASE_DIR`.
+    - `main`: Punto de entrada CLI con soporte `--output-dir`.
+
+Entradas / Dependencias:
+    - `front/` (`deck_styles`, `deck_slides_p1`, `deck_slides_p2`, `deck_notes`, `deck_branding`).
+    - `data/caso_1/*`, `data/caso_2/*`, `docs/notebooklm/*`, `docs/images/front/*`.
+    - `shared/python_deck/assets/chart.umd.min.js` y `pandas`.
+
+Salidas / Efectos:
+    - Escribe `presentacion.html` e `index.html` en el directorio destino.
+
+Ejecución:
+    python talks/2026-forecasting-ia/back/build_deck.py [--output-dir RUTA]
+
+Ejemplo de Uso:
+    python talks/2026-forecasting-ia/back/build_deck.py --output-dir _site/2026-forecasting-ia
+
+Argumentos:
+    - --output-dir: Path | None - Directorio destino de compilación (opcional).
+"""
+
+import argparse
+import base64
 import json
+import math
+import shutil
+import sys
 from pathlib import Path
+from typing import Any
+
 import pandas as pd
 
-# Resolver directorios base y front
-BASE_DIR = Path(__file__).resolve().parent.parent
-FRONT_DIR = BASE_DIR / "front"
-if str(FRONT_DIR) not in sys.path:
-    sys.path.insert(0, str(FRONT_DIR))
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
+REPO_ROOT: Path = BASE_DIR.parent.parent
+FRONT_DIR: Path = BASE_DIR / "front"
+
+# Prioriza los módulos de `front/` propios de esta charla frente a cualquier ruta previa.
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
+if str(FRONT_DIR) not in sys.path:
+    sys.path.insert(0, str(FRONT_DIR))
 
-from deck_styles import get_deck_css
-from deck_slides_p1 import get_slides_part1
-from deck_slides_p2 import get_slides_part2
-from deck_notes import get_speaker_notes
-from deck_branding import get_branding
+from deck_branding import get_branding  # noqa: E402
+from deck_notes import get_speaker_notes  # noqa: E402
+from deck_slides_p1 import get_slides_part1  # noqa: E402
+from deck_slides_p2 import get_slides_part2  # noqa: E402
+from deck_styles import get_deck_css  # noqa: E402
 
-def clean_nans(obj):
-    if isinstance(obj, float) and (pd.isna(obj) or obj != obj):
+SHARED_CHARTJS_PATH: Path = REPO_ROOT / "shared" / "python_deck" / "assets" / "chart.umd.min.js"
+LOCAL_CHARTJS_FALLBACK_PATH: Path = BASE_DIR / "front" / "assets" / "chart.umd.min.js"
+
+PROTOTYPE_CANDIDATES: dict[str, tuple[str, ...]] = {
+    "b64_sim_html": (
+        "docs/notebooklm/seccion_1/prototipos/5_Anatomia_de_la_senal_temporal_v3.html",
+        "docs/notebooklm/seccion_1/5_Anatomia_de_la_senal_temporal_v3.html",
+        "docs/notebooklm/seccion_1/prototipos/5_anatomia_senal_temporal_mejorada.html",
+        "docs/notebooklm/seccion_1/5_anatomia_senal_temporal_mejorada.html",
+        "docs/notebooklm/seccion_1/anatomia_senal_temporal_mejorada.html",
+        "docs/notebooklm/seccion_1/5_anatom_a_ontol_gica_f_sica_vs_ruido.html",
+        "docs/notebooklm/seccion_1/anatom_a_ontol_gica_f_sica_vs_ruido.html",
+    ),
+    "b64_era1_html": (
+        "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal_v3.html",
+        "docs/notebooklm/seccion_1/6_Era_1_La_parsimonia_lineal_v3.html",
+        "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal.html",
+        "docs/notebooklm/seccion_1/6_Era_1_La_parsimonia_lineal.html",
+    ),
+    "b64_era2_html": (
+        "docs/notebooklm/seccion_1/prototipos/7_Era_2_El_puente_tabular.html",
+        "docs/notebooklm/seccion_1/7_Era_2_El_puente_tabular.html",
+    ),
+    "b64_era3_html": (
+        "docs/notebooklm/seccion_1/prototipos/8_Era_3_Deep_Learning_y_Parches.html",
+        "docs/notebooklm/seccion_1/8_Era_3_Deep_Learning_y_Parches.html",
+    ),
+    "b64_era4_html": (
+        "docs/notebooklm/seccion_1/prototipos/9_Era_4_Modelos_Fundacionales_Zero_Shot.html",
+        "docs/notebooklm/seccion_1/9_Era_4_Modelos_Fundacionales_Zero_Shot.html",
+    ),
+    "b64_cono_html": (
+        "docs/notebooklm/seccion_1/prototipos/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html",
+        "docs/notebooklm/seccion_1/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html",
+    ),
+    "b64_decision_html": (
+        "docs/notebooklm/seccion_1/prototipos/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html",
+        "docs/notebooklm/seccion_1/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html",
+    ),
+    "b64_p19_html": (
+        "docs/notebooklm/seccion_3/prototipos/19_c_mo_el_agro_invent_el_forecasting.html",
+    ),
+    "b64_p20_html": (
+        "docs/notebooklm/seccion_3/prototipos/20_del_almanaque_al_sat_lite.html",
+    ),
+    "b64_p21_html": (
+        "docs/notebooklm/seccion_3/prototipos/21_f_sica_biol_gica_y_el_l_mite_algor_tmico.html",
+    ),
+    "b64_p22_html": (
+        "docs/notebooklm/seccion_3/prototipos/22_reloj_fenol_gico_del_caf.html",
+    ),
+    "b64_p23_html": (
+        "docs/notebooklm/seccion_3/prototipos/23_precisi_n_actual_y_las_tres_trampas.html",
+    ),
+    "b64_p13_html": (
+        "docs/notebooklm/seccion_2/prototipos/13_Datos_SENAMHI_Punchana.html",
+    ),
+    "b64_p14_html": (
+        "docs/notebooklm/seccion_2/prototipos/14_Trampa_Arboles_Meseta_vs_Diferencias.html",
+    ),
+    "b64_p15_html": (
+        "docs/notebooklm/seccion_2/prototipos/15_Benchmark_14_Modelos_Tierra_vs_Supercomputo.html",
+    ),
+    "b64_p16_html": (
+        "docs/notebooklm/seccion_2/prototipos/16_Pronostico_7_Dias_Cono_P10_P90.html",
+    ),
+    "b64_p17_html": (
+        "docs/notebooklm/seccion_2/prototipos/17_Pipeline_Codigo_Diferencias_ExtraTrees.html",
+    ),
+}
+
+
+def clean_nans(obj: Any) -> Any:
+    """
+    Reemplaza recursivamente valores `NaN` o infinitos por `None` para serializar JSON válido.
+
+    Args:
+        obj (Any): Estructura arbitraria compuesta por diccionarios, listas o escalares.
+
+    Returns:
+        Any: Estructura equivalente libre de `NaN` e infinitos no válidos en JSON.
+    """
+    if isinstance(obj, float) and (pd.isna(obj) or math.isnan(obj) or math.isinf(obj)):
         return None
-    elif isinstance(obj, dict):
-        return {k: clean_nans(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_nans(v) for v in obj]
+    if isinstance(obj, dict):
+        return {key: clean_nans(value) for key, value in obj.items()}
+    if isinstance(obj, list):
+        return [clean_nans(item) for item in obj]
     return obj
 
-def build_deck():
-    # Cargar datos reales auditados
+
+def _load_deck_data() -> dict[str, Any]:
+    """
+    Carga y sanitiza los datasets auditados de Caso 1 y Caso 2 desde `BASE_DIR / "data"`.
+
+    Returns:
+        dict[str, Any]: Diccionario listo para inyectar en `window.DECK_DATA`.
+    """
     bench_df = pd.read_csv(BASE_DIR / "data/caso_1/benchmark_punchana.csv")
     forecast_7d_df = pd.read_csv(BASE_DIR / "data/caso_1/senamhi_forecast_7d.csv")
     extrap_df = pd.read_csv(BASE_DIR / "data/caso_1/experimento_extrapolacion.csv")
@@ -37,14 +180,12 @@ def build_deck():
     cafe_bm_df = pd.read_csv(BASE_DIR / "data/caso_2/benchmark_cafe.csv")
     cafe_preds_df = pd.read_csv(BASE_DIR / "data/caso_2/cafe_jaen_predicciones_modelos.csv")
     noaa_ecmwf_df = pd.read_csv(BASE_DIR / "data/caso_1/noaa_ecmwf_forecast.csv")
-    
-    with open(BASE_DIR / "data/caso_2/cafe_jaen_hipotesis.json", "r", encoding="utf-8") as f:
-        hipotesis_cafe = json.load(f)
-
     senamhi_diario_df = pd.read_csv(BASE_DIR / "data/caso_1/senamhi_diario.csv")
-    senamhi_sub = senamhi_diario_df.tail(180).to_dict(orient="records")
 
-    raw_payload = {
+    hypothesis_path = BASE_DIR / "data/caso_2/cafe_jaen_hipotesis.json"
+    hipotesis_cafe = json.loads(hypothesis_path.read_text(encoding="utf-8"))
+
+    raw_payload: dict[str, Any] = {
         "benchmark": bench_df.to_dict(orient="records"),
         "forecast_7d": forecast_7d_df.to_dict(orient="records"),
         "extrapolacion": extrap_df.to_dict(orient="records"),
@@ -54,162 +195,90 @@ def build_deck():
         "cafe_predicciones": cafe_preds_df.to_dict(orient="records"),
         "hipotesis_cafe": hipotesis_cafe,
         "noaa_ecmwf": noaa_ecmwf_df.to_dict(orient="records"),
-        "senamhi_reciente": senamhi_sub
+        "senamhi_reciente": senamhi_diario_df.tail(180).to_dict(orient="records"),
     }
-    data_payload = clean_nans(raw_payload)
-    data_json = json.dumps(data_payload, ensure_ascii=False)
-    notes_json = json.dumps(get_speaker_notes(), ensure_ascii=False)
+    return clean_nans(raw_payload)
 
-    import base64
-    sim_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/5_Anatomia_de_la_senal_temporal_v3.html"
-    if not sim_path.exists():
-        sim_path = BASE_DIR / "docs/notebooklm/seccion_1/5_Anatomia_de_la_senal_temporal_v3.html"
-    if not sim_path.exists():
-        sim_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/5_anatomia_senal_temporal_mejorada.html"
-    if not sim_path.exists():
-        sim_path = BASE_DIR / "docs/notebooklm/seccion_1/5_anatomia_senal_temporal_mejorada.html"
-    if not sim_path.exists():
-        sim_path = BASE_DIR / "docs/notebooklm/seccion_1/anatomia_senal_temporal_mejorada.html"
-    if not sim_path.exists():
-        sim_path = BASE_DIR / "docs/notebooklm/seccion_1/5_anatom_a_ontol_gica_f_sica_vs_ruido.html"
-    if not sim_path.exists():
-        sim_path = BASE_DIR / "docs/notebooklm/seccion_1/anatom_a_ontol_gica_f_sica_vs_ruido.html"
-    if sim_path.exists():
-        sim_bytes = sim_path.read_bytes()
-        b64_sim_html = base64.b64encode(sim_bytes).decode("ascii")
-    else:
-        b64_sim_html = ""
 
-    era1_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal_v3.html"
-    if not era1_path.exists():
-        era1_path = BASE_DIR / "docs/notebooklm/seccion_1/6_Era_1_La_parsimonia_lineal_v3.html"
-    if not era1_path.exists():
-        era1_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/6_Era_1_La_parsimonia_lineal.html"
-    if not era1_path.exists():
-        era1_path = BASE_DIR / "docs/notebooklm/seccion_1/6_Era_1_La_parsimonia_lineal.html"
-    if era1_path.exists():
-        era1_bytes = era1_path.read_bytes()
-        b64_era1_html = base64.b64encode(era1_bytes).decode("ascii")
-    else:
-        b64_era1_html = ""
+def _encode_first_existing(candidates: tuple[str, ...]) -> str:
+    """
+    Codifica en Base64 ASCII el primer archivo candidato existente bajo `BASE_DIR`.
 
-    era2_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/7_Era_2_El_puente_tabular.html"
-    if not era2_path.exists():
-        era2_path = BASE_DIR / "docs/notebooklm/seccion_1/7_Era_2_El_puente_tabular.html"
-    if era2_path.exists():
-        era2_bytes = era2_path.read_bytes()
-        b64_era2_html = base64.b64encode(era2_bytes).decode("ascii")
-    else:
-        b64_era2_html = ""
+    Args:
+        candidates (tuple[str, ...]): Rutas relativas ordenadas por prioridad.
 
-    era3_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/8_Era_3_Deep_Learning_y_Parches.html"
-    if not era3_path.exists():
-        era3_path = BASE_DIR / "docs/notebooklm/seccion_1/8_Era_3_Deep_Learning_y_Parches.html"
-    if era3_path.exists():
-        era3_bytes = era3_path.read_bytes()
-        b64_era3_html = base64.b64encode(era3_bytes).decode("ascii")
-    else:
-        b64_era3_html = ""
+    Returns:
+        str: Cadena Base64 del archivo encontrado, o cadena vacía si ninguno existe.
+    """
+    for rel_path in candidates:
+        candidate_path = BASE_DIR / rel_path
+        if candidate_path.is_file():
+            return base64.b64encode(candidate_path.read_bytes()).decode("ascii")
+    return ""
 
-    era4_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/9_Era_4_Modelos_Fundacionales_Zero_Shot.html"
-    if not era4_path.exists():
-        era4_path = BASE_DIR / "docs/notebooklm/seccion_1/9_Era_4_Modelos_Fundacionales_Zero_Shot.html"
-    if era4_path.exists():
-        era4_bytes = era4_path.read_bytes()
-        b64_era4_html = base64.b64encode(era4_bytes).decode("ascii")
-    else:
-        b64_era4_html = ""
 
-    cono_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html"
-    if not cono_path.exists():
-        cono_path = BASE_DIR / "docs/notebooklm/seccion_1/10_El_Cono_de_Incertidumbre_y_Prediccion_Conforme.html"
-    if cono_path.exists():
-        cono_bytes = cono_path.read_bytes()
-        b64_cono_html = base64.b64encode(cono_bytes).decode("ascii")
-    else:
-        b64_cono_html = ""
+def _load_chartjs_bundle() -> str:
+    """
+    Lee el bundle UMD de Chart.js compartido, usando la copia local como respaldo.
 
-    decision_path = BASE_DIR / "docs/notebooklm/seccion_1/prototipos/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html"
-    if not decision_path.exists():
-        decision_path = BASE_DIR / "docs/notebooklm/seccion_1/11_Arquitectura_de_Decision_y_Cierre_Ejecutivo.html"
-    if decision_path.exists():
-        decision_bytes = decision_path.read_bytes()
-        b64_decision_html = base64.b64encode(decision_bytes).decode("ascii")
-    else:
-        b64_decision_html = ""
+    Returns:
+        str: Código fuente de `chart.umd.min.js` o cadena vacía si no existe ninguno.
+    """
+    for candidate_path in (SHARED_CHARTJS_PATH, LOCAL_CHARTJS_FALLBACK_PATH):
+        if candidate_path.is_file():
+            return candidate_path.read_text(encoding="utf-8")
+    return ""
 
-    # Prototipos Sección 3 (Diapositivas 19 a 23)
-    p19_path = BASE_DIR / "docs/notebooklm/seccion_3/prototipos/19_c_mo_el_agro_invent_el_forecasting.html"
-    b64_p19_html = base64.b64encode(p19_path.read_bytes()).decode("ascii") if p19_path.exists() else ""
 
-    p20_path = BASE_DIR / "docs/notebooklm/seccion_3/prototipos/20_del_almanaque_al_sat_lite.html"
-    b64_p20_html = base64.b64encode(p20_path.read_bytes()).decode("ascii") if p20_path.exists() else ""
+def _sync_runtime_assets(target_dir: Path) -> None:
+    """
+    Copia los datasets procesados de `data/` hacia `target_dir` excluyendo `raw/`.
 
-    p21_path = BASE_DIR / "docs/notebooklm/seccion_3/prototipos/21_f_sica_biol_gica_y_el_l_mite_algor_tmico.html"
-    b64_p21_html = base64.b64encode(p21_path.read_bytes()).decode("ascii") if p21_path.exists() else ""
+    Args:
+        target_dir (Path): Directorio de salida distinto de `BASE_DIR`.
+    """
+    if target_dir.resolve() == BASE_DIR.resolve():
+        return
 
-    p22_path = BASE_DIR / "docs/notebooklm/seccion_3/prototipos/22_reloj_fenol_gico_del_caf.html"
-    b64_p22_html = base64.b64encode(p22_path.read_bytes()).decode("ascii") if p22_path.exists() else ""
+    for case_name in ("caso_1", "caso_2"):
+        src_case_dir = BASE_DIR / "data" / case_name
+        if not src_case_dir.is_dir():
+            continue
+        dst_case_dir = target_dir / "data" / case_name
+        dst_case_dir.mkdir(parents=True, exist_ok=True)
+        for item in src_case_dir.iterdir():
+            if item.is_file():
+                shutil.copy2(item, dst_case_dir / item.name)
 
-    p23_path = BASE_DIR / "docs/notebooklm/seccion_3/prototipos/23_precisi_n_actual_y_las_tres_trampas.html"
-    b64_p23_html = base64.b64encode(p23_path.read_bytes()).decode("ascii") if p23_path.exists() else ""
 
-    # Prototipos Sección 2 (Diapositivas 13 a 17)
-    p13_path = BASE_DIR / "docs/notebooklm/seccion_2/prototipos/13_Datos_SENAMHI_Punchana.html"
-    b64_p13_html = base64.b64encode(p13_path.read_bytes()).decode("ascii") if p13_path.exists() else ""
+def _render_html_document(
+    *,
+    data_json: str,
+    notes_json: str,
+    branding: dict[str, str],
+    css_content: str,
+    slides_p1: str,
+    slides_p2: str,
+    chartjs_local_code: str,
+) -> str:
+    """
+    Ensambla el documento HTML completo del deck con estilos, datos y scripts interactivos.
 
-    p14_path = BASE_DIR / "docs/notebooklm/seccion_2/prototipos/14_Trampa_Arboles_Meseta_vs_Diferencias.html"
-    b64_p14_html = base64.b64encode(p14_path.read_bytes()).decode("ascii") if p14_path.exists() else ""
+    Args:
+        data_json (str): JSON serializado para `window.DECK_DATA`.
+        notes_json (str): JSON serializado con las notas del orador por diapositiva.
+        branding (dict[str, str]): Diccionario con recursos gráficos en Base64 y SVGs.
+        css_content (str): Hoja de estilos CSS completa del deck.
+        slides_p1 (str): Markup HTML de la primera mitad de diapositivas (1-14).
+        slides_p2 (str): Markup HTML de la segunda mitad de diapositivas (15-30).
+        chartjs_local_code (str): Bundle offline de Chart.js como fallback del CDN.
 
-    p15_path = BASE_DIR / "docs/notebooklm/seccion_2/prototipos/15_Benchmark_14_Modelos_Tierra_vs_Supercomputo.html"
-    b64_p15_html = base64.b64encode(p15_path.read_bytes()).decode("ascii") if p15_path.exists() else ""
-
-    p16_path = BASE_DIR / "docs/notebooklm/seccion_2/prototipos/16_Pronostico_7_Dias_Cono_P10_P90.html"
-    b64_p16_html = base64.b64encode(p16_path.read_bytes()).decode("ascii") if p16_path.exists() else ""
-
-    p17_path = BASE_DIR / "docs/notebooklm/seccion_2/prototipos/17_Pipeline_Codigo_Diferencias_ExtraTrees.html"
-    b64_p17_html = base64.b64encode(p17_path.read_bytes()).decode("ascii") if p17_path.exists() else ""
-
-    branding = get_branding()
-    branding["b64_sim_html"] = b64_sim_html
-    branding["b64_era1_html"] = b64_era1_html
-    branding["b64_era2_html"] = b64_era2_html
-    branding["b64_era3_html"] = b64_era3_html
-    branding["b64_era4_html"] = b64_era4_html
-    branding["b64_cono_html"] = b64_cono_html
-    branding["b64_decision_html"] = b64_decision_html
-    branding["b64_p19_html"] = b64_p19_html
-    branding["b64_p20_html"] = b64_p20_html
-    branding["b64_p21_html"] = b64_p21_html
-    branding["b64_p22_html"] = b64_p22_html
-    branding["b64_p23_html"] = b64_p23_html
-    branding["b64_p13_html"] = b64_p13_html
-    branding["b64_p14_html"] = b64_p14_html
-    branding["b64_p15_html"] = b64_p15_html
-    branding["b64_p16_html"] = b64_p16_html
-    branding["b64_p17_html"] = b64_p17_html
+    Returns:
+        str: Contenido HTML completo listo para escribir en disco.
+    """
     b64_header_logo = branding["b64_header"]
-    b64_dw_logo = branding["b64_dw"]
-    qr_svg = branding["qr_svg"]
 
-    css_content = get_deck_css(branding=branding)
-
-    # Cargar diagramas anatómicos generados con Anatomy Framework
-    anatomy_c1_path = BASE_DIR / "front/components/anatomy/anatomy_estacion_vs_malla.svg"
-    anatomy_c2_path = BASE_DIR / "front/components/anatomy/anatomy_cafe_sombra_ndvi.svg"
-    branding["anatomy_c1_svg"] = anatomy_c1_path.read_text(encoding="utf-8") if anatomy_c1_path.exists() else ""
-    branding["anatomy_c2_svg"] = anatomy_c2_path.read_text(encoding="utf-8") if anatomy_c2_path.exists() else ""
-
-    # Inyección de Chart.js local offline como fallback si CDN no responde
-    chartjs_local_code = ""
-    if os.path.exists("scripts/assets/chart.umd.min.js"):
-        with open("scripts/assets/chart.umd.min.js", "r", encoding="utf-8") as f:
-            chartjs_local_code = f.read()
-
-    slides_p1 = get_slides_part1(branding=branding)
-    slides_p2 = get_slides_part2(branding=branding)
-
-    html_content = f"""<!DOCTYPE html>
+    return f"""<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -1346,15 +1415,85 @@ def build_deck():
 </html>
 """
 
-    output_path = str(BASE_DIR / "presentacion.html")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
 
-    index_path = str(BASE_DIR / "index.html")
-    with open(index_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
+def build_deck(output_dir: Path | None = None) -> Path:
+    """
+    Compila el deck interactivo de 30 diapositivas y retorna la ruta a `index.html`.
 
-    print(f"Deck interactivo de 30 diapositivas generado con éxito en: {output_path} e {index_path} ({len(html_content)} bytes)")
+    Args:
+        output_dir (Path | None, opcional): Directorio destino de compilación. Si es
+            `None`, escribe directamente en `BASE_DIR`.
+
+    Returns:
+        Path: Ruta al archivo `index.html` generado.
+    """
+    target_dir = Path(output_dir) if output_dir is not None else BASE_DIR
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    data_payload = _load_deck_data()
+    data_json = json.dumps(data_payload, ensure_ascii=False, allow_nan=False)
+    notes_json = json.dumps(get_speaker_notes(), ensure_ascii=False, allow_nan=False)
+
+    branding = get_branding()
+    for key, candidates in PROTOTYPE_CANDIDATES.items():
+        branding[key] = _encode_first_existing(candidates)
+
+    # Carga los diagramas anatómicos SVG generados con Anatomy Framework.
+    anatomy_c1_path = BASE_DIR / "front/components/anatomy/anatomy_estacion_vs_malla.svg"
+    anatomy_c2_path = BASE_DIR / "front/components/anatomy/anatomy_cafe_sombra_ndvi.svg"
+    branding["anatomy_c1_svg"] = (
+        anatomy_c1_path.read_text(encoding="utf-8") if anatomy_c1_path.is_file() else ""
+    )
+    branding["anatomy_c2_svg"] = (
+        anatomy_c2_path.read_text(encoding="utf-8") if anatomy_c2_path.is_file() else ""
+    )
+
+    css_content = get_deck_css(branding=branding)
+    chartjs_local_code = _load_chartjs_bundle()
+    slides_p1 = get_slides_part1(branding=branding)
+    slides_p2 = get_slides_part2(branding=branding)
+
+    html_content = _render_html_document(
+        data_json=data_json,
+        notes_json=notes_json,
+        branding=branding,
+        css_content=css_content,
+        slides_p1=slides_p1,
+        slides_p2=slides_p2,
+        chartjs_local_code=chartjs_local_code,
+    )
+
+    presentation_path = target_dir / "presentacion.html"
+    presentation_path.write_text(html_content, encoding="utf-8")
+
+    index_path = target_dir / "index.html"
+    index_path.write_text(html_content, encoding="utf-8")
+
+    _sync_runtime_assets(target_dir)
+
+    print(
+        f"Deck interactivo de 30 diapositivas generado con éxito en: "
+        f"{presentation_path} e {index_path} ({len(html_content)} bytes)"
+    )
+    return index_path
+
+
+def main() -> None:
+    """
+    Ejecuta la compilación del deck desde línea de comandos aceptando `--output-dir`.
+    """
+    parser = argparse.ArgumentParser(
+        description="Compila el deck interactivo de la charla 2026-forecasting-ia."
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Directorio destino donde escribir index.html y presentacion.html.",
+    )
+    args = parser.parse_args()
+    build_deck(output_dir=args.output_dir)
+
 
 if __name__ == "__main__":
-    build_deck()
+    main()
