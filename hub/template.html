@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alex Prieto Romani · Charlas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #060913;
+      --bg-panel: rgba(13, 20, 40, 0.82);
+      --bg-card: rgba(16, 25, 49, 0.90);
+      --bg-card-hover: rgba(22, 34, 66, 0.96);
+      --accent-cyan: #12C8FC;
+      --accent-blue: #3B82F6;
+      --accent-amber: #FFC857;
+      --accent-emerald: #2EE6A6;
+      --accent-orange: #FF6B4A;
+      --text-main: #F8FAFC;
+      --text-sub: #CBD5E1;
+      --text-faint: #94A3B8;
+      --border: rgba(148, 163, 184, 0.20);
+      --border-hover: rgba(18, 200, 252, 0.55);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(18, 200, 252, 0.12), transparent 36%),
+        radial-gradient(circle at 90% 12%, rgba(59, 130, 246, 0.12), transparent 38%),
+        radial-gradient(circle at 50% 95%, rgba(46, 230, 166, 0.07), transparent 45%);
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 24px 64px;
+    }
+
+    /* Cabecera de marca personal: Alex Prieto Romani */
+    .hub-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px 28px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      backdrop-filter: blur(14px);
+      margin-bottom: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .avatar-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      padding: 2.5px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));
+      flex-shrink: 0;
+    }
+    .avatar-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #0D1428;
+    }
+
+    .hub-kicker {
+      font-size: 11.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hub-kicker .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+    }
+    .hub-title {
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .hub-subtitle {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      margin-top: 5px;
+    }
+    .personal-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .personal-links a {
+      color: var(--text-faint);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .personal-links a:hover { color: var(--accent-cyan); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tab-switcher {
+      display: inline-flex;
+      background: rgba(6, 9, 19, 0.78);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-sub);
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .tab-btn:hover { color: #FFFFFF; }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(18, 200, 252, 0.20), rgba(59, 130, 246, 0.24));
+      color: #FFFFFF;
+      border-color: rgba(18, 200, 252, 0.45);
+    }
+
+    /* Barra de controles */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1 1 280px;
+      max-width: 420px;
+    }
+    .search-box input {
+      width: 100%;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 11px 14px 11px 40px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-box input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(18, 200, 252, 0.14);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-faint);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .pill {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .pill:hover { border-color: var(--accent-cyan); color: #fff; }
+    .pill.active {
+      background: rgba(18, 200, 252, 0.16);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+    .pill.hidden { display: none; }
+
+    .presenter-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-panel);
+      border: 1px solid rgba(46, 230, 166, 0.35);
+      color: #A7F3D0;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .presenter-toggle.on {
+      background: rgba(46, 230, 166, 0.18);
+      border-color: var(--accent-emerald);
+      box-shadow: 0 0 18px rgba(46, 230, 166, 0.22);
+    }
+
+    /* Grilla de charlas */
+    .talks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 22px;
+    }
+
+    .talk-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .talk-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(18, 200, 252, 0.10);
+    }
+
+    .card-cover {
+      height: 185px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+      display: block;
+    }
+    .talk-card:hover .card-cover img { transform: scale(1.04); }
+
+    .cover-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      font-size: 13px;
+      background: linear-gradient(135deg, rgba(18, 200, 252, 0.14), rgba(59, 130, 246, 0.18));
+    }
+
+    .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(6, 9, 19, 0.24) 0%, rgba(6, 9, 19, 0.88) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 14px;
+      pointer-events: none;
+    }
+
+    .cover-top-badges {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-event {
+      background: rgba(6, 9, 19, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+    }
+
+    .badge-engine {
+      font-size: 10.5px;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .engine-py { background: rgba(18, 200, 252, 0.18); color: #12C8FC; border: 1px solid rgba(18, 200, 252, 0.45); }
+    .engine-astro { background: rgba(255, 107, 74, 0.20); color: #FF8E72; border: 1px solid rgba(255, 107, 74, 0.50); }
+    .engine-static { background: rgba(255, 200, 87, 0.16); color: #FFC857; border: 1px solid rgba(255, 200, 87, 0.40); }
+
+    .cover-slug {
+      font-size: 11.5px;
+      color: var(--accent-cyan);
+      opacity: 0.95;
+    }
+
+    .card-body {
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .card-desc {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-sub);
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-primary {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #03050F;
+      font-weight: 700;
+      font-size: 13.5px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-sub);
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 9px 11px;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent-cyan);
+      color: #fff;
+      background: rgba(18, 200, 252, 0.12);
+    }
+
+    .presenter-bar {
+      display: none;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(46, 230, 166, 0.10);
+      border: 1px dashed rgba(46, 230, 166, 0.40);
+      font-size: 11.5px;
+      color: #A7F3D0;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .presenter-bar a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .presenter-bar a:hover { text-decoration: underline; }
+    body.presenter-mode .presenter-bar { display: flex; }
+
+    .empty-state {
+      display: none;
+      margin-top: 24px;
+      padding: 36px 24px;
+      text-align: center;
+      background: var(--bg-panel);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      color: var(--text-sub);
+    }
+    .empty-state.visible { display: block; }
+
+    /* Vista Arquitectura y Cómo agregar una charla */
+    .arch-view { display: none; }
+    .arch-view.active { display: block; }
+    .catalog-view.hidden { display: none; }
+
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 20px;
+    }
+    .arch-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .arch-box h3 {
+      font-size: 16px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .arch-box p {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    .arch-box pre {
+      background: rgba(6, 9, 19, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #E2E8F0;
+      overflow-x: auto;
+    }
+
+    /* Modal de inspección JSON */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 9, 19, 0.84);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #0F172A;
+      border: 1px solid var(--accent-cyan);
+      border-radius: 16px;
+      max-width: 680px;
+      width: 100%;
+      padding: 22px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+    .modal-close {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+    .modal pre {
+      background: #060913;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #A5F3FC;
+      overflow: auto;
+      border: 1px solid rgba(18, 200, 252, 0.25);
+    }
+
+    @media (max-width: 640px) {
+      .talks-grid { grid-template-columns: 1fr; }
+      .arch-grid { grid-template-columns: 1fr; }
+      .hub-header { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hub-header">
+      <div class="brand-left">
+        <div class="avatar-ring">
+          <img src="hub_assets/profile_alex.jpg" alt="Alex Prieto Romani" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <div class="hub-kicker mono">
+            <span class="dot"></span>
+            <span id="hubKicker">alexprietoromani.github.io/charlas</span>
+          </div>
+          <h1 class="hub-title display">Alex Prieto Romani · Charlas</h1>
+          <p class="hub-subtitle">
+            Agriculture Data Science · Mg Sc Big Data &amp; Data Science · Ponencias interactivas, datos reales y demos en vivo
+          </p>
+          <div class="personal-links mono">
+            <a href="https://alexprietoromani.github.io/" target="_blank" rel="noopener noreferrer">🌐 Web</a>
+            <a href="https://github.com/AlexPrietoRomani" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
+            <a href="https://linkedin.com/in/alex-prieto-romani" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="tab-switcher" role="tablist" aria-label="Vistas del portal">
+          <button type="button" class="tab-btn active" data-tab="catalog" role="tab" aria-selected="true">
+            🎤 Charlas (<span id="totalTalksCount">0</span>)
+          </button>
+          <button type="button" class="tab-btn" data-tab="arch" role="tab" aria-selected="false">
+            ➕ Cómo agregar una charla
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="catalogView" class="catalog-view">
+        <div class="controls-bar">
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input id="searchInput" type="search" placeholder="Buscar por título, evento, descripción, tags o motor..." aria-label="Buscar charlas">
+          </div>
+
+          <div class="filter-pills" id="filterPills" role="group" aria-label="Filtrar por motor">
+            <button type="button" class="pill active" data-filter="all">Todas (<span class="pill-count">0</span>)</button>
+            <button type="button" class="pill" data-filter="python-deck">Python Deck (<span class="pill-count">0</span>)</button>
+            <button type="button" class="pill" data-filter="astro">Astro (<span class="pill-count">0</span>)</button>
+            <button type="button" class="pill" data-filter="other">Otros estilos (<span class="pill-count">0</span>)</button>
+          </div>
+
+          <button type="button" id="presenterBtn" class="presenter-toggle" aria-pressed="false">
+            <span>📽️</span> Modo Presentador
+          </button>
+        </div>
+
+        <div class="talks-grid" id="talksGrid"></div>
+        <div class="empty-state" id="emptyState">
+          No se encontraron charlas que coincidan con el filtro o búsqueda actual.
+        </div>
+      </section>
+
+      <section id="archView" class="arch-view" aria-label="Arquitectura y guía para agregar charlas">
+        <div class="arch-grid">
+          <div class="arch-box">
+            <h3 class="display">➕ Cómo agregar una nueva charla</h3>
+            <p>
+              Cada ponencia vive en su propia carpeta dentro de <code>talks/&lt;slug&gt;/</code> con un archivo
+              <code>talk.json</code>. El orquestador la descubre automáticamente y la publica en este Hub.
+            </p>
+            <pre class="mono">1. Copia una plantilla según el estilo deseado:
+   • talks/_template_python_deck/  -> Deck Python + Chart.js
+   • talks/_template_static/       -> HTML / Reveal.js / Quarto libre
+   • O crea un proyecto Astro      -> engine: "astro"
+
+2. Define talks/2027-mi-charla/talk.json:
+{
+  "slug": "2027-mi-charla",
+  "title": "Título de la ponencia",
+  "subtitle": "Resumen breve",
+  "event": "Conferencia / Meetup",
+  "date": "2027-03-15",
+  "engine": "python-deck",
+  "tags": ["Data Science", "Forecasting"],
+  "cover": "docs/cover.png"
+}
+
+3. Compila y valida localmente:
+   python scripts/build_all.py --base-path /
+   python -m pytest -q</pre>
+          </div>
+
+          <div class="arch-box">
+            <h3 class="display">🗂️ Arquitectura del repositorio</h3>
+            <p>
+              Las charlas permanecen aisladas por motor y comparten el validador de manifiestos y el generador del Hub.
+            </p>
+            <pre class="mono">charlas/
+├── .github/workflows/deploy.yml   # Compila Python + Astro + Hub -> Pages
+├── hub/
+│   ├── build_hub.py               # Lee catálogo -> _site/index.html + talks.json
+│   ├── template.html              # Selector personal (Alex Prieto Romani)
+│   └── assets/profile_alex.jpg    # Foto de perfil del Hub
+├── shared/
+│   ├── manifest.py                # Descubrimiento y validación de talk.json
+│   └── python_deck/               # Activos compartidos para decks Python
+├── scripts/
+│   └── build_all.py               # Orquestador unificado local y CI
+└── talks/
+    ├── _template_python_deck/     # Plantilla estilo Python Deck
+    ├── _template_static/          # Plantilla estilo libre
+    └── &lt;slug&gt;/                    # Cada ponencia independiente</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="display" style="color:#12C8FC;">Configuración</h3>
+        <button type="button" id="modalCloseBtn" class="modal-close" aria-label="Cerrar modal">✕</button>
+      </div>
+      <pre id="modalBody" class="mono"></pre>
+    </div>
+  </div>
+
+  <script id="catalog-data" type="application/json">__CATALOG_JSON__</script>
+  <script>
+    (function () {
+      const ENGINE_META = {
+        'python-deck': { label: 'Python Deck', badgeClass: 'engine-py', filterKey: 'python-deck', shortcut: 'Atajos: [N] Notas · [F] Fullscreen' },
+        'astro': { label: 'Astro', badgeClass: 'engine-astro', filterKey: 'astro', shortcut: 'Atajos: [→ / Espacio] Avanzar · [F] Fullscreen' },
+        'static': { label: 'Static', badgeClass: 'engine-static', filterKey: 'other', shortcut: 'Modo presentación estático' },
+        'custom': { label: 'Custom', badgeClass: 'engine-static', filterKey: 'other', shortcut: 'Modo presentación personalizado' }
+      };
+
+      const MONTH_NAMES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+      let currentFilter = 'all';
+      let catalog = { base_path: '/', total_talks: 0, talks: [] };
+
+      function loadCatalog() {
+        const scriptEl = document.getElementById('catalog-data');
+        if (!scriptEl) return;
+        try {
+          const parsed = JSON.parse(scriptEl.textContent || '{}');
+          if (parsed && Array.isArray(parsed.talks)) {
+            catalog = parsed;
+          }
+        } catch (_err) {
+          catalog = { base_path: '/', total_talks: 0, talks: [] };
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatTalkDate(isoDate) {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(isoDate || ''));
+        if (!match) return escapeHtml(isoDate || '');
+        const monthIndex = Number(match[2]) - 1;
+        const monthLabel = MONTH_NAMES[monthIndex] || match[2];
+        return `${monthLabel} ${match[1]}`;
+      }
+
+      function buildPresentHref(talk) {
+        const slug = encodeURIComponent(talk.slug || '');
+        const entry = talk.entry && talk.entry !== 'index.html' ? talk.entry : '';
+        return `./${slug}/${entry}`;
+      }
+
+      function getEngineMeta(engine) {
+        return ENGINE_META[engine] || {
+          label: engine || 'Static',
+          badgeClass: 'engine-static',
+          filterKey: 'other',
+          shortcut: 'Modo presentación directo'
+        };
+      }
+
+      function updateKicker() {
+        const kickerEl = document.getElementById('hubKicker');
+        if (!kickerEl) return;
+        const basePath = String(catalog.base_path || '/').trim();
+        if (!basePath || basePath === '/' || basePath === '/charlas') {
+          kickerEl.textContent = 'alexprietoromani.github.io/charlas';
+          return;
+        }
+        const normalized = basePath.startsWith('/') ? basePath : `/${basePath}`;
+        kickerEl.textContent = `alexprietoromani.github.io${normalized}`;
+      }
+
+      function updateFilterCounts() {
+        const counts = { all: catalog.talks.length, 'python-deck': 0, astro: 0, other: 0 };
+        catalog.talks.forEach(function (talk) {
+          const meta = getEngineMeta(talk.engine);
+          counts[meta.filterKey] = (counts[meta.filterKey] || 0) + 1;
+        });
+
+        const totalBadge = document.getElementById('totalTalksCount');
+        if (totalBadge) totalBadge.textContent = String(counts.all);
+
+        document.querySelectorAll('#filterPills .pill').forEach(function (pill) {
+          const key = pill.dataset.filter;
+          const count = counts[key] || 0;
+          const countEl = pill.querySelector('.pill-count');
+          if (countEl) countEl.textContent = String(count);
+
+          if (key !== 'all' && count === 0) {
+            pill.classList.add('hidden');
+            if (currentFilter === key) {
+              currentFilter = 'all';
+              pill.classList.remove('active');
+              const allPill = document.querySelector('#filterPills .pill[data-filter="all"]');
+              if (allPill) allPill.classList.add('active');
+            }
+          } else {
+            pill.classList.remove('hidden');
+          }
+        });
+      }
+
+      function renderTalkCards() {
+        const grid = document.getElementById('talksGrid');
+        if (!grid) return;
+
+        grid.innerHTML = catalog.talks.map(function (talk) {
+          const meta = getEngineMeta(talk.engine);
+          const presentHref = buildPresentHref(talk);
+          const displayPath = talk.url || presentHref;
+          const tagsHtml = (talk.tags || []).map(function (tag) {
+            return `<span class="tag">${escapeHtml(tag)}</span>`;
+          }).join('');
+
+          const metaRightParts = [];
+          if (talk.slides_count) metaRightParts.push(`${talk.slides_count} slides`);
+          if (talk.duration_min) metaRightParts.push(`${talk.duration_min} min`);
+          const metaRight = metaRightParts.length ? `🎞️ ${metaRightParts.join(' · ')}` : `⚙️ ${escapeHtml(meta.label)}`;
+
+          const coverHtml = talk.cover_url
+            ? `<img src="${escapeHtml(talk.cover_url)}" alt="Portada ${escapeHtml(talk.title)}" onerror="this.style.display='none'">`
+            : `<div class="cover-fallback mono">${escapeHtml(talk.slug)}</div>`;
+
+          const extras = talk.extras || {};
+          const notebooksBtn = extras.notebooks
+            ? `<a href="${escapeHtml(extras.notebooks)}" class="btn-ghost" target="_blank" rel="noopener noreferrer" title="Ver notebooks">📓 NB</a>`
+            : '';
+          const repoBtn = extras.repo
+            ? `<a href="${escapeHtml(extras.repo)}" class="btn-ghost" target="_blank" rel="noopener noreferrer" title="Ver código fuente">💻 Repo</a>`
+            : '';
+
+          const searchableText = [
+            talk.slug,
+            talk.title,
+            talk.subtitle,
+            talk.event,
+            talk.engine,
+            meta.label,
+            (talk.tags || []).join(' ')
+          ].filter(Boolean).join(' ').toLowerCase();
+
+          return `
+            <article class="talk-card" data-slug="${escapeHtml(talk.slug)}" data-engine="${escapeHtml(talk.engine)}" data-filter-key="${escapeHtml(meta.filterKey)}" data-search="${escapeHtml(searchableText)}">
+              <div class="card-cover">
+                ${coverHtml}
+                <div class="cover-overlay">
+                  <div class="cover-top-badges">
+                    <span class="badge-event">📍 ${escapeHtml(talk.event)}</span>
+                    <span class="badge-engine ${meta.badgeClass} mono">${escapeHtml(meta.label)}</span>
+                  </div>
+                  <div class="cover-slug mono">${escapeHtml(displayPath)}</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-meta mono">
+                  <span>📅 ${formatTalkDate(talk.date)}</span>
+                  <span>${metaRight}</span>
+                </div>
+                <h2 class="card-title display">${escapeHtml(talk.title)}</h2>
+                <p class="card-desc">${escapeHtml(talk.subtitle || '')}</p>
+                <div class="card-tags">${tagsHtml}</div>
+                <div class="card-actions">
+                  <a href="${escapeHtml(presentHref)}" class="btn-primary">▶ Presentar</a>
+                  <button type="button" class="btn-ghost" data-action="config" data-slug="${escapeHtml(talk.slug)}" title="Ver talk.json">{ } Config</button>
+                  ${notebooksBtn}${repoBtn}
+                </div>
+                <div class="presenter-bar mono">
+                  <span>${escapeHtml(meta.shortcut)}</span>
+                  <a href="${escapeHtml(presentHref)}" target="_blank" rel="noopener noreferrer">Abrir directo ↗</a>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      function applyFilters() {
+        const searchInput = document.getElementById('searchInput');
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const cards = document.querySelectorAll('#talksGrid .talk-card');
+        let visibleCount = 0;
+
+        cards.forEach(function (card) {
+          const text = card.dataset.search || '';
+          const filterKey = card.dataset.filterKey || 'other';
+          const matchesQuery = !query || text.includes(query);
+          const matchesFilter = currentFilter === 'all' || filterKey === currentFilter;
+          const visible = matchesQuery && matchesFilter;
+          card.style.display = visible ? 'flex' : 'none';
+          if (visible) visibleCount += 1;
+        });
+
+        const emptyState = document.getElementById('emptyState');
+        if (emptyState) {
+          emptyState.classList.toggle('visible', visibleCount === 0);
+        }
+      }
+
+      function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+          const isTarget = btn.dataset.tab === tab;
+          btn.classList.toggle('active', isTarget);
+          btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+        });
+        const catalogView = document.getElementById('catalogView');
+        const archView = document.getElementById('archView');
+        if (catalogView) catalogView.classList.toggle('hidden', tab !== 'catalog');
+        if (archView) archView.classList.toggle('active', tab === 'arch');
+      }
+
+      function showConfigModal(slug) {
+        const talk = catalog.talks.find(function (item) { return item.slug === slug; });
+        if (!talk) return;
+        const manifestPayload = talk.manifest || talk;
+        document.getElementById('modalTitle').textContent = `talks/${talk.slug}/talk.json`;
+        document.getElementById('modalBody').textContent = JSON.stringify(manifestPayload, null, 2);
+        document.getElementById('modalBackdrop').classList.add('open');
+      }
+
+      function closeModal() {
+        document.getElementById('modalBackdrop').classList.remove('open');
+      }
+
+      function bindEvents() {
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            switchTab(btn.dataset.tab);
+          });
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+          searchInput.addEventListener('input', applyFilters);
+        }
+
+        document.querySelectorAll('#filterPills .pill').forEach(function (pill) {
+          pill.addEventListener('click', function () {
+            currentFilter = pill.dataset.filter || 'all';
+            document.querySelectorAll('#filterPills .pill').forEach(function (item) {
+              item.classList.toggle('active', item === pill);
+            });
+            applyFilters();
+          });
+        });
+
+        const presenterBtn = document.getElementById('presenterBtn');
+        if (presenterBtn) {
+          presenterBtn.addEventListener('click', function () {
+            const active = document.body.classList.toggle('presenter-mode');
+            presenterBtn.classList.toggle('on', active);
+            presenterBtn.setAttribute('aria-pressed', active ? 'true' : 'false');
+          });
+        }
+
+        const grid = document.getElementById('talksGrid');
+        if (grid) {
+          grid.addEventListener('click', function (event) {
+            const configBtn = event.target.closest('button[data-action="config"]');
+            if (configBtn) {
+              showConfigModal(configBtn.dataset.slug);
+            }
+          });
+        }
+
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+        if (modalBackdrop) {
+          modalBackdrop.addEventListener('click', function (event) {
+            if (event.target === modalBackdrop) closeModal();
+          });
+        }
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') closeModal();
+        });
+      }
+
+      loadCatalog();
+      updateKicker();
+      updateFilterCounts();
+      renderTalkCards();
+      applyFilters();
+      bindEvents();
+    })();
+  </script>
+</body>
+</html>
