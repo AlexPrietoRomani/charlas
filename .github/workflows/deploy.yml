@@ -1,4 +1,4 @@
-name: Build and Deploy Deck to GitHub Pages
+name: Build and Deploy Charlas Hub to GitHub Pages
 
 on:
   push:
@@ -29,30 +29,37 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          pip install pandas numpy
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-      - name: Build Presentation Deck
-        run: |
-          python scripts/build_deck.py
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: "talks/2026-falsa-alarma/pnpm-lock.yaml"
 
-      - name: Prepare Pages Artifact
-        run: |
-          mkdir -p _site
-          cp presentacion.html _site/index.html
-          cp presentacion.html _site/presentacion.html
-          cp -r data _site/
-          cp -r docs _site/
-          cp -r docs/images _site/images
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt pyyaml
+
+      - name: Install Astro dependencies
+        run: pnpm --dir talks/2026-falsa-alarma install --frozen-lockfile
+
+      - name: Build Charlas Hub and Talks
+        run: python scripts/build_all.py --base-path /charlas
+
+      - name: Run unit and integration tests
+        run: python -m pytest tests/unit tests/integration -v
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_site'
+          path: "_site"
 
       - name: Deploy to GitHub Pages
         id: deployment
