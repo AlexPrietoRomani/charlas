@@ -1,0 +1,13 @@
+{
+  "slug": "2026-sdd-proyectos-reales",
+  "title": "Aplicación de SDD en proyectos reales",
+  "subtitle": "SDD + flexibilidad ODD + rigor EGM (+ EDD) con project-suite en un proyecto real de Data Science",
+  "event": "Taller / Masterclass SDD — 2 horas",
+  "date": "2026-11-14",
+  "engine": "python-deck",
+  "entry": "index.html",
+  "cover": "assets/cover.svg",
+  "slides_count": 27,
+  "duration_min": 120,
+  "tags": ["SDD", "ODD", "EGM", "Data Science", "project-suite"]
+}
