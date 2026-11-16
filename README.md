@@ -14,6 +14,7 @@ Cada charla vive autocontenida dentro de `talks/<slug>/`, declara sus metadatos 
 |---|---|---|---|---|---|---|
 | `2026-forecasting-ia` | ¿Puede la IA predecir el futuro? Casos de forecasting real | Iquitos Data Fest 2026 | 2026-10-05 | `python-deck` | 30 | Deck HTML single-file + Chart.js offline (SENAMHI Iquitos + Café Jaén) |
 | `2026-falsa-alarma` | Falsa alarma o amenaza real: el dilema oculto detrás de cada dato | Storytelling con Datos · Valle del Elqui | 2026-07-23 | `astro` | 21 | Migrada desde `Data_Wizard` (Astro estático con `--base` dinámico) |
+| `2026-sdd-proyectos-reales` | Aplicación de SDD en proyectos reales | Taller / Masterclass SDD — 2 horas | 2026-11-14 | `python-deck` | 27 | Estética Bento + Chart.js offline; laboratorio en vivo `demos/sdd-churn-leakage` (AUC 0.9593 fuga vs 0.8318 honesto) y 3 prácticas de terminal |
 
 ---
 
@@ -32,7 +33,10 @@ charlas/
 │   ├── _template_python_deck/     # Plantilla base para charlas con motor python-deck
 │   ├── _template_static/          # Plantilla base para charlas static / custom
 │   ├── 2026-forecasting-ia/       # Charla 1 (python-deck)
-│   └── 2026-falsa-alarma/         # Charla 2 (astro)
+│   ├── 2026-falsa-alarma/         # Charla 2 (astro)
+│   └── 2026-sdd-proyectos-reales/ # Charla 3 (python-deck, taller 2h con 3 prácticas de terminal)
+├── demos/
+│   └── sdd-churn-leakage/         # Laboratorio en vivo de la Charla 3 (antiejemplo de fuga temporal)
 ├── tests/
 │   ├── unit/                      # Pruebas unitarias de manifiestos, estructura y CI
 │   ├── integration/               # Pruebas de compilación multi-motor con build_all.py
@@ -69,6 +73,7 @@ Abre en el navegador:
 - **Hub selector:** `http://localhost:8000/`
 - **Charla `2026-forecasting-ia`:** `http://localhost:8000/2026-forecasting-ia/`
 - **Charla `2026-falsa-alarma`:** `http://localhost:8000/2026-falsa-alarma/`
+- **Charla `2026-sdd-proyectos-reales`:** `http://localhost:8000/2026-sdd-proyectos-reales/`
 
 *(Para simular exactamente el subpath de GitHub Pages en local, compila con `--base-path /charlas`.)*
 
