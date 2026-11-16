@@ -47,6 +47,7 @@ articles/*.md
 talks/*/articles/*.pdf
 talks/*/articles/*.md
 !articles/README.md
+!talks/*/articles/README.md
 
 # --- Modelos y pesos (no versionar) ---
 *.pt
@@ -62,6 +63,7 @@ talks/*/articles/*.md
 models/*
 talks/*/models/*
 !models/.gitkeep
+!talks/*/models/.gitkeep
 
 # --- Datos pesados / crudos ---
 data/raw/
