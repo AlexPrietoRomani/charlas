@@ -1,6 +1,6 @@
 """
 Archivo: talks/2026-sdd-proyectos-reales/front/notes.py
-Fecha de modificación: 15/11/2026
+Fecha de modificación: 17/11/2026
 Autor: Alex Prieto <alexprieto1997@gmail.com>
 
 Descripción:
@@ -37,7 +37,8 @@ NOTES = {
             "taller de 2 horas, 5 bloques, con teclado: <strong>&larr;/&rarr;</strong> navegar, "
             "<strong>N</strong> notas, <strong>G</strong> índice, <strong>F</strong> pantalla completa.</p>"
             "<ul><li>Pregunta rompehielos: '¿cuántos han entregado un proyecto que solo el autor entiende?'</li>"
-            "<li>Anticipa el caso real del Bloque 3: churn con leakage, AUC 0.9593 &rarr; 0.8318.</li>"
+            "<li>Anticipa los DOS proyectos reales: uno <strong>Web Full-Stack</strong> (AgroVision: FastAPI + Astro, "
+            "caso T10.4.1) y uno de <strong>Data Science</strong> (churn con leakage, AUC 0.9593 &rarr; 0.8318).</li>"
             "<li>[4:00] Pasa a la agenda cuando la sala esté enganchada con el rompehielos.</li></ul>"
         ),
     },
@@ -47,7 +48,7 @@ NOTES = {
             "<p><strong>Mapa de la sesión con tiempos duros</strong> — úsalo como contrato con la audiencia.</p>"
             "<ul><li>Revela los 5 bloques con los fragmentos (tecla &rarr;). Cada bloque cierra con verificación: sin evidencia no avanza.</li>"
             "<li>Aviso práctico: <strong>habrá tres cortes a terminal</strong> (prácticas 1, 2 y 3); pide que abran la carpeta demos/sdd-churn-leakage.</li>"
-            "<li>Subraya que los bloques 3 y 4 son el corazón: caso real + coste de verificación.</li></ul>"
+            "<li>Subraya que el Bloque 3 compara DOS casos reales: Web (AgroVision) y Data Science (churn); el Bloque 4 es el coste de verificación.</li></ul>"
         ),
     },
     "03-vibe-dolor": {
@@ -56,8 +57,11 @@ NOTES = {
             "<p><strong>[7:00] Síntomas (3').</strong> Pide manos: '¿quién ha vivido el chat perdido con la especificación?'. "
             "Los síntomas de la izquierda deben sonar a experiencia propia.</p>"
             "<p><strong>[10:00] La sesión típica (3').</strong> Lee el código en voz alta: la feature <strong>post_churn_cancellation_days</strong> "
-            "y el scaler fitteado antes del split son las fugas reales del laboratorio. Remata: 'el problema no es la velocidad, "
-            "es que no existe la definición de éxito'.</p>"
+            "y el scaler fitteado antes del split son las fugas reales del laboratorio.</p>"
+            "<p><strong>[11:30] El mismo vibe rompe distinto (1.5').</strong> En <strong>Web</strong> el daño es visible: "
+            "un 'regex de validación' en Astro deja la URL BYOK <strong>X-User-Supabase-Url</strong> abierta a <strong>SSRF</strong> "
+            "y desincroniza la BD de la UI. En <strong>Data Science</strong> el daño calla: un AUC <strong>0.9593</strong> que miente. "
+            "Remata: 'el problema no es la velocidad, es que no existe la definición de éxito'.</p>"
         ),
     },
     "04-que-es-sdd": {
@@ -134,6 +138,9 @@ NOTES = {
             "<p><strong>[44:00] SDD &rarr; ODD (3').</strong> La tabla es la clave: reversible &rarr; comentario ligero; "
             "semi-reversible &rarr; spec + test; irreversible (DB, API pública, seguridad) &rarr; ADR + spec + auditoría.</p>"
             "<ul><li>Explica el salto: el SDD rígido documenta todo al máximo y muere por burocracia; ODD dimensiona el doc según la irreversibilidad.</li>"
+            "<li><strong>Antecedente (cítalo con nombre):</strong> ODD la propuso <strong>Alan Buscaglia</strong> (<em>Gentleman Programming</em>) "
+            "en su ecosistema <strong>Gentle-AI</strong>, que retiró el SDD clásico por burocrático y sumó <strong>Engram</strong> "
+            "(memoria persistente SQLite + FTS5). project-suite hereda esa flexibilidad y le añade auditoría EGM + evidencia EDD.</li>"
             "<li>Pregunta para la sala: 'la tabla de precios de su producto, ¿qué fila de la tabla merece?'</li>"
             "<li>Cierra con el gancho: 'pero ¿quién verifica esta flexibilidad sin memoria de contexto? EGM, ya'.</li></ul>"
         ),
@@ -142,7 +149,9 @@ NOTES = {
         "time": "min 47–50 · Bloque 2 (25–50')",
         "body": (
             "<p><strong>[47:00] ODD &rarr; EGM (2').</strong> La flexibilidad necesita verificación zero-context: "
-            "EGM audita con tests, DoD y docs contra el código — la evidencia no depende del equipo ni de la memoria de sesión.</p>"
+            "EGM audita con tests, DoD y docs contra el código — la evidencia no depende del equipo ni de la memoria de sesión. "
+            "Contrasta el enfoque: Gentle-AI resuelve la memoria con <strong>Engram</strong> (SQLite + FTS5 persistente); "
+            "EGM prefiere la auditoría zero-context, que funciona aunque la memoria falte.</p>"
             "<p><strong>[49:00] EGM &rarr; EDD (1').</strong> En Data Science la evidencia final es la métrica: Golden Data determinista (seed=42) "
             "+ split temporal. EDD registra 0.8318 con procedencia, no un 0.9593 recitado.</p>"
             "<ul><li>Frase puente: 'progresión completa: SDD (qué) &rarr; ODD (cuánto doc) &rarr; EGM (quién verifica) &rarr; EDD (qué evidencia)'.</li>"
@@ -152,17 +161,25 @@ NOTES = {
     "13-divider-b3": {
         "time": "min 50–52 · Bloque 3 (50–75')",
         "body": (
-            "<p><strong>[50:00] Transición al caso real.</strong> Pausa de preguntas (2'). "
-            "Presenta el laboratorio: demos/sdd-churn-leakage, 1,203 clientes, AUC 0.9593 vs 0.8318.</p>"
+            "<p><strong>[50:00] Transición a los casos reales.</strong> Pausa de preguntas (2'). "
+            "Presenta los DOS casos en paralelo: <strong>AgroVision</strong> (Web: gateway FastAPI :8000 + Astro 5, "
+            "Supabase PostGIS BYOK, 5 índices Sentinel-2, HF Spaces, 16 fases) y el laboratorio "
+            "demos/sdd-churn-leakage (1,203 clientes, AUC 0.9593 vs 0.8318)."
         ),
     },
     "14-el-caso": {
         "time": "min 52–56 · Bloque 3 (50–75')",
         "body": (
-            "<p><strong>[52:00] Contexto (4').</strong> El laboratorio real: mini-proyecto reproducible en ~10 minutos, "
-            "Golden Data determinista <strong>data/churn_events.csv</strong> (seed=42) y contrato en <strong>tests/test_demo_seed.py</strong>.</p>"
-            "<ul><li>La tensión: el pipeline con fuga promete 0.9593; la evaluación honesta del mismo dataset: 0.8318.</li>"
-            "<li>Conecta con la slide 8: este contrato salió de description_proyecto + architecture del mini-proyecto.</li></ul>"
+            "<p><strong>[52:00] Los dos casos en paralelo (4').</strong> Columna izquierda: el laboratorio DS — "
+            "mini-proyecto reproducible, Golden Data <strong>data/churn_events.csv</strong> (seed=42), contrato en "
+            "<strong>tests/test_demo_seed.py</strong>, tensión 0.9593 vs 0.8318 (brecha 0.1275).</p>"
+            "<ul><li>Columna derecha: <strong>AgroVision</strong> — gateway <strong>FastAPI :8000</strong> que sirve la SPA "
+            "<strong>Astro 5 + Tailwind 4</strong>, Supabase <strong>PostGIS</strong> con credenciales efímeras BYOK "
+            "(<strong>X-User-*</strong>), <strong>5 índices</strong> Sentinel-2, deploy en <strong>Hugging Face Spaces</strong> y "
+            "<strong>16 fases</strong> en plan_agrovision.md.</li>"
+            "<li>Recorre la fila de pills del flujo: especificar &rarr; planificar &rarr; construir (goldfish) &rarr; testear "
+            "(Playwright / Golden Data) &rarr; verificar-dod &rarr; auditar-coherencia — el MISMO flujo en ambos dominios.</li>"
+            "<li>Estándares por dominio: Web &rarr; backend-standards + astro-standards; DS &rarr; python-standards + EDD.</li></ul>"
         ),
     },
     "15-elefante-goldfish": {
@@ -182,6 +199,10 @@ NOTES = {
             "y el <strong>train_test_split</strong> es aleatorio: tres fugas en seis líneas.</p>"
             "<p><strong>[65:00] La lectura SDD (3').</strong> La spec ya lo prohibía: solo variables disponibles en el instante del "
             "snapshot_date. El chequeo ODD: '¿existiría esta feature el día que el modelo corre en producción?' Si no: fuga.</p>"
+            "<p><strong>[66:30] Paralelo Web (1.5').</strong> La tarea pendiente <strong>T10.4.1</strong> de AgroVision: "
+            "<strong>allowlist anti-SSRF</strong> para <strong>X-User-Supabase-Url</strong> y <strong>límite geométrico del polígono "
+            "en servidor</strong>. El vibe pondría un regex en Astro y rompería prod o dev; project-suite la resuelve con "
+            "backend-standards + astro-standards y E2E Playwright.</p>"
         ),
     },
     "17-honesto": {
@@ -261,7 +282,9 @@ NOTES = {
             "el drift se detecta en minutos, no en producción (ya lo ejecutaron read-only en la práctica 2).</p>"
             "<p><strong>[99:00] bitácora (1').</strong> Cierra el bloque registrando el incidente del laboratorio en formato forense: "
             "<strong>síntoma</strong> (AUC 0.9593), <strong>causa raíz</strong> (post_churn_cancellation_days + scaler antes del split + split aleatorio), "
-            "<strong>lección</strong> (chequeo ODD de disponibilidad temporal en toda feature).</p>"
+            "<strong>lección</strong> (chequeo ODD de disponibilidad temporal en toda feature). En <strong>AgroVision</strong>, "
+            "auditar-coherencia mantiene <strong>architecture_agrovision.md</strong> fiel al gateway FastAPI + Astro: "
+            "la misma disciplina anti-drift, otro dominio.</p>"
         ),
     },
     "25-checklist": {
@@ -287,6 +310,7 @@ NOTES = {
             "<p><strong>[115:00] Cierre y Q&amp;A (5').</strong> Frase final: 'la especificación es el contrato; la verificación, la inversión; "
             "la evidencia, el informe final'.</p>"
             "<ul><li>Recoge 2–3 preguntas; si no surgen, lanza tú la de siempre: '¿qué decisión irreversible tomaste esta semana sin spec?'</li>"
+            "<li>Recuerda los dos casos: AgroVision (Web) y el laboratorio de churn (Data Science) — mismo flujo, estándares distintos.</li>"
             "<li>Comparte contacto y repo. Fin a los 120' exactos.</li></ul>"
         ),
     },

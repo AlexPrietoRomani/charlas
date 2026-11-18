@@ -1,6 +1,6 @@
 """
 Archivo: talks/2026-sdd-proyectos-reales/front/slides_p1.py
-Fecha de modificación: 15/11/2026
+Fecha de modificación: 17/11/2026
 Autor: Alex Prieto <alexprieto1997@gmail.com>
 
 Descripción:
@@ -37,8 +37,8 @@ SLIDES_P1 = [
         "layout": "cover",
         "kicker": "TALLER · MASTERCLASS · 2 HORAS",
         "title": "Aplicación de SDD en proyectos reales",
-        "sub": ("SDD + flexibilidad ODD + rigor EGM (+ EDD) con project-suite "
-                "en un proyecto real de Data Science"),
+        "sub": ("La aplicación del SDD con sus evoluciones ODD + EGM (+ EDD) "
+                "en proyectos reales de Web y Data Science"),
         "body": """
 <div class="c-meta">
   <span class="pill cobalt">SDD</span>
@@ -46,7 +46,8 @@ SLIDES_P1 = [
   <span class="pill emerald">EGM</span>
   <span class="pill emerald">EDD</span>
   <span class="pill">project-suite</span>
-  <span class="pill">Data Science</span>
+  <span class="pill cobalt">Web · Astro + FastAPI</span>
+  <span class="pill emerald">Data Science · ML</span>
 </div>
 <p class="c-author">Alex Prieto Romani · 2026-11-14 · 5 bloques · 120 minutos · 27 diapositivas</p>
 """,
@@ -71,8 +72,8 @@ SLIDES_P1 = [
   </div>
   <div class="card accent-amber frag" data-step="3">
     <div class="num">Bloque 3 · 50–75'</div>
-    <h3>Caso real</h3>
-    <p>Churn con leakage: AUC 0.9593 &rarr; 0.8318 honesto.</p>
+    <h3>Casos reales Web + DS</h3>
+    <p>AgroVision (FastAPI + Astro) y churn con leakage: AUC 0.9593 &rarr; 0.8318.</p>
   </div>
   <div class="card accent-emerald frag" data-step="4">
     <div class="num">Bloque 4 · 75–100'</div>
@@ -116,7 +117,8 @@ SLIDES_P1 = [
 <span class="cm"># 14:30 — producción explota en silencio</span></div>
   </div>
 </div>
-<p style="margin-top:18px" class="frag" data-step="3">El problema no es la velocidad: es que <strong>nada define qué es "terminado"</strong> y qué evidencia lo prueba.</p>
+<p style="margin-top:14px" class="frag" data-step="3">Y rompe <strong>distinto según el dominio</strong>: en <strong>Web</strong> un "regex de validación" en Astro deja la URL BYOK <code>X-User-Supabase-Url</code> abierta a SSRF y desincroniza la BD de la UI; en <strong>Data Science</strong> el desastre calla: un AUC <strong>0.9593</strong> que miente en producción.</p>
+<p style="margin-top:8px" class="frag" data-step="4">El problema no es la velocidad: es que <strong>nada define qué es "terminado"</strong> y qué evidencia lo prueba.</p>
 """,
     },
     {
@@ -408,7 +410,7 @@ SLIDES_P1 = [
         "id": "11-odd",
         "block": 2,
         "kicker": "Bloque 2 · min 44–47",
-        "title": "ODD: por qué el SDD rígido necesita flexibilidad proporcional",
+        "title": "ODD: flexibilidad proporcional, no burocracia",
         "sub": "Outcome-Driven Development: el peso del documento crece con la irreversibilidad de la decisión.",
         "body": """
 <table class="cmp frag" data-step="1">
@@ -423,8 +425,8 @@ SLIDES_P1 = [
     <p>SDD estricto y rígido muere por burocracia: documentar todo al máximo bloquea el proyecto real. <strong>ODD evita el boicot</strong>: doc mínimo para riesgo mínimo, doc máximo para riesgo máximo.</p>
   </div>
   <div class="card frag" data-step="3">
-    <h3>En la práctica</h3>
-    <p>Antes de pedir el cambio al asistente, pregúntate: <strong>¿si me equivoco, cuánto cuesta revertirlo?</strong> Esa respuesta elige el formato del doc… y abre la pregunta siguiente: ¿quién verifica sin contexto?</p>
+    <h3>En la práctica + antecedente</h3>
+    <p>Regla: <strong>¿si me equivoco, cuánto cuesta revertirlo?</strong> Esa respuesta elige el doc. <strong>Antecedente:</strong> ODD la propuso <strong>Alan Buscaglia</strong> (<em>Gentleman Programming</em>) en <strong>Gentle-AI</strong>, que retiró el SDD clásico por burocrático y sumó <strong>Engram</strong> (SQLite + FTS5); project-suite la hereda y le suma EGM + EDD.</p>
   </div>
 </div>
 """,
@@ -440,7 +442,7 @@ SLIDES_P1 = [
   <div class="card accent-emerald frag" data-step="1">
     <span class="num">3 · EGM</span>
     <h3>Por qué ODD necesita auditoría zero-context</h3>
-    <p>Decidir cuánto documentar es letra muerta si nadie lo verifica <strong>sin memoria de sesión</strong> (la goldfish). EGM audita con tests, DoD y docs contra el código: la evidencia no depende del equipo.</p>
+    <p>Decidir cuánto documentar es letra muerta si nadie lo verifica <strong>sin memoria de sesión</strong> (la goldfish). EGM audita con tests, DoD y docs contra el código: la evidencia no depende del equipo ni de memorias persistentes como <strong>Engram</strong> (SQLite + FTS5, la apuesta de Gentle-AI).</p>
   </div>
   <div class="card accent-emerald frag" data-step="2">
     <span class="num">4 · EDD</span>
@@ -457,15 +459,16 @@ SLIDES_P1 = [
         "block": 3,
         "layout": "divider",
         "kicker": "BLOQUE 3 · 50–75 MIN",
-        "title": "Caso real: churn con leakage, del elefante a la goldfish",
+        "title": "Casos reales: Web (AgroVision) y Data Science (churn con leakage)",
         "sub": "",
         "body": """
 <p class="d-meta">
+  <span class="pill cobalt">AgroVision · Web real</span>
   <span class="pill amber">demos/sdd-churn-leakage</span>
   <span class="pill carmine">AUC 0.9593 → sospecha</span>
   <span class="pill emerald">AUC 0.8318 → honesto</span>
 </p>
-<p class="d-time">Un pipeline de churn real donde SDD detectó lo que el entusiasmo había escondido.</p>
+<p class="d-time">El mismo flujo project-suite aplicado a un gateway FastAPI + Astro y a un pipeline de churn.</p>
 """,
     },
 ]

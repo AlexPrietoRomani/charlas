@@ -1,6 +1,6 @@
 """
 Archivo: talks/2026-sdd-proyectos-reales/front/slides_p2.py
-Fecha de modificación: 15/11/2026
+Fecha de modificación: 17/11/2026
 Autor: Alex Prieto <alexprieto1997@gmail.com>
 
 Descripción:
@@ -35,26 +35,23 @@ SLIDES_P2 = [
         "id": "14-el-caso",
         "block": 3,
         "kicker": "Bloque 3 · min 52–56",
-        "title": "El caso real: el laboratorio demos/sdd-churn-leakage",
-        "sub": "Un pipeline de churn con Golden Data determinista donde la fuga está plantada a propósito.",
+        "title": "Los casos reales, en paralelo: Web y Data Science",
+        "sub": "Dos dominios distintos, el mismo proceso de especificación, construcción aislada y verificación.",
         "body": """
-<div class="grid3">
+<div class="grid2">
   <div class="card accent-cobalt frag" data-step="1">
-    <span class="num">Contexto</span>
-    <h3>El laboratorio</h3>
-    <p><strong>demos/sdd-churn-leakage/</strong>: clasificador de churn reproducible en ~10 minutos, con contrato de tests en <strong>tests/test_demo_seed.py</strong>.</p>
+    <span class="num">Caso Data Science</span>
+    <h3>demos/sdd-churn-leakage</h3>
+    <p><strong>1,203 clientes</strong> en <strong>data/churn_events.csv</strong> (Golden Data determinista, <strong>seed=42</strong>) y contrato de tests en <strong>tests/test_demo_seed.py</strong>. Tensión: AUC <strong>0.9593</strong> con fuga vs <strong>0.8318</strong> honesto (brecha <strong>0.1275</strong>).</p>
   </div>
-  <div class="card accent-cobalt frag" data-step="2">
-    <span class="num">Golden Data</span>
-    <h3>1,203 clientes</h3>
-    <p><strong>data/churn_events.csv</strong>, determinista (<strong>seed=42</strong>): cualquier regeneración produce las mismas filas y AUC estables.</p>
-  </div>
-  <div class="card accent-amber frag" data-step="3">
-    <span class="num">Tensión</span>
-    <h3>El 0.9593 celebrado</h3>
-    <p>El pipeline con fuga promete <strong>AUC 0.9593</strong>. La evaluación honesta del mismo dataset: <strong>0.8318</strong>. La brecha es <strong>0.1275</strong>.</p>
+  <div class="card accent-amber frag" data-step="2">
+    <span class="num">Caso Web Full-Stack</span>
+    <h3>AgroVision</h3>
+    <p>Gateway <strong>FastAPI :8000</strong> + SPA estática <strong>Astro 5 + Tailwind 4</strong>, Supabase <strong>PostGIS</strong> con credenciales efímeras BYOK (<code>X-User-*</code>), <strong>5 índices</strong> espectrales Sentinel-2 y deploy en <strong>Hugging Face Spaces</strong>: <strong>16 fases</strong> en <strong>plan_agrovision.md</strong>.</p>
   </div>
 </div>
+<p style="margin-top:16px" class="frag" data-step="3"><span class="pill cobalt">especificar</span><span class="pill cobalt">planificar</span><span class="pill amber">construir · goldfish</span><span class="pill emerald">testear · Playwright / Golden Data</span><span class="pill emerald">verificar-dod</span><span class="pill cobalt">auditar-coherencia</span></p>
+<p style="margin-top:4px" class="frag" data-step="4">Mismo flujo, estándares por dominio: <strong>Web</strong> &rarr; <strong>backend-standards + astro-standards</strong>; <strong>Data Science</strong> &rarr; <strong>python-standards + EDD</strong> (Golden Data).</p>
 """,
     },
     {
@@ -121,7 +118,7 @@ FEATURES_HONESTAS = [tenure_months, monthly_spend,
     </ul>
   </div>
 </div>
-<p style="margin-top:18px" class="frag" data-step="3">Chequeo ODD de la tarea: <strong>"¿existiría esta feature en el instante del snapshot_date?"</strong> Si no: fuga.</p>
+<p style="margin-top:16px" class="frag" data-step="3">Chequeo ODD: <strong>"¿existiría esta feature en el instante del snapshot_date?"</strong> Si no: fuga. <br><strong>Paralelo Web</strong> (AgroVision · <strong>T10.4.1</strong>): el vibe pondría un regex en Astro y rompería prod; la tarea real pide <strong>allowlist anti-SSRF</strong> en <code>X-User-Supabase-Url</code> y <strong>límite geométrico del polígono en servidor</strong>, resuelta con backend-standards + astro-standards y E2E Playwright.</p>
 """,
     },
     {
@@ -361,7 +358,7 @@ FEATURES_HONESTAS = [tenure_months, monthly_spend,
 &rarr; resolución &rarr; verificación &rarr; <span class="good">lecciones</span></div>
   </div>
 </div>
-<p style="margin-top:18px" class="frag" data-step="3">El leakage del laboratorio quedó registrado así: <strong>síntoma</strong> (AUC 0.9593), <strong>causa raíz</strong> (post_churn_cancellation_days + scaler antes del split + split aleatorio), <strong>lección</strong> (chequeo ODD de disponibilidad temporal en toda feature).</p>
+<p style="margin-top:18px" class="frag" data-step="3">El leakage del laboratorio quedó registrado así: <strong>síntoma</strong> (AUC 0.9593), <strong>causa raíz</strong> (post_churn_cancellation_days + scaler antes del split + split aleatorio), <strong>lección</strong> (chequeo ODD de disponibilidad temporal en toda feature). En <strong>AgroVision</strong>, auditar-coherencia mantiene <strong>architecture_agrovision.md</strong> fiel al gateway FastAPI + Astro: la misma disciplina, otro dominio.</p>
 """,
     },
     # ------------------------------------------------------------------ B5
@@ -443,6 +440,8 @@ FEATURES_HONESTAS = [tenure_months, monthly_spend,
   <span class="pill amber">ODD</span>
   <span class="pill emerald">EGM</span>
   <span class="pill emerald">EDD</span>
+  <span class="pill cobalt">Web · AgroVision</span>
+  <span class="pill amber">Data Science · churn</span>
 </p>
 <p class="d-time">Gracias — preguntas y discusión. · Alex Prieto Romani · alexprieto1997@gmail.com</p>
 """,
