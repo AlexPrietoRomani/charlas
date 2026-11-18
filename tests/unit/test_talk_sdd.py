@@ -121,7 +121,7 @@ def test_manifest_and_talk_assets_valid() -> None:
     assert manifest.slides_count == EXPECTED_SLIDES_COUNT
     assert manifest.duration_min == 120
     assert manifest.date == "2026-11-14"
-    assert manifest.tags == ("SDD", "ODD", "EGM", "Data Science", "project-suite")
+    assert manifest.tags == ("SDD", "ODD", "EGM", "Web", "Data Science", "project-suite")
 
     cover_path = TALK_DIR / "assets" / "cover.svg"
     assert cover_path.is_file(), "Falta la portada assets/cover.svg"
@@ -249,6 +249,13 @@ def test_user_simulation_build_deck_to_output_dir(tmp_path: Path) -> None:
     assert "1,203 clientes" in html_text and "0.1275" in html_text
     assert "post_churn_cancellation_days" in html_text
     assert "AndinaTel" not in html_text and "50.000" not in html_text
+
+    # Caso Web (AgroVision) y ecosistema Gentle-AI (antecedente de ODD)
+    assert "AgroVision" in html_text and "T10.4.1" in html_text
+    assert "Gentle-AI" in html_text and "Engram" in html_text
+    assert "Alan Buscaglia" in html_text
+    assert "X-User-Supabase-Url" in html_text and "SSRF" in html_text
+    assert "backend-standards" in html_text and "astro-standards" in html_text
 
     # Metadatos, notas del orador y specs de gráficas sin NaN
     meta_json = _extract_window_json(html_text, "DECK_META")
